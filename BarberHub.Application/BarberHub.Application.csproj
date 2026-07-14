@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\BarberHub.Domain\BarberHub.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
