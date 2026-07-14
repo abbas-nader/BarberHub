@@ -15,4 +15,9 @@
       <Folder Include="Controllers\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\BarberHub.Application\BarberHub.Application.csproj" />
+      <ProjectReference Include="..\BarberHub.Infrastructure\BarberHub.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>
