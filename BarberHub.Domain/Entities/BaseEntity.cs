@@ -11,21 +11,19 @@ public abstract class BaseEntity
     public long? ModifiedBy { get; private set; }
     public DateTimeOffset? DeletedAt { get; private set; }
     public long? DeletedBy { get; private set; }
-    public bool IsDeleted { get; private set; }
+    public bool IsDeleted { get; private set; } 
 
-    private BaseEntity()
+    protected BaseEntity()
     {
     }
-
-    protected BaseEntity(long createdBy)
+    public void SetCreationInfo(long createdBy)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(createdBy);
         CreatedAt = DateTimeOffset.UtcNow;
         CreatedBy = createdBy;
     }
 
-    
-    public void Modified(long userId)
+    public void MarkAsModified(long userId)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(userId);
         ModifiedAt = DateTimeOffset.UtcNow;
