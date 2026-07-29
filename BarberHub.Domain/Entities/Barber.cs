@@ -11,5 +11,5 @@ public class Barber : BaseEntity
     public long SalonId { get;private set; }
     
     public IReadOnlyCollection<WorkSchedule> WorkSchedules { get; private set; } = null!;
-    public IReadOnlyCollection<Service> Services { get; private set; } = null!;
+    public IReadOnlyCollection<BarberService> BarberServices { get; private set; } = null!;
 }
