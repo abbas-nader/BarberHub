@@ -8,7 +8,7 @@ public class Appointment : BaseEntity
     public DateOnly AppointmentDate {get; private set; }
     public TimeOnly StartTime {get; private set;}
     public TimeOnly EndTime {get; private set;}
-    public Status Status { get; private set; } 
+    public AppointmentStatus AppointmentStatus { get; private set; } 
     public ServiceSnapshot ServiceSnapshot { get; private set; } = null!;
     public Money DepositAmountSnapshot { get; private set; } = null!;
     public DepositPaymentMethod DepositPaymentMethod { get; private set; }
