@@ -1,6 +1,6 @@
 ﻿namespace BarberHub.Domain.Enums;
 
-public enum Currency
+public enum Currency : byte
 {
-    IRR = 1,
+    Irr = 1,
 }
