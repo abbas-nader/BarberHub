@@ -23,5 +23,6 @@ public class Appointment : BaseEntity
     public Customer Customer { get; private set; } = null!;
         
     public long SalonId { get; private set; }
-    
+
+    public IReadOnlyCollection<WalletTransaction> WalletTransactions { get; private set; } = null!;
 }
