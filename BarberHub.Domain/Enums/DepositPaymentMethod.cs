@@ -3,5 +3,5 @@
 public enum DepositPaymentMethod :  byte
 {
     Wallet = 1,
-    GeteWay = 2
+    GateWay = 2
 }
