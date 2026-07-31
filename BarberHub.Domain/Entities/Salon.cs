@@ -10,8 +10,11 @@ public class Salon : BaseEntity
     public string PhoneNumber { get; private set; } = null!;
     public Money DepositAmount { get; private set; } = null!;
     public string? Description { get; private set; }
-    public bool IsActive { get; private set; } 
+    public bool IsActive { get; private set; }
 
+    public IReadOnlyCollection<Barber> Barbers { get; private set; } = null!;
+    public IReadOnlyCollection<Appointment> Appointments { get; private set; } = null!;
+    
     // private Salon()
     // {
     // }
