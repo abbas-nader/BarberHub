@@ -11,8 +11,7 @@ public abstract class BaseEntity
     public long? ModifiedBy { get; private set; }
     public DateTimeOffset? DeletedAt { get; private set; }
     public long? DeletedBy { get; private set; }
-    public bool IsDeleted { get; private set; } 
-
+    public bool IsDeleted  => DeletedAt.HasValue;
     protected BaseEntity()
     {
     }
@@ -34,7 +33,6 @@ public abstract class BaseEntity
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(userId);
         if (IsDeleted) throw new EntityAlreadyDeletedException();
-        IsDeleted = true;
         DeletedAt = DateTimeOffset.UtcNow;
         DeletedBy = userId;
         ModifiedAt = DateTimeOffset.UtcNow;
