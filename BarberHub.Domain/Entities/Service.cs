@@ -9,4 +9,5 @@ public class Service : BaseEntity
     public TimeSpan Duration { get; private set; }
     
     public long SalonId { get; private set; }
+    public Salon Salon { get; private set; } = null!;
 }
