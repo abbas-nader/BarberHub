@@ -14,7 +14,7 @@ public class Salon : BaseEntity
 
     public IReadOnlyCollection<Barber> Barbers { get; private set; } = null!;
     public IReadOnlyCollection<Appointment> Appointments { get; private set; } = null!;
-    
+    public IReadOnlyCollection<Service> Services { get; private set; } = null!;
     // private Salon()
     // {
     // }
