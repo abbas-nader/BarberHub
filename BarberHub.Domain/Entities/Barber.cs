@@ -9,7 +9,7 @@ public class Barber : BaseEntity
     public bool IsActive { get; private set; }
     
     public long SalonId { get;private set; }
-    
+    public Salon Salon { get; private set; } = null!;
     public IReadOnlyCollection<WorkSchedule> WorkSchedules { get; private set; } = null!;
     public IReadOnlyCollection<BarberService> BarberServices { get; private set; } = null!;
 }
