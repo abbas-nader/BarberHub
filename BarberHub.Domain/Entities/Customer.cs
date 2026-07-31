@@ -7,4 +7,5 @@ public class Customer : BaseEntity
     public string MobileNumber { get; private set; } = null!;
 
     public IReadOnlyCollection<Appointment> Appointments { get; private set; } = null!;
+    public IReadOnlyCollection<WalletTransaction> WalletTransactions { get; private set; } = null!;
 }
