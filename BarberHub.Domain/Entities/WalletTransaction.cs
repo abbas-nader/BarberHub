@@ -11,8 +11,5 @@ public class WalletTransaction : BaseEntity
     public Money BalanceAfterTransaction { get; private set; } = null!;
     
     public long CustomerId { get; private set; }
-    public Customer Customer { get; private set; } = null!;
     public long AppointmentId  { get; private set; }
-    public Appointment Appointment { get; private set; } = null!;
-
 }

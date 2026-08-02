@@ -7,5 +7,4 @@ public class SalonAdmin : BaseEntity
     public string PasswordHash { get;private set; } = null!;
     
     public long SalonId { get;private set; }
-    public Salon Salon { get; private set; } = null!;
 }

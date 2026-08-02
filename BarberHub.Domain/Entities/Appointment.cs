@@ -17,11 +17,7 @@ public class Appointment : BaseEntity
     public NoShowDetectionType?  NoShowDetectionType { get; private set; }
     
     public long BarberId { get; private set; }
-    public Barber Barber { get; private set; } = null!;
-    
     public long CustomerId { get; private set; }
-    public Customer Customer { get; private set; } = null!;
-        
     public long SalonId { get; private set; }
 
     public IReadOnlyCollection<WalletTransaction> WalletTransactions { get; private set; } = null!;
