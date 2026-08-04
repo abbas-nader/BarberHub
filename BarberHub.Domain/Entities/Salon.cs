@@ -17,7 +17,6 @@ public class Salon : BaseEntity
     public IReadOnlyCollection<Service> Services { get; private set; } = null!;
     public IReadOnlyCollection<Image> Images { get; private set; } = null!;
     public IReadOnlyCollection<Review> Reviews { get; private set; } = null!;
-    public long SalonAdminId { get; private set; }
     public SalonAdmin SalonAdmin { get; private set; } = null!;
     // private Salon()
     // {

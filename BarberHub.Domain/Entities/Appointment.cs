@@ -19,6 +19,7 @@ public class Appointment : BaseEntity
     public long BarberId { get; private set; }
     public long CustomerId { get; private set; }
     public long SalonId { get; private set; }
-
+    public long BarberServiceId { get; private set; }
+    
     public IReadOnlyCollection<WalletTransaction> WalletTransactions { get; private set; } = null!;
 }
