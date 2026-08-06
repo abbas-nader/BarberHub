@@ -1,5 +1,5 @@
 ﻿using BarberHub.Domain.Exceptions;
-
+using BarberHub.Domain.Constants;
 namespace BarberHub.Domain.Entities;
 
 public class Image : BaseEntity
@@ -48,7 +48,7 @@ public class Image : BaseEntity
 
     public void UpdateCaption(string? caption, long modifiedBy)
     {
-        if (caption is { Length: > 500 })
+        if (caption is { Length: > ImageConstants.CaptionMaxLength })
             throw new CaptionLengthExceededException();
         Caption = caption;
         MarkAsModified(modifiedBy);
