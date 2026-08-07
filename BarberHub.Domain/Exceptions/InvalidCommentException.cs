@@ -1,5 +1,5 @@
 ﻿namespace BarberHub.Domain.Exceptions;
 
-public class InvalidCommentException() : Exception("The mobile number cannot be null or empty.")
+public class InvalidCommentException() : Exception("Comment cannot be null or empty.")
 {
 }

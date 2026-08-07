@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using BarberHub.Domain.Constants;
+﻿using BarberHub.Domain.Constants;
 using BarberHub.Domain.Exceptions;
 
 namespace BarberHub.Domain.Entities;
@@ -9,7 +8,7 @@ public class Review : BaseEntity
     public byte Rating { get; private set; }
     public string Comment { get; private set; } = null!;
     public bool IsApproved { get; private set; }
-    public string? Reply { get; private set; } = null!;
+    public string? Reply { get; private set; }
 
     public long CustomerId { get; private set; }
     public long BarberId { get; private set; }
@@ -20,28 +19,20 @@ public class Review : BaseEntity
     {
     }
 
-    private Review(byte rating, string comment, bool isApproved, long customerId, long barberId, long appointmentId,
-        long salonId,
-        long userId)
+    public Review(byte rating, string comment, long customerId, long barberId, long appointmentId,
+        long salonId, long creationBy)
     {
+        ValidateRating(rating);
+        ValidateComment(comment);
+
         Rating = rating;
         Comment = comment;
-        IsApproved = isApproved;
+        IsApproved = false;
         CustomerId = customerId;
         BarberId = barberId;
         AppointmentId = appointmentId;
         SalonId = salonId;
-    }
-
-    public static Review Create(byte rating, string comment, bool isApproved, long customerId, long barberId,
-        long appointmentId, long salonId,
-        long userId)
-    {
-        ValidateRating(rating);
-        ValidateComment(comment);
-        var review = new Review(rating, comment, isApproved, customerId, barberId, appointmentId, salonId, userId);
-        review.SetCreationInfo(userId);
-        return review;
+        SetCreationInfo(creationBy);
     }
 
     public void EditComment(byte rating, string comment, long customerId)
@@ -53,7 +44,6 @@ public class Review : BaseEntity
             IsApproved = false;
             Reply = null;
         }
-
         MarkAsModified(customerId);
     }
 
@@ -71,7 +61,6 @@ public class Review : BaseEntity
         Reply = reply;
         MarkAsModified(adminId);
     }
-
 
     public void DeleteReply(long userId)
     {
