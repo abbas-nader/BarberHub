@@ -1,5 +1,6 @@
 ﻿using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.Constants;
+
 namespace BarberHub.Domain.Entities;
 
 public class Image : BaseEntity
@@ -17,33 +18,27 @@ public class Image : BaseEntity
     {
     }
 
-    private Image(string imageUrl, string? caption, long salonId, long? barberId = null)
+    public Image(long salonId, string imageUrl, string? caption, long creationBy)
     {
+        if (string.IsNullOrWhiteSpace(imageUrl))
+            throw new InvalidImageUrlException();
+
+        SalonId = salonId;
         ImageUrl = imageUrl;
         Caption = caption;
+        SetCreationInfo(creationBy);
+    }
+
+    public Image(long barberId, long salonId, string imageUrl, string? caption, long creationBy, bool forBarber)
+    {
+        if (string.IsNullOrWhiteSpace(imageUrl))
+            throw new InvalidImageUrlException();
+
         SalonId = salonId;
         BarberId = barberId;
-    }
-
-    private static string CheckImageUrl(string imageUrl)
-    {
-        return string.IsNullOrWhiteSpace(imageUrl) ? throw new InvalidImageUrlException() : imageUrl;
-    }
-
-    public static Image CreateForSalon(long salonId, string imageUrl, string? caption, long creationBy)
-    {
-        var url = CheckImageUrl(imageUrl);
-        var image = new Image(url, caption, salonId);
-        image.SetCreationInfo(creationBy);
-        return image;
-    }
-
-    public static Image CreateForBarber(long barberId, long salonId, string imageUrl, string? caption, long creationBy)
-    {
-        var url = CheckImageUrl(imageUrl);
-        var image = new Image(url, caption, salonId, barberId);
-        image.SetCreationInfo(creationBy);
-        return image;
+        ImageUrl = imageUrl;
+        Caption = caption;
+        SetCreationInfo(creationBy);
     }
 
     public void UpdateCaption(string? caption, long modifiedBy)
