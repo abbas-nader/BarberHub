@@ -6,39 +6,33 @@ public class Customer : BaseEntity
 {
     private readonly List<Appointment> _appointments = [];
     private readonly List<WalletTransaction> _walletTransactions = [];
+
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
     public string MobileNumber { get; private set; } = null!;
 
     public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
-
-    public IReadOnlyCollection<WalletTransaction> WalletTransactions =>
-        _walletTransactions.AsReadOnly();
+    public IReadOnlyCollection<WalletTransaction> WalletTransactions => _walletTransactions.AsReadOnly();
 
     private Customer()
     {
     }
 
-    private Customer(string firstName, string lastName, string mobileNumber)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-        MobileNumber = mobileNumber;
-    }
-
-    public static Customer Create(string firstName, string lastName, string mobileNumber, long creationBy)
+    public Customer(string firstName, string lastName, string mobileNumber, long creationBy)
     {
         ValidateName(firstName, lastName);
         ValidateMobileNumber(mobileNumber);
-        var customer = new Customer(firstName, lastName, mobileNumber);
-        customer.SetCreationInfo(creationBy);
-        return customer;
+
+        FirstName = firstName;
+        LastName = lastName;
+        MobileNumber = mobileNumber;
+        SetCreationInfo(creationBy);
     }
 
     public void UpdateProfile(string firstName, string lastName, string mobileNumber, long modifiedBy)
     {
-       ValidateName(firstName, lastName);
-       ValidateMobileNumber(mobileNumber);
+        ValidateName(firstName, lastName);
+        ValidateMobileNumber(mobileNumber);
         FirstName = firstName;
         LastName = lastName;
         MobileNumber = mobileNumber;
