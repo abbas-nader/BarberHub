@@ -16,14 +16,14 @@ public abstract class BaseEntity
     {
     }
 
-    protected void SetCreationInfo(long createdBy)
+    protected void Creation(long createdBy)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(createdBy);
         CreatedAt = DateTimeOffset.UtcNow;
         CreatedBy = createdBy;
     }
 
-    protected void MarkAsModified(long userId)
+    protected void Modified(long userId)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(userId);
         ModifiedAt = DateTimeOffset.UtcNow;

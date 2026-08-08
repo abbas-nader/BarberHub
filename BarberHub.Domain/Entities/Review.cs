@@ -32,7 +32,7 @@ public class Review : BaseEntity
         BarberId = barberId;
         AppointmentId = appointmentId;
         SalonId = salonId;
-        SetCreationInfo(creationBy);
+        Creation(creationBy);
     }
 
     public void EditComment(byte rating, string comment, long customerId)
@@ -44,14 +44,14 @@ public class Review : BaseEntity
             IsApproved = false;
             Reply = null;
         }
-        MarkAsModified(customerId);
+        Modified(customerId);
     }
 
     public void Approve(long adminId)
     {
         if (IsApproved) throw new ReviewAlreadyApprovedException();
         IsApproved = true;
-        MarkAsModified(adminId);
+        Modified(adminId);
     }
 
     public void InsertReply(string reply, long adminId)
@@ -59,13 +59,13 @@ public class Review : BaseEntity
         if (!IsApproved) throw new ReviewNotApprovedException();
         if (string.IsNullOrWhiteSpace(reply)) throw new InvalidReplyException();
         Reply = reply;
-        MarkAsModified(adminId);
+        Modified(adminId);
     }
 
     public void DeleteReply(long userId)
     {
         Reply = null;
-        MarkAsModified(userId);
+        Modified(userId);
     }
 
     private static void ValidateRating(byte rating)

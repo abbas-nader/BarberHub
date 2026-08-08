@@ -26,7 +26,7 @@ public class Image : BaseEntity
         SalonId = salonId;
         ImageUrl = imageUrl;
         Caption = caption;
-        SetCreationInfo(creationBy);
+        Creation(creationBy);
     }
 
     public Image(long barberId, long salonId, string imageUrl, string? caption, long creationBy, bool forBarber)
@@ -38,7 +38,7 @@ public class Image : BaseEntity
         BarberId = barberId;
         ImageUrl = imageUrl;
         Caption = caption;
-        SetCreationInfo(creationBy);
+        Creation(creationBy);
     }
 
     public void UpdateCaption(string? caption, long modifiedBy)
@@ -46,6 +46,6 @@ public class Image : BaseEntity
         if (caption is { Length: > ImageConstants.CaptionMaxLength })
             throw new CaptionLengthExceededException();
         Caption = caption;
-        MarkAsModified(modifiedBy);
+        Modified(modifiedBy);
     }
 }

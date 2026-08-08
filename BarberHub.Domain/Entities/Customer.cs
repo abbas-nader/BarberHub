@@ -26,7 +26,7 @@ public class Customer : BaseEntity
         FirstName = firstName;
         LastName = lastName;
         MobileNumber = mobileNumber;
-        SetCreationInfo(creationBy);
+        Creation(creationBy);
     }
 
     public void UpdateProfile(string firstName, string lastName, string mobileNumber, long modifiedBy)
@@ -36,7 +36,7 @@ public class Customer : BaseEntity
         FirstName = firstName;
         LastName = lastName;
         MobileNumber = mobileNumber;
-        MarkAsModified(modifiedBy);
+        Modified(modifiedBy);
     }
 
     private static void ValidateName(string firstName, string lastName)
