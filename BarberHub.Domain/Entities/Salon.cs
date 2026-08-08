@@ -1,9 +1,17 @@
-﻿using BarberHub.Domain.ValueObjects;
+﻿using BarberHub.Domain.Constants;
+using BarberHub.Domain.Exceptions;
+using BarberHub.Domain.ValueObjects;
 
 namespace BarberHub.Domain.Entities;
 
 public class Salon : BaseEntity
 {
+    private readonly List<Barber> _barbers = [];
+    private readonly List<Appointment> _appointments = [];
+    private readonly List<Service> _services = [];
+    private readonly List<Image> _images = [];
+    private readonly List<Review> _reviews = [];
+
     public string Name { get; private set; } = null!;
     public string Address { get; private set; } = null!;
     public string City { get; private set; } = null!;
@@ -12,89 +20,107 @@ public class Salon : BaseEntity
     public string? Description { get; private set; }
     public bool IsActive { get; private set; }
 
-    public IReadOnlyCollection<Barber> Barbers { get; private set; } = null!;
-    public IReadOnlyCollection<Appointment> Appointments { get; private set; } = null!;
-    public IReadOnlyCollection<Service> Services { get; private set; } = null!;
-    public IReadOnlyCollection<Image> Images { get; private set; } = null!;
-    public IReadOnlyCollection<Review> Reviews { get; private set; } = null!;
+    public IReadOnlyCollection<Barber> Barbers => _barbers.AsReadOnly();
+    public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
+    public IReadOnlyCollection<Service> Services => _services.AsReadOnly();
+    public IReadOnlyCollection<Image> Images => _images.AsReadOnly();
+    public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
     public SalonAdmin SalonAdmin { get; private set; } = null!;
-    // private Salon()
-    // {
-    // }
-    //
-    // public Salon(string name, string address, string city, string phoneNumber, Money depositAmount,
-    //     string? description)
-    // {
-    //     ValidateName(name);
-    //     ValidateAddress(address);
-    //     ValidateCity(city);
-    //     ValidatePhoneNumber(phoneNumber);
-    //     ValidateDepositAmount(depositAmount);
-    //     ValidateDescription(description);
-    //     Name = name;
-    //     Address = address;
-    //     City = city;
-    //     PhoneNumber = phoneNumber;
-    //     DepositAmount = depositAmount;
-    //     Description = description;
-    //     IsActive = false;
-    // }
-    //
-    // public void UpdateInfo(string name, string address, string city, string phoneNumber, string? description)
-    // {
-    //     ValidateName(name);
-    //     ValidateAddress(address);
-    //     ValidateCity(city);
-    //     ValidatePhoneNumber(phoneNumber);
-    //     ValidateDescription(description);
-    //     Name = name;
-    //     Address = address;
-    //     City = city;
-    //     PhoneNumber = phoneNumber;
-    //     Description = description;
-    // }
-    //
-    // public void UpdateDepositAmount(Money depositAmount)
-    // {
-    //     ValidateDepositAmount(depositAmount);
-    //     DepositAmount = depositAmount;
-    // }
-    //
-    // public void Activate() => IsActive = true;
-    // public void Deactivate() => IsActive = false;
-    //
-    // private static void ValidateName(string name)
-    // {
-    //     if (string.IsNullOrWhiteSpace(name))
-    //         throw new ArgumentException("Salon name cannot be null or empty", nameof(name));
-    // }
-    //
-    // private static void ValidateAddress(string address)
-    // {
-    //     if (string.IsNullOrWhiteSpace(address))
-    //         throw new ArgumentException("Salon address cannot be null or empty", nameof(address));
-    // }
-    //
-    // private static void ValidateCity(string city)
-    // {
-    //     if (string.IsNullOrWhiteSpace(city))
-    //         throw new ArgumentException("Salon city cannot be null or empty", nameof(city));
-    // }
-    //
-    // private static void ValidatePhoneNumber(string phoneNumber)
-    // {
-    //     if (string.IsNullOrWhiteSpace(phoneNumber))
-    //         throw new ArgumentException("Salon phone number cannot be null or empty", nameof(phoneNumber));
-    // }
-    //
-    // private static void ValidateDepositAmount(Money depositAmount)
-    // {
-    //     ArgumentNullException.ThrowIfNull(depositAmount);
-    // }
-    //
-    // private static void ValidateDescription(string? description)
-    // {
-    //     if (description?.Length > 1000)
-    //         throw new ArgumentException("Salon description cannot be more than 1000", nameof(description));
-    // }
+
+    private Salon()
+    {
+    }
+
+    public Salon(string name, string address, string city, string phoneNumber, Money depositAmount,
+        string? description, long creationBy)
+    {
+        ValidateName(name);
+        ValidateAddress(address);
+        ValidateCity(city);
+        ValidatePhoneNumber(phoneNumber);
+        ValidateDepositAmount(depositAmount);
+        ValidateDescription(description);
+
+        Name = name;
+        Address = address;
+        City = city;
+        PhoneNumber = phoneNumber;
+        DepositAmount = depositAmount;
+        Description = description;
+        IsActive = false;
+
+        Creation(creationBy);
+    }
+
+    public void UpdateInfo(string name, string address, string city, string phoneNumber, string? description,
+        long modifiedBy)
+    {
+        ValidateName(name);
+        ValidateAddress(address);
+        ValidateCity(city);
+        ValidatePhoneNumber(phoneNumber);
+        ValidateDescription(description);
+
+        Name = name;
+        Address = address;
+        City = city;
+        PhoneNumber = phoneNumber;
+        Description = description;
+
+        Modified(modifiedBy);
+    }
+
+    public void UpdateDepositAmount(Money depositAmount, long modifiedBy)
+    {
+        ValidateDepositAmount(depositAmount);
+        DepositAmount = depositAmount;
+        Modified(modifiedBy);
+    }
+
+    public void Activate(long modifiedBy)
+    {
+        IsActive = true;
+        Modified(modifiedBy);
+    }
+
+    public void Deactivate(long modifiedBy)
+    {
+        IsActive = false;
+        Modified(modifiedBy);
+    }
+
+    private static void ValidateName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new InvalidSalonNameException();
+    }
+
+    private static void ValidateAddress(string address)
+    {
+        if (string.IsNullOrWhiteSpace(address))
+            throw new InvalidSalonAddressException();
+    }
+
+    private static void ValidateCity(string city)
+    {
+        if (string.IsNullOrWhiteSpace(city))
+            throw new InvalidSalonCityException();
+    }
+
+    private static void ValidatePhoneNumber(string phoneNumber)
+    {
+        if (string.IsNullOrWhiteSpace(phoneNumber))
+            throw new InvalidMobileNumberException();
+    }
+
+    private static void ValidateDepositAmount(Money depositAmount)
+    {
+        throw new InvalidDepositAmountException();
+    }
+
+    private static void ValidateDescription(string? description)
+    {
+        if (description is { Length: > SalonConstants.DescriptionMaxLength })
+            throw new InvalidSalonDescriptionException();
+    }
 }
