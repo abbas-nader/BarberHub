@@ -1,4 +1,5 @@
 ﻿using BarberHub.Domain.Exceptions;
+using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Domain.ValueObjects;
 
@@ -12,9 +13,9 @@ public sealed record ServiceSnapshot
     {
         if (serviceDuration.Ticks <= 0) throw new InvalidServiceDurationSnapshotException();
         if (string.IsNullOrWhiteSpace(serviceName))
-            throw new InvalidServiceNameSnapshotException();
+            throw new RequiredFieldException(serviceName);
         ServiceName = serviceName;
         ServiceDuration = serviceDuration;
-        ServicePrice = servicePrice ?? throw new InvalidServicePriceSnapshotException();
+        ServicePrice = servicePrice ?? throw new RequiredFieldException(serviceName);
     }
 }

@@ -2,7 +2,7 @@
 
 public class SalonAdmin : BaseEntity
 {
-    public string FullName { get; private set; } = null!;
+    public string FullName { get; private set; }
     public string UserName { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
 

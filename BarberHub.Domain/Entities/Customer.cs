@@ -1,4 +1,5 @@
 ﻿using BarberHub.Domain.Exceptions;
+using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Domain.Entities;
 
@@ -42,14 +43,14 @@ public class Customer : BaseEntity
     private static void ValidateName(string firstName, string lastName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            throw new InvalidFirstNameException();
+            throw new RequiredFieldException(firstName);
         if (string.IsNullOrWhiteSpace(lastName))
-            throw new InvalidLastNameException();
+            throw new RequiredFieldException(lastName);
     }
 
     private static void ValidateMobileNumber(string mobileNumber)
     {
-        if (mobileNumber.Length != 11 || !mobileNumber.StartsWith("09"))
-            throw new InvalidMobileNumberException();
+        if (string.IsNullOrWhiteSpace(mobileNumber))
+            throw new RequiredFieldException(mobileNumber);
     }
 }

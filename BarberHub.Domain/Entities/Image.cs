@@ -1,5 +1,6 @@
 ﻿using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.Constants;
+using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Domain.Entities;
 
@@ -21,7 +22,7 @@ public class Image : BaseEntity
     public Image(long salonId, string imageUrl, string? caption, long creationBy)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
-            throw new InvalidImageUrlException();
+            throw new RequiredFieldException(imageUrl);
 
         SalonId = salonId;
         ImageUrl = imageUrl;
@@ -32,7 +33,7 @@ public class Image : BaseEntity
     public Image(long barberId, long salonId, string imageUrl, string? caption, long creationBy, bool forBarber)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
-            throw new InvalidImageUrlException();
+            throw new RequiredFieldException(imageUrl);
 
         SalonId = salonId;
         BarberId = barberId;

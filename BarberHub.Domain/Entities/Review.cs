@@ -1,5 +1,6 @@
 ﻿using BarberHub.Domain.Constants;
 using BarberHub.Domain.Exceptions;
+using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Domain.Entities;
 
@@ -57,7 +58,7 @@ public class Review : BaseEntity
     public void InsertReply(string reply, long adminId)
     {
         if (!IsApproved) throw new ReviewNotApprovedException();
-        if (string.IsNullOrWhiteSpace(reply)) throw new InvalidReplyException();
+        if (string.IsNullOrWhiteSpace(reply)) throw new RequiredFieldException(reply);
         Reply = reply;
         Modified(adminId);
     }
@@ -77,6 +78,6 @@ public class Review : BaseEntity
     private static void ValidateComment(string comment)
     {
         if (string.IsNullOrWhiteSpace(comment))
-            throw new InvalidCommentException();
+            throw new RequiredFieldException(comment);
     }
 }

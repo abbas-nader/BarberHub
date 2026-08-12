@@ -1,5 +1,6 @@
 ﻿using BarberHub.Domain.Constants;
 using BarberHub.Domain.Exceptions;
+using BarberHub.Domain.Exceptions.SharedExceptions;
 using BarberHub.Domain.ValueObjects;
 
 namespace BarberHub.Domain.Entities;
@@ -92,25 +93,25 @@ public class Salon : BaseEntity
     private static void ValidateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new InvalidSalonNameException();
+            throw new RequiredFieldException(name);
     }
 
     private static void ValidateAddress(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
-            throw new InvalidSalonAddressException();
+            throw new RequiredFieldException(address);
     }
 
     private static void ValidateCity(string city)
     {
         if (string.IsNullOrWhiteSpace(city))
-            throw new InvalidSalonCityException();
+            throw new RequiredFieldException(city);
     }
 
     private static void ValidatePhoneNumber(string phoneNumber)
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
-            throw new InvalidMobileNumberException();
+            throw new RequiredFieldException(phoneNumber);
     }
 
     private static void ValidateDepositAmount(Money depositAmount)
