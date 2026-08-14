@@ -6,9 +6,11 @@ namespace BarberHub.Domain.Entities;
 
 public class SalonAdmin : BaseEntity
 {
-    public string FullName { get; private set; }
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
     public string UserName { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
+    public string MobileNumber { get; private set; } = null!;
 
     public long SalonId { get; private set; }
 
@@ -16,37 +18,45 @@ public class SalonAdmin : BaseEntity
     {
     }
 
-    public SalonAdmin(string fullName, string userName, string passwordHash, long salonId, long creationBy)
+    public SalonAdmin(string firstName, string lastName, string userName, string passwordHash, string mobileNumber,
+        long salonId, long creationBy)
     {
-        ValidateFullName(fullName);
+        ValidateName(firstName, lastName);
         ValidateUserName(userName);
         ValidatePasswordHash(passwordHash);
-        FullName = fullName;
+        ValidateMobileNumber(mobileNumber);
+        FirstName = firstName;
+        LastName = lastName;
         UserName = userName;
         PasswordHash = passwordHash;
+        MobileNumber = mobileNumber;
         SalonId = salonId;
         Creation(creationBy);
     }
 
-    private static void ValidateFullName(string fullName)
+    private static void ValidateName(string firstName, string lastName)
     {
-        if (string.IsNullOrWhiteSpace(fullName))
-            throw new RequiredFieldException(nameof(fullName));
-        if (fullName is { Length: > SalonAdminConstants.SalonAdminFullNameMaxLength })
-            throw new InvalidSalonAdminFullNameException();
+        if (string.IsNullOrWhiteSpace(firstName))
+            throw new RequiredFieldException(nameof(firstName));
+        if (string.IsNullOrWhiteSpace(lastName))
+            throw new RequiredFieldException(nameof(lastName));
     }
 
     private static void ValidateUserName(string userName)
     {
         if (string.IsNullOrWhiteSpace(userName))
             throw new RequiredFieldException(nameof(userName));
-        if (userName is { Length: > SalonAdminConstants.SalonAdminUserNameMaxLength })
-            throw new InvalidSalonAdminUserNameException();
     }
 
     private static void ValidatePasswordHash(string passwordHash)
     {
         if (string.IsNullOrWhiteSpace(passwordHash))
             throw new RequiredFieldException(nameof(passwordHash));
+    }
+
+    private static void ValidateMobileNumber(string mobileNumber)
+    {
+        if (string.IsNullOrWhiteSpace(mobileNumber))
+            throw new RequiredFieldException(nameof(mobileNumber));
     }
 }
