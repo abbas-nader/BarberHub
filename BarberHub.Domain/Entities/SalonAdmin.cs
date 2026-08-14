@@ -1,4 +1,8 @@
-﻿namespace BarberHub.Domain.Entities;
+﻿using BarberHub.Domain.Constants;
+using BarberHub.Domain.Exceptions;
+using BarberHub.Domain.Exceptions.SharedExceptions;
+
+namespace BarberHub.Domain.Entities;
 
 public class SalonAdmin : BaseEntity
 {
@@ -15,21 +19,34 @@ public class SalonAdmin : BaseEntity
     public SalonAdmin(string fullName, string userName, string passwordHash, long salonId, long creationBy)
     {
         ValidateFullName(fullName);
-        
+        ValidateUserName(userName);
+        ValidatePasswordHash(passwordHash);
         FullName = fullName;
         UserName = userName;
         PasswordHash = passwordHash;
         SalonId = salonId;
         Creation(creationBy);
     }
+
     private static void ValidateFullName(string fullName)
     {
-        if (string.IsNullOrWhiteSpace(fullName) || fullName is { Length: > 100 })
-            throw new ();
+        if (string.IsNullOrWhiteSpace(fullName))
+            throw new RequiredFieldException(nameof(fullName));
+        if (fullName is { Length: > SalonAdminConstants.SalonAdminFullNameMaxLength })
+            throw new InvalidSalonAdminFullNameException();
     }
+
     private static void ValidateUserName(string userName)
     {
-        if (string.IsNullOrWhiteSpace(userName) || userName is { Length: > 100 })
-            throw new ();
+        if (string.IsNullOrWhiteSpace(userName))
+            throw new RequiredFieldException(nameof(userName));
+        if (userName is { Length: > SalonAdminConstants.SalonAdminUserNameMaxLength })
+            throw new InvalidSalonAdminUserNameException();
+    }
+
+    private static void ValidatePasswordHash(string passwordHash)
+    {
+        if (string.IsNullOrWhiteSpace(passwordHash))
+            throw new RequiredFieldException(nameof(passwordHash));
     }
 }
