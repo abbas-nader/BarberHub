@@ -121,7 +121,7 @@ public class Salon : BaseEntity
 
     private static void ValidateDescription(string? description)
     {
-        if (description is { Length: > SalonConstant.DescriptionMaxLength })
+        if (description is { Length: > SalonConstants.DescriptionMaxLength })
             throw new InvalidSalonDescriptionException();
     }
 }

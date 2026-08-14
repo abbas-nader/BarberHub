@@ -71,7 +71,7 @@ public class Review : BaseEntity
 
     private static void ValidateRating(byte rating)
     {
-        if (rating is < ReviewConstant.RateMinLength or > ReviewConstant.RateMaxLength)
+        if (rating is < ReviewConstants.RateMinLength or > ReviewConstants.RateMaxLength)
             throw new InvalidRatingException();
     }
 
