@@ -34,6 +34,22 @@ public class SalonAdmin : BaseEntity
         Creation(creationBy);
     }
 
+    public void Update(string firstName, string lastName, string userName, string passwordHash, string mobileNumber,
+        long modifiedBy)
+    {
+        ValidateName(firstName, lastName);
+        ValidateUserName(userName);
+        ValidatePasswordHash(passwordHash);
+        ValidateMobileNumber(mobileNumber);
+        FirstName = firstName;
+        LastName = lastName;
+        UserName = userName;
+        PasswordHash = passwordHash;
+        MobileNumber = mobileNumber;
+        Modified(modifiedBy);
+    }
+
+
     private static void ValidateName(string firstName, string lastName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
