@@ -7,7 +7,7 @@ public class Barber : BaseEntity
     private readonly List<WorkSchedule> _workSchedules = [];
     private readonly List<BarberService> _barberServices = [];
     private readonly List<Appointment> _appointments = [];
-    private readonly List<File> _files = [];
+    private readonly List<Gallery> _Images = [];
     private readonly List<Review> _reviews = [];
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
@@ -21,7 +21,7 @@ public class Barber : BaseEntity
     public IReadOnlyCollection<WorkSchedule> WorkSchedules => _workSchedules.AsReadOnly();
     public IReadOnlyCollection<BarberService> BarberServices => _barberServices.AsReadOnly();
     public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
-    public IReadOnlyCollection<File> Files => _files.AsReadOnly();
+    public IReadOnlyCollection<Gallery> Images => _Images.AsReadOnly();
     public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
 
     private Barber()
@@ -49,7 +49,7 @@ public class Barber : BaseEntity
 
     public void Update(string firstName, string lastName, string mobileNumber, string userName,
         string passwordHash,
-        string? description, long salonId, long modifiedBy)
+        string? description, long modifiedBy)
     {
         ValidateFirstName(firstName);
         ValidateLastName(lastName);
