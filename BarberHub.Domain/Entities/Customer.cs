@@ -38,7 +38,7 @@ public class Customer : BaseEntity
         Creation(creationBy);
     }
 
-    public void UpdateProfile(string firstName, string lastName,string userName,string passwordHash, long modifiedBy)
+    public void UpdateProfile(string firstName, string lastName, string userName, string passwordHash, long modifiedBy)
     {
         ValidateName(firstName, lastName);
         ValidateUserName(userName);
@@ -53,7 +53,7 @@ public class Customer : BaseEntity
     public void RequestMobileNumberChange(string newMobileNumber, long modifiedBy)
     {
         ValidateMobileNumber(newMobileNumber);
-        if(newMobileNumber == MobileNumber) return;
+        if (newMobileNumber == MobileNumber) return;
         MobileNumber = newMobileNumber;
         IsMobileVerified = false;
         Modified(modifiedBy);

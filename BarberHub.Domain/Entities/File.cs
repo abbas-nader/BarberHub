@@ -18,11 +18,11 @@ public class File : BaseEntity
 
     public File(string fileName, string originFileName, string url, string contentType, long size, long creationBy)
     {
-       ValidateFileName(fileName);
-       ValidateOriginFileName(originFileName);
-       ValidateUrl(url);
-       ValidateContentType(contentType);
-       ValidateSize(size);
+        ValidateFileName(fileName);
+        ValidateOriginFileName(originFileName);
+        ValidateUrl(url);
+        ValidateContentType(contentType);
+        ValidateSize(size);
         FileName = fileName;
         OriginFileName = originFileName;
         Url = url;
@@ -55,7 +55,8 @@ public class File : BaseEntity
         if (string.IsNullOrWhiteSpace(contentType))
             throw new RequiredFieldException(nameof(contentType));
     }
-private  static void ValidateSize(long size)
+
+    private static void ValidateSize(long size)
     {
         if (size <= FileConstants.SizeMinLength)
             throw new InvalidFileSizeException();

@@ -45,6 +45,7 @@ public class Review : BaseEntity
             IsApproved = false;
             Reply = null;
         }
+
         Modified(customerId);
     }
 
