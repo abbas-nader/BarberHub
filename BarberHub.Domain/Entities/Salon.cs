@@ -93,30 +93,31 @@ public class Salon : BaseEntity
     private static void ValidateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new RequiredFieldException(name);
+            throw new RequiredFieldException(nameof(name));
     }
 
     private static void ValidateAddress(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
-            throw new RequiredFieldException(address);
+            throw new RequiredFieldException(nameof(address));
     }
 
     private static void ValidateCity(string city)
     {
         if (string.IsNullOrWhiteSpace(city))
-            throw new RequiredFieldException(city);
+            throw new RequiredFieldException(nameof(city));
     }
 
     private static void ValidatePhoneNumber(string phoneNumber)
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
-            throw new RequiredFieldException(phoneNumber);
+            throw new RequiredFieldException(nameof(phoneNumber));
     }
 
     private static void ValidateDepositAmount(Money depositAmount)
     {
-        throw new InvalidDepositAmountException();
+        if (depositAmount is null)
+            throw new InvalidDepositAmountException();
     }
 
     private static void ValidateDescription(string? description)
