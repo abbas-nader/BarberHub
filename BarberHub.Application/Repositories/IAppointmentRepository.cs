@@ -2,6 +2,6 @@
 
 namespace BarberHub.Application.Repositories;
 
-public interface IAppointment : IRepository<Domain.Entities.Appointment>
+public interface IAppointmentRepository : IRepository<Appointment>
 {
 }
