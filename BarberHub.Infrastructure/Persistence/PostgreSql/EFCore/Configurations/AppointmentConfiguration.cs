@@ -1,4 +1,5 @@
-﻿using BarberHub.Domain.Entities;
+﻿using BarberHub.Domain.Constants;
+using BarberHub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,30 +16,30 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.ComplexProperty(x => x.DepositAmountSnapshot, money =>
             {
                 money.Property(m => m.Value)
-                    .HasColumnName("DepositAmountValue")
-                    .HasColumnType("numeric(18,2)")
+                    .HasColumnName(AppointmentConstants.DepositAmountValueColumnName)
+                    .HasColumnType(AppointmentConstants.DepositAmountValueColumnType)
                     .IsRequired();
                 money.Property(m => m.Currency)
-                    .HasColumnName("DepositAmountCurrency")
+                    .HasColumnName(AppointmentConstants.DepositAmountCurrencyColumnName)
                     .IsRequired();
             }
         );
         builder.ComplexProperty(x => x.ServiceSnapshot, serviceSnapShot =>
             {
                 serviceSnapShot.Property(s=> s.ServiceName)
-                    .HasColumnName("ServiceName")
+                    .HasColumnName(AppointmentConstants.ServiceNameColumnName)
                     .IsRequired();
                 serviceSnapShot.Property(s=> s.ServiceDuration)
-                    .HasColumnName("ServiceDuration")
+                    .HasColumnName(AppointmentConstants.ServiceDurationColumnName)
                     .IsRequired();
                 serviceSnapShot.ComplexProperty(s => s.ServicePrice, money =>
                 {
                     money.Property(m => m.Value)
-                        .HasColumnName("ServicePriceValue")
-                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName(AppointmentConstants.ServicePriceValueColumnName)
+                        .HasColumnType(AppointmentConstants.ServicePriceColumnType)
                         .IsRequired();
                     money.Property(m => m.Currency)
-                        .HasColumnName("ServicePriceCurrency")
+                        .HasColumnName(AppointmentConstants.ServicePriceCurrencyColumnName)
                         .IsRequired();
                 });
             }
