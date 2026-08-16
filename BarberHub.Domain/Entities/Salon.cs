@@ -10,7 +10,7 @@ public class Salon : BaseEntity
     private readonly List<Barber> _barbers = [];
     private readonly List<Appointment> _appointments = [];
     private readonly List<Service> _services = [];
-    private readonly List<Gallery> _Images = [];
+    private readonly List<Gallery> _galleries = [];
     private readonly List<Review> _reviews = [];
 
     public string Name { get; private set; } = null!;
@@ -24,7 +24,7 @@ public class Salon : BaseEntity
     public IReadOnlyCollection<Barber> Barbers => _barbers.AsReadOnly();
     public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
     public IReadOnlyCollection<Service> Services => _services.AsReadOnly();
-    public IReadOnlyCollection<Gallery> Images => _Images.AsReadOnly();
+    public IReadOnlyCollection<Gallery> Images => _galleries.AsReadOnly();
     public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
     public SalonAdmin SalonAdmin { get; private set; } = null!;
 

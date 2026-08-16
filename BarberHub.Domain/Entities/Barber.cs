@@ -7,7 +7,7 @@ public class Barber : BaseEntity
     private readonly List<WorkSchedule> _workSchedules = [];
     private readonly List<BarberService> _barberServices = [];
     private readonly List<Appointment> _appointments = [];
-    private readonly List<Gallery> _Images = [];
+    private readonly List<Gallery> _galleries = [];
     private readonly List<Review> _reviews = [];
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
@@ -21,7 +21,7 @@ public class Barber : BaseEntity
     public IReadOnlyCollection<WorkSchedule> WorkSchedules => _workSchedules.AsReadOnly();
     public IReadOnlyCollection<BarberService> BarberServices => _barberServices.AsReadOnly();
     public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
-    public IReadOnlyCollection<Gallery> Images => _Images.AsReadOnly();
+    public IReadOnlyCollection<Gallery> Images => _galleries.AsReadOnly();
     public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
 
     private Barber()
