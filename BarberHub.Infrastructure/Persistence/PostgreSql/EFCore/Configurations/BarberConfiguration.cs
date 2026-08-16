@@ -1,4 +1,5 @@
-﻿using BarberHub.Domain.Entities;
+﻿using BarberHub.Domain.Constants;
+using BarberHub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,21 +12,21 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
         builder.HasKey(m => m.Id);
         builder.Property(x => x.FirstName)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(BarberConstants.FirstNameMaxLength);
         builder.Property(x => x.LastName)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(BarberConstants.LastNameMaxLength);
         builder.Property(x => x.MobileNumber)
             .IsRequired()
-            .HasMaxLength(11);
+            .HasMaxLength(BarberConstants.MobileMaxLength);
         builder.Property(x => x.UserName)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(BarberConstants.UserNameMaxLength);
         builder.Property(x => x.PasswordHash)
             .IsRequired()
-            .HasMaxLength(255);
+            .HasMaxLength(BarberConstants.PasswordHashMaxLength);
         builder.Property(x => x.Description)
-            .HasMaxLength(500);
+            .HasMaxLength(BarberConstants.DescriptionMaxLength);
         builder.Property(x => x.IsActive)
             .IsRequired();
 
