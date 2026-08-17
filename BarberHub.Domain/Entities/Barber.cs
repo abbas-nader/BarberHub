@@ -21,7 +21,7 @@ public class Barber : BaseEntity
     public IReadOnlyCollection<WorkSchedule> WorkSchedules => _workSchedules.AsReadOnly();
     public IReadOnlyCollection<BarberService> BarberServices => _barberServices.AsReadOnly();
     public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
-    public IReadOnlyCollection<Gallery> Images => _galleries.AsReadOnly();
+    public IReadOnlyCollection<Gallery> Galleries => _galleries.AsReadOnly();
     public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
 
     private Barber()

@@ -24,7 +24,7 @@ public class Salon : BaseEntity
     public IReadOnlyCollection<Barber> Barbers => _barbers.AsReadOnly();
     public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
     public IReadOnlyCollection<Service> Services => _services.AsReadOnly();
-    public IReadOnlyCollection<Gallery> Images => _galleries.AsReadOnly();
+    public IReadOnlyCollection<Gallery> Galleries => _galleries.AsReadOnly();
     public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
     public SalonAdmin SalonAdmin { get; private set; } = null!;
 
