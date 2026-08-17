@@ -41,18 +41,9 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
             .WithOne()
             .HasForeignKey(w => w.BarberId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasMany(b => b.BarberServices)
-            .WithOne()
-            .HasForeignKey(bs => bs.BarberId)
-            .OnDelete(DeleteBehavior.Cascade);
-        builder.HasMany(b => b.Appointments)
-            .WithOne()
-            .HasForeignKey(bs => bs.BarberId)
-            .OnDelete(DeleteBehavior.Cascade);
         builder.HasMany(b => b.Reviews)
             .WithOne()
             .HasForeignKey(bs => bs.BarberId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
