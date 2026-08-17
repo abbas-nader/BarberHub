@@ -33,10 +33,5 @@ public class CustomerConfigration : IEntityTypeConfiguration<Customer>
             .HasColumnType(CustomerConstants.PasswordColumnType)
             .HasMaxLength(CustomerConstants.PasswordMaxLength)
             .IsRequired();
-        
-        builder.HasMany(x=> x.WalletTransactions)
-            .WithOne()
-            .HasForeignKey(x=> x.CustomerId)
-            .OnDelete(DeleteBehavior.Restrict);
     }
 }
