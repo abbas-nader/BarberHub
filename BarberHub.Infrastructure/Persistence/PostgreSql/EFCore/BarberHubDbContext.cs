@@ -1,8 +1,9 @@
-﻿using BarberHub.Domain.Entities;
+﻿using System.Reflection;
+using BarberHub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using File = BarberHub.Domain.Entities.File;
 
-namespace BarberHub.Infrastructure;
+namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore;
 
 public class BarberHubDbContext(DbContextOptions<BarberHubDbContext> options) : DbContext(options)
 {
@@ -18,4 +19,9 @@ public class BarberHubDbContext(DbContextOptions<BarberHubDbContext> options) : 
     public DbSet<BarberService> BarberServices { get; set; }
     public DbSet<WalletTransaction> WalletTransactions { get; set; }
     public DbSet<WorkSchedule> WorkSchedules { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
 }
