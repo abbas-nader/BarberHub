@@ -16,10 +16,5 @@ public class WorkScheduleConfiguration  :IEntityTypeConfiguration<WorkSchedule>
             .IsRequired();
         builder.Property(x=>x.DayOfWeek)
             .IsRequired();
-        
-       builder.HasOne<Barber>()
-           .WithMany(x=>x.WorkSchedules)
-           .HasForeignKey(x=>x.BarberId)
-           .OnDelete(DeleteBehavior.Cascade);
     }
 }
