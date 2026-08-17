@@ -26,10 +26,10 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         );
         builder.ComplexProperty(x => x.ServiceSnapshot, serviceSnapShot =>
             {
-                serviceSnapShot.Property(s=> s.ServiceName)
+                serviceSnapShot.Property(s => s.ServiceName)
                     .HasColumnName(AppointmentConstants.ServiceNameColumnName)
                     .IsRequired();
-                serviceSnapShot.Property(s=> s.ServiceDuration)
+                serviceSnapShot.Property(s => s.ServiceDuration)
                     .HasColumnName(AppointmentConstants.ServiceDurationColumnName)
                     .IsRequired();
                 serviceSnapShot.ComplexProperty(s => s.ServicePrice, money =>
@@ -45,25 +45,24 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             }
         );
         builder.HasOne<Barber>()
-            .WithMany(a=> a.Appointments)
+            .WithMany(a => a.Appointments)
             .HasForeignKey(b => b.BarberId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<Customer>()
-            .WithMany(a=> a.Appointments)
+            .WithMany(a => a.Appointments)
             .HasForeignKey(b => b.CustomerId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<Salon>()
-            .WithMany(a=> a.Appointments)
+            .WithMany(a => a.Appointments)
             .HasForeignKey(b => b.SalonId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<BarberService>()
             .WithMany()
             .HasForeignKey(b => b.BarberServiceId)
             .OnDelete(DeleteBehavior.Restrict);
-        builder.HasMany(w=> w.WalletTransactions)
+        builder.HasMany(w => w.WalletTransactions)
             .WithOne()
             .HasForeignKey(a => a.AppointmentId)
             .OnDelete(DeleteBehavior.Restrict);
-             
     }
 }
