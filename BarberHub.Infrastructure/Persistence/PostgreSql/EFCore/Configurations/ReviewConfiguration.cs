@@ -26,7 +26,7 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
             .HasForeignKey(x => x.CustomerId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<Barber>()
-            .WithMany()
+            .WithMany(x=> x.Reviews)
             .HasForeignKey(x => x.BarberId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<Appointment>()
@@ -34,7 +34,7 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
             .HasForeignKey<Review>(x => x.AppointmentId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<Salon>()
-            .WithMany()
+            .WithMany(x=> x.Reviews)
             .HasForeignKey(x => x.SalonId)
             .OnDelete(DeleteBehavior.Restrict);
         
