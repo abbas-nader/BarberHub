@@ -42,7 +42,7 @@ public class Customer : BaseEntity
     {
         ValidateName(firstName, lastName);
         ValidateUserName(userName);
-        ValidatePasswordHash(PasswordHash);
+        ValidatePasswordHash(passwordHash);
         FirstName = firstName;
         LastName = lastName;
         UserName = userName;
