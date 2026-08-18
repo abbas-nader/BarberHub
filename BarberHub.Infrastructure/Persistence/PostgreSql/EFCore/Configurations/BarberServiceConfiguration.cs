@@ -21,12 +21,12 @@ public class BarberServiceConfiguration : IEntityTypeConfiguration<BarberService
                     .IsRequired();
             }
         );
-        builder.HasOne<Service>()
+          builder.HasOne(x => x.Service)
             .WithMany()
             .HasForeignKey(x => x.ServiceId)
             .OnDelete(DeleteBehavior.Restrict);
-        builder.HasOne<Barber>()
-            .WithMany()
+        builder.HasOne(x => x.Barber)
+            .WithMany(b => b.BarberServices)
             .HasForeignKey(x => x.BarberId)
             .OnDelete(DeleteBehavior.Restrict);
     }
