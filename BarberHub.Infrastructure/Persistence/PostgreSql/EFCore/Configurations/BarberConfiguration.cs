@@ -29,10 +29,7 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
             .HasMaxLength(BarberConstants.DescriptionMaxLength);
         builder.Property(x => x.IsActive)
             .IsRequired();
-
-        builder.HasIndex(x => x.UserName).IsUnique();
-        builder.HasIndex(x => x.PasswordHash).IsUnique();
-
+        
         builder.HasOne<Salon>()
             .WithMany(b => b.Barbers)
             .HasForeignKey(m => m.SalonId)
