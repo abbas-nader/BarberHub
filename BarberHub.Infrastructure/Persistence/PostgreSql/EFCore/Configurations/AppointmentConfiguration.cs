@@ -28,6 +28,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             {
                 serviceSnapShot.Property(s => s.ServiceName)
                     .HasColumnName(AppointmentConstants.ServiceNameColumnName)
+                    .HasColumnType(AppointmentConstants.ServiceNameColumnType)
                     .IsRequired();
                 serviceSnapShot.Property(s => s.ServiceDuration)
                     .HasColumnName(AppointmentConstants.ServiceDurationColumnName)
