@@ -32,5 +32,8 @@ public class SalonAdminConfiguration  :IEntityTypeConfiguration<SalonAdmin>
             .WithOne(x=> x.SalonAdmin)
             .HasForeignKey<SalonAdmin>(x=>x.SalonId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(x => x.UserName).IsUnique();
+        builder.HasIndex(x => x.PasswordHash).IsUnique();
     }
 }
