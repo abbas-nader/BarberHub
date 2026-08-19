@@ -40,5 +40,8 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
             .WithOne()
             .HasForeignKey(w => w.BarberId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasIndex(x => x.UserName).IsUnique();
+        builder.HasIndex(x => x.PasswordHash).IsUnique();
     }
 }
