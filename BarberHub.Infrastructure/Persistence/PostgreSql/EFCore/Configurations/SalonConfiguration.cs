@@ -33,6 +33,8 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
                 .HasColumnName(SalonConstants.DepositAmountCurrencyCodeColumnName)
                 .IsRequired();
         });
+        builder.Property(x => x.Description)
+            .HasMaxLength(SalonConstants.DescriptionMaxLength);
         builder.Property(x=> x.IsActive)
             .IsRequired();
         
