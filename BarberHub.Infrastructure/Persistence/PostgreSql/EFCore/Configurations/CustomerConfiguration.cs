@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Configurations;
 
-public class CustomerConfigration : IEntityTypeConfiguration<Customer>
+public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {
     public void Configure(EntityTypeBuilder<Customer> builder)
     {
@@ -33,5 +33,8 @@ public class CustomerConfigration : IEntityTypeConfiguration<Customer>
             .HasColumnType(CustomerConstants.PasswordColumnType)
             .HasMaxLength(CustomerConstants.PasswordMaxLength)
             .IsRequired();
+        
+        builder.HasIndex(x => x.UserName).IsUnique();
+        builder.HasIndex(x => x.PasswordHash).IsUnique();
     }
 }
