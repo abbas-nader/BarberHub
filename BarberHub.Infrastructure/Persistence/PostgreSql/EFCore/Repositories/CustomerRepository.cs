@@ -3,6 +3,6 @@ using BarberHub.Domain.Entities;
 
 namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
 
-public class CustomerRepository(BarberHubDbContext context) : BaseRepository<Barber>(context), IBarberRepository
+public class CustomerRepository(BarberHubDbContext context) : BaseRepository<Customer>(context), ICustomerRepository
 {
 }
