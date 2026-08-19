@@ -27,6 +27,8 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
             .HasMaxLength(BarberConstants.PasswordHashMaxLength);
         builder.Property(x => x.Description)
             .HasMaxLength(BarberConstants.DescriptionMaxLength);
+        builder.Property(x=> x.Description)
+            .HasMaxLength(BarberConstants.DescriptionMaxLength);
         builder.Property(x => x.IsActive)
             .IsRequired();
         
