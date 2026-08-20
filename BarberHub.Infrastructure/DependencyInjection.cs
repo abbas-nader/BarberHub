@@ -1,11 +1,11 @@
 ﻿using BarberHub.Application.Repositories;
+using BarberHub.Application.Security;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
+using BarberHub.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using File = BarberHub.Domain.Entities.File;
-
 namespace BarberHub.Infrastructure;
 
 public static class DependencyInjection
@@ -26,5 +26,6 @@ public static class DependencyInjection
         services.AddScoped<ISalonAdminRepository, SalonAdminRepository>();
         services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
         services.AddScoped<IWorkScheduleRepository, WorkScheduleRepository>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
     }
 }
