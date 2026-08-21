@@ -28,7 +28,7 @@ public class BarberService : BaseEntity
 
     public void Update(Money money , long modifiedBy)
     {
-        Money = money ?? throw new RequiredFieldException(nameof(Money));
+        Money = money ?? throw new RequiredFieldException(nameof(money));
         Modified(modifiedBy);
     }
 }
