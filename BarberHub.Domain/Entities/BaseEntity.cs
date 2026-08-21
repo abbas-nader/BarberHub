@@ -16,21 +16,21 @@ public abstract class BaseEntity
     {
     }
 
-    protected void Creation(long createdBy)
+    public void Creation(long createdBy)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(createdBy);
         CreatedAt = DateTimeOffset.UtcNow;
         CreatedBy = createdBy;
     }
 
-    protected void Modified(long userId)
+    public void Modified(long userId)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(userId);
         ModifiedAt = DateTimeOffset.UtcNow;
         ModifiedBy = userId;
     }
 
-    protected void SoftDelete(long userId)
+    public void SoftDelete(long userId)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(userId);
         if (IsDeleted) throw new EntityAlreadyDeletedException();
