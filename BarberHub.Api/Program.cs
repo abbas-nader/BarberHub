@@ -1,4 +1,6 @@
+using BarberHub.Application;
 using BarberHub.Infrastructure;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,15 +8,30 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplications();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithTitle("BarberHub API");
+
+        // var descriptions = app.DescribeApiVersions();
+        //
+        // for (var index = 0; index < descriptions.Count; index++)
+        // {
+        //     var description = descriptions[index];
+        //     var isDefault = index == 0;
+        //
+        //     options.AddDocument(
+        //         description.GroupName,
+        //         description.GroupName.ToUpperInvariant(),
+        //         isDefault: isDefault);
+        // }
+    });
 }
 
 app.UseHttpsRedirection();
