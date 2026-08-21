@@ -21,9 +21,6 @@
 
     <ItemGroup>
       <Folder Include="Controllers\" />
-      <Folder Include="Filters\" />
-      <Folder Include="Validators\Messages\" />
-      <Folder Include="Validators\Validations\Barber\" />
     </ItemGroup>
 
     <ItemGroup>
