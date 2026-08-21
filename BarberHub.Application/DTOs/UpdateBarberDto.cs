@@ -7,6 +7,5 @@ public record UpdateBarberDto(
     string MobileNumber,
     string Username,
     string? Password,
-    string? Description,
-    bool IsActive
+    string? Description
 );
