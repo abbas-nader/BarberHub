@@ -1,5 +1,7 @@
+using BarberHub.Api.Contracts.Barber;
 using BarberHub.Application;
 using BarberHub.Infrastructure;
+using FluentValidation;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplications();
+
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
