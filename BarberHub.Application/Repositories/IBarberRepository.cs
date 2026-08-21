@@ -2,7 +2,8 @@
 
 namespace BarberHub.Application.Repositories;
 
-public interface IBarberRepository:IRepository<Barber>
+public interface IBarberRepository : IRepository<Barber>
 {
     Task<bool> ExistsByUserNameAsync(string userName, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Barber>> GetAllBySalonIdAsync(long salonId, CancellationToken cancellationToken = default);
 }
