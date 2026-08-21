@@ -8,4 +8,5 @@ public class BarberConstants
     public const int UserNameMaxLength = 50;
     public const int PasswordHashMaxLength = 255;
     public const int DescriptionMaxLength = 255;
+    public const int SalonMinValidValue  = 0;
 }
