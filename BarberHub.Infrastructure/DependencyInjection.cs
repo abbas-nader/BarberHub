@@ -1,11 +1,14 @@
 ﻿using BarberHub.Application.Repositories;
 using BarberHub.Application.Security;
+using BarberHub.Infrastructure.Persistence.Mongo;
+using BarberHub.Infrastructure.Persistence.Mongo.Repositories;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
 using BarberHub.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 namespace BarberHub.Infrastructure;
 
 public static class DependencyInjection
@@ -27,5 +30,17 @@ public static class DependencyInjection
         services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
         services.AddScoped<IWorkScheduleRepository, WorkScheduleRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+        services.AddMongo(configuration);
+    }
+
+    private static void AddMongo(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<MongoSetting>(configuration.GetSection(MongoSetting.SectionName));
+
+        MongoMappingConfig.Register();
+
+        services.AddSingleton<MongoContext>();
+        services.AddScoped<IExceptionLogRepository, ExceptionLogRepository>();
     }
 }
