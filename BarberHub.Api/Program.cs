@@ -1,10 +1,9 @@
 using Asp.Versioning;
-using BarberHub.Api.Contracts.Barber;
+using BarberHub.Api.Filters;
 using BarberHub.Api.Middleware;
 using BarberHub.Application;
 using BarberHub.Infrastructure;
 using FluentValidation;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplications();
 
@@ -30,28 +30,27 @@ builder.Services.AddApiVersioning(options =>
         options.SubstituteApiVersionInUrl = true;
     }
 );
-
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>();
+    options.Filters.Add<ApiResultFilter>();
+});
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapScalarApiReference(options =>
-    {
-        options.WithTitle("BarberHub API");
+    var apiVersionDescriptionProvider = app.Services.GetRequiredService<Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider>();
 
-        // var descriptions = app.DescribeApiVersions();
-        //
-        // for (var index = 0; index < descriptions.Count; index++)
-        // {
-        //     var description = descriptions[index];
-        //     var isDefault = index == 0;
-        //
-        //     options.AddDocument(
-        //         description.GroupName,
-        //         description.GroupName.ToUpperInvariant(),
-        //         isDefault: isDefault);
-        // }
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint(
+                $"/swagger/{description.GroupName}/swagger.json",
+                description.GroupName.ToUpperInvariant());
+        }
     });
 }
 
