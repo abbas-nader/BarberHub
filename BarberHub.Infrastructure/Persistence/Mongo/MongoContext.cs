@@ -12,7 +12,7 @@ public class MongoContext
     {
         _settings = settings.Value;
         var client = new MongoClient(_settings.ConnectionString);
-        var database = client.GetDatabase(_settings.DatabaseName);
+        Database = client.GetDatabase(_settings.DatabaseName);
     }
 
     public IMongoDatabase Database { get; }
