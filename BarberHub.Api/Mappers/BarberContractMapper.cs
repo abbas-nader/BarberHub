@@ -15,24 +15,25 @@ public static class BarberContractMapper
             dto.IsActive
         );
 
-    public static CreateBarberRequest ToDto(this CreateBarberDto dto) =>
+    public static CreateBarberDto ToDto(this CreateBarberRequest request) =>
         new(
-            dto.FirstName,
-            dto.LastName,
-            dto.MobileNumber,
-            dto.Username,
-            dto.Password,
-            dto.Description,
-            dto.SalonId
+            request.FirstName,
+            request.LastName,
+            request.MobileNumber,
+            request.Username,
+            request.Password,
+            request.Description,
+            request.SalonId
         );
 
-    public static UpdateBarberRequest ToDto(this UpdateBarberDto dto) =>
+    public static UpdateBarberDto ToDto(this UpdateBarberRequest request) =>
         new(
-            dto.FirstName,
-            dto.LastName,
-            dto.MobileNumber,
-            dto.Username,
-            dto.Password,
-            dto.Description
+            request.Id,
+            request.FirstName,
+            request.LastName,
+            request.MobileNumber,
+            request.Username,
+            request.Password,
+            request.Description
         );
 }
