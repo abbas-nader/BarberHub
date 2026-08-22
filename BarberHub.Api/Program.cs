@@ -1,4 +1,6 @@
+using Asp.Versioning;
 using BarberHub.Api.Contracts.Barber;
+using BarberHub.Api.Middleware;
 using BarberHub.Application;
 using BarberHub.Infrastructure;
 using FluentValidation;
@@ -15,8 +17,21 @@ builder.Services.AddApplications();
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
-var app = builder.Build();
+builder.Services.AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    }
+).AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    }
+);
 
+var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
