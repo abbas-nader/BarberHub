@@ -1,60 +1,46 @@
-﻿using BarberHub.Api.Contracts;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace BarberHub.Api.Filters;
 
-public class ValidationFilter : IAsyncResultFilter
+public class ValidationFilter(IServiceProvider serviceProvider) : IAsyncActionFilter
 {
-     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        if (context.Result is ApiResult or ApiResult<object>)
-        {
-            await next();
-            return;
-        }
-        int statusCode;
+        var errors = new Dictionary<string, string[]>();
 
-        switch (context.Result)
+        foreach (var parameter in context.ActionDescriptor.Parameters)
         {
-            case OkObjectResult okResult:
-                statusCode = StatusCodes.Status200OK;
-                WrapObjectResult(okResult, statusCode);
-                break;
-            case CreatedResult createdResult:
-                statusCode = StatusCodes.Status201Created;
-                WrapObjectResult(createdResult, statusCode);
-                break;
-            case AcceptedResult acceptedResult:
-                statusCode = StatusCodes.Status202Accepted;
-                WrapObjectResult(acceptedResult, statusCode);
-                break;
-            case NotFoundResult:
-                statusCode = StatusCodes.Status404NotFound;
-                context.Result = new ObjectResult(ApiResult.Failed(null, statusCode))
-                { StatusCode = statusCode };
-                break;
-            case NoContentResult:
-                statusCode = StatusCodes.Status204NoContent;
-                context.Result = new ObjectResult(ApiResult.NoContent())
-                { StatusCode = statusCode };
-                break;
-            case ObjectResult { StatusCode: not null } objectResult:
-                statusCode = objectResult.StatusCode.Value;
-                WrapObjectResult(objectResult, statusCode);
-                break;
+            if (!context.ActionArguments.TryGetValue(parameter.Name, out var argument) || argument is null)
+                continue;
+            var validator = serviceProvider.GetService(
+                typeof(IValidator<>).MakeGenericType(argument.GetType())) as IValidator;
+
+            if (validator is null)
+                continue;
+
+            var validationContext = new ValidationContext<object>(argument);
+            var result = await validator.ValidateAsync(validationContext, context.HttpContext.RequestAborted);
+
+            if (result.IsValid)
+                continue;
+
+            foreach (var group in result.Errors.GroupBy(e => e.PropertyName))
+                errors[group.Key] = group.Select(e => e.ErrorMessage).ToArray();
+        }
+
+        if (errors.Count > 0)
+        {
+            context.Result = new BadRequestObjectResult(new ValidationProblemDetails(errors)
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "BadRequest",
+                Detail = "One or more validation errors occurred."
+            });
+            return;
         }
 
         await next();
-    }
-
-    private static void WrapObjectResult(ObjectResult objectResult, int statusCode)
-    {
-        var apiResult = statusCode is >= 200 and < 300
-            ? ApiResult<object?>.Succeeded(objectResult.Value, statusCode)
-            : ApiResult.Failed(objectResult.Value, statusCode);
-
-        objectResult.Value = apiResult;
-        objectResult.StatusCode = statusCode;
     }
 }
