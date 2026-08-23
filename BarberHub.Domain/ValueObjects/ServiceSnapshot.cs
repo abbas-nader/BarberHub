@@ -20,6 +20,6 @@ public abstract record ServiceSnapshot
             throw new RequiredFieldException(serviceName);
         ServiceName = serviceName;
         ServiceDuration = serviceDuration;
-        ServicePrice = servicePrice ?? throw new RequiredFieldException(serviceName);
+        ServicePrice = servicePrice ?? throw new RequiredFieldException(nameof(servicePrice));
     }
 }
