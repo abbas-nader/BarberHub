@@ -30,11 +30,9 @@ public class Appointment : BaseEntity
     {
     }
 
-    public Appointment(DateOnly appointmentDate, TimeOnly startTime, TimeOnly endTime,
-        AppointmentStatus appointmentStatus, ServiceSnapshot serviceSnapshot, Money depositAmountSnapshot,
-        DepositPaymentMethod depositPaymentMethod, DepositStatus depositStatus, DateTimeOffset? cancelledAt,
-        NoShowDetectionType? noShowDetectionType, long barberId, long customerId, long salonId, long barberServiceId,
-        long creationBy)
+    public Appointment(DateOnly appointmentDate, TimeOnly startTime, TimeOnly endTime, ServiceSnapshot serviceSnapshot,
+        Money depositAmountSnapshot, DepositPaymentMethod depositPaymentMethod, long barberId, long customerId,
+        long salonId, long barberServiceId, long creationBy)
     {
         ValidateDate(appointmentDate);
         ValidateTimes(startTime, endTime);
@@ -91,6 +89,7 @@ public class Appointment : BaseEntity
         DepositStatus = depositStatus;
         Modified(modifiedBy);
     }
+
     private void EnsureIsConfirmed()
     {
         if (AppointmentStatus != AppointmentStatus.Confirmed)
