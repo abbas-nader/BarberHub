@@ -19,7 +19,7 @@ public abstract class BaseRepository<TEntity>(BarberHubDbContext barberHubDbCont
     public async Task<PaginatedResult<TEntity>> GetPagedAsync(int pageNumber, int pageSize,
         CancellationToken cancellationToken = default)
     {
-        var totalCount = _dbSet.Count();
+        var totalCount =await _dbSet.CountAsync(cancellationToken);
         var items = await _dbSet.AsNoTracking()
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
