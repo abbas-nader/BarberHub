@@ -12,7 +12,7 @@ namespace BarberHub.Api.Controllers.V1;
 public class BarberController(BarberService barberService) : BaseController
 {
     [HttpGet(BarberUriConstants.GetAllBySalonId)]
-    public async Task<IReadOnlyList<BarberResponse>> GetAllBySalonIdAsync(long salonId,
+    public async Task<ApiResult<IReadOnlyList<BarberResponse>>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken)
     {
         var barbers = await barberService.GetAllBySalonIdAsync(salonId, cancellationToken);
@@ -20,7 +20,7 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpGet(BarberUriConstants.GetById)]
-    public async Task<BarberResponse> GetByIdAsync(long barberId, CancellationToken cancellationToken)
+    public async Task<ApiResult<BarberResponse>> GetByIdAsync(long barberId, CancellationToken cancellationToken)
     {
         var barber = await barberService.GetByIdAsync(barberId, cancellationToken);
         return barber.ToResponse();
