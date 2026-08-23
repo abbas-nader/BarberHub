@@ -43,15 +43,15 @@ public class UpdateBarberValidator : AbstractValidator<UpdateBarberRequest>
             .Matches(@"^\S+$")
             .WithMessage(UpdateBarberValidationMessages.UsernameInvalidFormat);
         RuleFor(x => x.Password)
-            .NotEmpty()
-            .WithMessage(UpdateBarberValidationMessages.PropertyRequired(nameof(UpdateBarberValidationMessages
-                .PasswordProperty)))
             .MinimumLength(PasswordValidationMessages.MinLength)
-            .WithMessage(UpdateBarberValidationMessages.PropertyMinLength(nameof(UpdateBarberValidationMessages
-                .PasswordProperty)))
+            .WithMessage(
+                UpdateBarberValidationMessages.PropertyMinLength(
+                    nameof(UpdateBarberValidationMessages.PasswordProperty)))
             .MaximumLength(PasswordValidationMessages.MaxLength)
-            .WithMessage(UpdateBarberValidationMessages.PropertyMaxLength(nameof(UpdateBarberValidationMessages
-                .PasswordProperty)));
+            .WithMessage(
+                UpdateBarberValidationMessages.PropertyMaxLength(
+                    nameof(UpdateBarberValidationMessages.PasswordProperty)))
+            .When(x => !string.IsNullOrWhiteSpace(x.Password));
         RuleFor(x => x.Description)
             .MaximumLength(BarberConstants.DescriptionMaxLength)
             .WithMessage(UpdateBarberValidationMessages.PropertyMaxLength(nameof(UpdateBarberValidationMessages
