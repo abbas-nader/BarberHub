@@ -6,13 +6,14 @@ namespace BarberHub.Api.Filters;
 
 public class ApiResultFilter : IAsyncResultFilter
 {
-     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+    public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
         if (context.Result is ApiResult or ApiResult<object>)
         {
             await next();
             return;
         }
+
         int statusCode;
 
         switch (context.Result)
@@ -32,12 +33,12 @@ public class ApiResultFilter : IAsyncResultFilter
             case NotFoundResult:
                 statusCode = StatusCodes.Status404NotFound;
                 context.Result = new ObjectResult(ApiResult.Failed(null, statusCode))
-                { StatusCode = statusCode };
+                    { StatusCode = statusCode };
                 break;
             case NoContentResult:
                 statusCode = StatusCodes.Status204NoContent;
                 context.Result = new ObjectResult(ApiResult.NoContent())
-                { StatusCode = statusCode };
+                    { StatusCode = statusCode };
                 break;
             case ObjectResult { StatusCode: not null } objectResult:
                 statusCode = objectResult.StatusCode.Value;
@@ -50,10 +51,9 @@ public class ApiResultFilter : IAsyncResultFilter
 
     private static void WrapObjectResult(ObjectResult objectResult, int statusCode)
     {
-        var apiResult = statusCode is >= 200 and < 300
+        ApiResult apiResult = statusCode is >= 200 and < 300
             ? ApiResult<object?>.Succeeded(objectResult.Value, statusCode)
             : ApiResult.Failed(objectResult.Value, statusCode);
-
         objectResult.Value = apiResult;
         objectResult.StatusCode = statusCode;
     }
