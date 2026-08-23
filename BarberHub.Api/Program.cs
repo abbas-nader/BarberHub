@@ -32,8 +32,8 @@ builder.Services.AddApiVersioning(options =>
 );
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add<ValidationFilter>();
     options.Filters.Add<ApiResultFilter>();
+    options.Filters.Add<ValidationFilter>();
 });
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
