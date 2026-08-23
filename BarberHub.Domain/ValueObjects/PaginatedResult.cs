@@ -6,11 +6,11 @@ namespace BarberHub.Domain.ValueObjects;
 
 public record PaginatedResult<T>
 {
-    public IReadOnlyCollection<T> Items { get; init; }
-    public int PageNumber { get; init; }
-    public int PageSize { get; init; }
+    public IReadOnlyCollection<T> Items { get; private init; }
+    public int PageNumber { get; private init; }
+    public int PageSize { get; private init; }
     public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
-    public int TotalCount { get; init; }
+    public int TotalCount { get; private init; }
 
     public PaginatedResult(IReadOnlyCollection<T> items, int pageNumber, int pageSize, int totalCount)
     {
