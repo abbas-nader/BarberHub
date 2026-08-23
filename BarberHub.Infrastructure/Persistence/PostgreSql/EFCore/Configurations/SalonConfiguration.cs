@@ -37,10 +37,5 @@ public class SalonConfiguration : IEntityTypeConfiguration<Salon>
             .HasMaxLength(SalonConstants.DescriptionMaxLength);
         builder.Property(x=> x.IsActive)
             .IsRequired();
-        
-        builder.HasMany(x=>x.Services)
-            .WithOne()
-            .HasForeignKey(x=>x.SalonId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

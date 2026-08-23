@@ -18,5 +18,10 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
             .HasMaxLength(ServiceConstants.DescriptionMaxLength);
         builder.Property(x => x.Duration)
             .IsRequired();
+        
+        builder.HasOne<Service>()
+            .WithMany()
+            .HasForeignKey(x=>x.SalonId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
