@@ -59,7 +59,7 @@ public class Review : BaseEntity
     public void InsertReply(string reply, long adminId)
     {
         if (!IsApproved) throw new ReviewNotApprovedException();
-        if (string.IsNullOrWhiteSpace(reply)) throw new RequiredFieldException(reply);
+        if (string.IsNullOrWhiteSpace(reply)) throw new RequiredFieldException(nameof(reply));
         Reply = reply;
         Modified(adminId);
     }
@@ -79,6 +79,6 @@ public class Review : BaseEntity
     private static void ValidateComment(string comment)
     {
         if (string.IsNullOrWhiteSpace(comment))
-            throw new RequiredFieldException(comment);
+            throw new RequiredFieldException(nameof(comment));
     }
 }
