@@ -45,12 +45,12 @@ public class CreateBarberValidator : AbstractValidator<CreateBarberRequest>
         RuleFor(x => x.Password)
             .MinimumLength(PasswordValidationMessages.MinLength)
             .WithMessage(
-                UpdateBarberValidationMessages.PropertyMinLength(
-                    nameof(UpdateBarberValidationMessages.PasswordProperty)))
+                CreateBarberValidationMessages.PropertyMinLength(
+                    nameof(CreateBarberValidationMessages.PasswordProperty)))
             .MaximumLength(PasswordValidationMessages.MaxLength)
             .WithMessage(
-                UpdateBarberValidationMessages.PropertyMaxLength(
-                    nameof(UpdateBarberValidationMessages.PasswordProperty)))
+                CreateBarberValidationMessages.PropertyMaxLength(
+                    nameof(CreateBarberValidationMessages.PasswordProperty)))
             .When(x => !string.IsNullOrWhiteSpace(x.Password));
         RuleFor(x => x.Description)
             .MaximumLength(BarberConstants.DescriptionMaxLength)
