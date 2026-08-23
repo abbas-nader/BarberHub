@@ -63,7 +63,6 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         if (barber == null)
             throw new EntityNotFoundException(nameof(Barber), id);
         barber.SoftDelete(deletedBy);
-        barberRepository.Update(barber);
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
     }
@@ -88,7 +87,7 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         return ToDto(barber);
     }
     private static BarberDto ToDto(Barber barber)
-        => new BarberDto(
+        => new(
             barber.Id,
             barber.FirstName,
             barber.LastName,
