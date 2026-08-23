@@ -29,7 +29,7 @@ public class Service : BaseEntity
         Creation(creationBy);
     }
 
-    public void UpdateService(string name, string? description, TimeSpan duration, long salonId, long modifiedBy)
+    public void UpdateService(string name, string? description, TimeSpan duration, long modifiedBy)
     {
         ValidateName(name);
         ValidateDescription(description);
