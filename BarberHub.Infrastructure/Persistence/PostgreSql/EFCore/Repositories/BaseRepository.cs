@@ -1,20 +1,23 @@
 ﻿using BarberHub.Application.Repositories;
+using BarberHub.Domain.Entities;
 using BarberHub.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
 
 public abstract class BaseRepository<TEntity>(BarberHubDbContext barberHubDbContext)
-    : IRepository<TEntity> where TEntity : class
+    : IRepository<TEntity> where TEntity : BaseEntity
 {
     protected readonly BarberHubDbContext BarberHubDbContext = barberHubDbContext;
     private readonly DbSet<TEntity> _dbSet = barberHubDbContext.Set<TEntity>();
 
     public async Task<TEntity?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
-        => await _dbSet.FindAsync([id], cancellationToken);
+        => await _dbSet.FirstOrDefaultAsync(x=> x.Id == id && x.IsDeleted == false, cancellationToken);
 
     public async Task<IReadOnlyCollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
-        => await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
+        => await _dbSet.AsNoTracking()
+            .Where(x => x.IsDeleted == false)
+            .ToListAsync(cancellationToken);
 
     public async Task<PaginatedResult<TEntity>> GetPagedAsync(int pageNumber, int pageSize,
         CancellationToken cancellationToken = default)

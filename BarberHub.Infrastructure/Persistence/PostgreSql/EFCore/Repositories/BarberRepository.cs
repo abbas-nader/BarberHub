@@ -17,7 +17,9 @@ public class BarberRepository(BarberHubDbContext context) : BaseRepository<Barbe
     public async Task<IReadOnlyCollection<Barber>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
     {
-        return await BarberHubDbContext.Barbers.Where(x => x.SalonId == salonId).AsNoTracking()
+        return await BarberHubDbContext.Barbers
+            .Where(x => x.SalonId == salonId && x.IsDeleted == false)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 

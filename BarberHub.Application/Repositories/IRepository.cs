@@ -1,8 +1,9 @@
-﻿using BarberHub.Domain.ValueObjects;
+﻿using BarberHub.Domain.Entities;
+using BarberHub.Domain.ValueObjects;
 
 namespace BarberHub.Application.Repositories;
 
-public interface IRepository<TEntity> where TEntity : class
+public interface IRepository<TEntity> where TEntity : BaseEntity
 {
     Task<TEntity?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
