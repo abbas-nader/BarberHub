@@ -13,48 +13,40 @@ public class UpdateBarberValidator : AbstractValidator<UpdateBarberRequest>
         RuleFor(x => x.FirstName)
             .NotEmpty()
             .WithMessage(
-                UpdateBarberValidationMessages.PropertyRequired(
-                    nameof(UpdateBarberValidationMessages.FirstNameProperty)))
+                UpdateBarberValidationMessages.PropertyRequired(UpdateBarberValidationMessages.FirstNameProperty))
             .MaximumLength(BarberConstants.FirstNameMaxLength)
             .WithMessage(
-                UpdateBarberValidationMessages.PropertyMaxLength(
-                    nameof(UpdateBarberValidationMessages.LastNameProperty)));
+                UpdateBarberValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.LastNameProperty));
         RuleFor(x => x.LastName)
             .NotEmpty()
             .MaximumLength(BarberConstants.LastNameMaxLength)
             .WithMessage(
-                UpdateBarberValidationMessages.PropertyMaxLength(
-                    nameof(UpdateBarberValidationMessages.LastNameProperty)));
+                UpdateBarberValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.LastNameProperty));
         RuleFor(x => x.MobileNumber)
             .NotEmpty()
             .WithMessage(
-                UpdateBarberValidationMessages.PropertyRequired(nameof(UpdateBarberValidationMessages
-                    .MobileNumberProperty)))
+                UpdateBarberValidationMessages.PropertyRequired(UpdateBarberValidationMessages.MobileNumberProperty))
             .Matches(@"^09\d{9}$")
             .WithMessage(UpdateBarberValidationMessages.MobileNumberInvalidFormat);
         RuleFor(x => x.Username)
             .NotEmpty()
             .WithMessage(
-                UpdateBarberValidationMessages.PropertyRequired(nameof(UpdateBarberValidationMessages
-                    .UsernameProperty)))
+                UpdateBarberValidationMessages.PropertyRequired(UpdateBarberValidationMessages.UsernameProperty))
             .MaximumLength(BarberConstants.UserNameMaxLength)
-            .WithMessage(UpdateBarberValidationMessages.PropertyMaxLength(nameof(UpdateBarberValidationMessages
-                .UsernameProperty)))
+            .WithMessage(
+                UpdateBarberValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.UsernameProperty))
             .Matches(@"^\S+$")
             .WithMessage(UpdateBarberValidationMessages.UsernameInvalidFormat);
         RuleFor(x => x.Password)
             .MinimumLength(PasswordValidationMessages.MinLength)
             .WithMessage(
-                UpdateBarberValidationMessages.PropertyMinLength(
-                    nameof(UpdateBarberValidationMessages.PasswordProperty)))
+                UpdateBarberValidationMessages.PropertyMinLength(UpdateBarberValidationMessages.PasswordProperty))
             .MaximumLength(PasswordValidationMessages.MaxLength)
             .WithMessage(
-                UpdateBarberValidationMessages.PropertyMaxLength(
-                    nameof(UpdateBarberValidationMessages.PasswordProperty)))
+                UpdateBarberValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.PasswordProperty))
             .When(x => !string.IsNullOrWhiteSpace(x.Password));
         RuleFor(x => x.Description)
-            .MaximumLength(BarberConstants.DescriptionMaxLength)
-            .WithMessage(UpdateBarberValidationMessages.PropertyMaxLength(nameof(UpdateBarberValidationMessages
-                .DescriptionProperty)));
+            .MaximumLength(BarberConstants.DescriptionMaxLength).WithMessage(
+                UpdateBarberValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.DescriptionProperty));
     }
 }
