@@ -16,6 +16,7 @@ public class WorkSchedule : BaseEntity
 
     public WorkSchedule(TimeOnly startTime, TimeOnly endTime, DayOfWeek dayOfWeek, long barberId, long creationBy)
     {
+        ValidateTimeRange(startTime, endTime);
         StartTime = startTime;
         EndTime = endTime;
         DayOfWeek = dayOfWeek;
@@ -25,12 +26,14 @@ public class WorkSchedule : BaseEntity
 
     public void Update(TimeOnly startTime, TimeOnly endTime, DayOfWeek dayOfWeek, long modifiedBy)
     {
+        ValidateTimeRange(startTime, endTime);
         StartTime = startTime;
         EndTime = endTime;
         DayOfWeek = dayOfWeek;
         Modified(modifiedBy);
     }
-    public static void ValidateTimeRange(TimeOnly startTime, TimeOnly endTime)
+
+    private static void ValidateTimeRange(TimeOnly startTime, TimeOnly endTime)
     {
         if (endTime <= startTime)
             throw new InvalidWorkScheduleTimeRangeException();
