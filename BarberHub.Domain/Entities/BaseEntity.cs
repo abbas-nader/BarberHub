@@ -11,8 +11,9 @@ public abstract class BaseEntity
     public long? ModifiedBy { get; private set; }
     public DateTimeOffset? DeletedAt { get; private set; }
     public long? DeletedBy { get; private set; }
-    public bool IsDeleted  => DeletedAt.HasValue;
-    protected BaseEntity()
+    public bool IsDeleted{get; private set;}
+
+protected BaseEntity()
     {
     }
 
@@ -36,6 +37,7 @@ public abstract class BaseEntity
         if (IsDeleted) throw new EntityAlreadyDeletedException();
         DeletedAt = DateTimeOffset.UtcNow;
         DeletedBy = userId;
+        IsDeleted = true;
         ModifiedAt = DateTimeOffset.UtcNow;
         ModifiedBy = userId;
     }
