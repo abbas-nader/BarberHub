@@ -8,5 +8,6 @@ public static class DependencyInjection
     public static void AddApplications(this IServiceCollection services)
     {
         services.AddScoped<BarberService>();
+        services.AddScoped<ExceptionLogService>();
     }
 }
