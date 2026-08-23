@@ -35,6 +35,5 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .IsRequired();
         
         builder.HasIndex(x => x.UserName).IsUnique();
-        builder.HasIndex(x => x.PasswordHash).IsUnique();
     }
 }

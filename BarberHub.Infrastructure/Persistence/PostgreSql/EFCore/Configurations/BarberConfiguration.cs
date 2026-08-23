@@ -42,6 +42,5 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
             .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasIndex(x => x.UserName).IsUnique();
-        builder.HasIndex(x => x.PasswordHash).IsUnique();
     }
 }
