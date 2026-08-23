@@ -19,9 +19,9 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.Property(x => x.Duration)
             .IsRequired();
         
-        builder.HasOne<Service>()
-            .WithMany()
-            .HasForeignKey(x=>x.SalonId)
+        builder.HasOne<Salon>()
+            .WithMany(x => x.Services)
+            .HasForeignKey(x => x.SalonId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
