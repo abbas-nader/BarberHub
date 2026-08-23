@@ -39,7 +39,6 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or InvalidServiceDurationSnapshotException
             or InvalidRatingException
             or InvalidSalonDescriptionException
-            or InvalidSalonAdminUserNameException
             or InvalidWorkScheduleTimeRangeException
             or InvalidFileSizeException
             or InvalidServiceDurationException
