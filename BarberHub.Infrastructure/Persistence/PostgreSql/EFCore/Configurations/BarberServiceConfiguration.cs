@@ -10,7 +10,7 @@ public class BarberServiceConfiguration : IEntityTypeConfiguration<BarberService
     public void Configure(EntityTypeBuilder<BarberService> builder)
     {
         builder.HasKey(x => x.Id);
-        builder.ComplexProperty(x => x.Money, money =>
+        builder.ComplexProperty(x => x.Price, money =>
             {
                 money.Property(m => m.Value)
                     .HasColumnName(BarberServiceConstants.PriceValueColumnName)
@@ -21,7 +21,7 @@ public class BarberServiceConfiguration : IEntityTypeConfiguration<BarberService
                     .IsRequired();
             }
         );
-          builder.HasOne(x => x.Service)
+        builder.HasOne(x => x.Service)
             .WithMany()
             .HasForeignKey(x => x.ServiceId)
             .OnDelete(DeleteBehavior.Restrict);
