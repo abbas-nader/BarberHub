@@ -19,6 +19,8 @@ public class BarberHubDbContext(DbContextOptions<BarberHubDbContext> options) : 
     public DbSet<BarberService> BarberServices { get; set; }
     public DbSet<WalletTransaction> WalletTransactions { get; set; }
     public DbSet<WorkSchedule> WorkSchedules { get; set; }
+    public DbSet<PlatformAdmin> PlatformAdmins { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
