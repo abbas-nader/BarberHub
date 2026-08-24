@@ -2,7 +2,7 @@
 
 namespace BarberHub.Domain.Constants;
 
-public class SalonConstants
+public static class SalonConstants
 {
     public const int DescriptionMaxLength = 1000;
     public const int NameMaxLength = 100;

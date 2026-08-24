@@ -1,6 +1,6 @@
 ﻿namespace BarberHub.Domain.Constants;
 
-public class AppointmentConstants
+public static class AppointmentConstants
 {
     public const string DepositAmountValueColumnName  = "DepositAmountValue";
     public const string DepositAmountValueColumnType  = "numeric(18,2)";

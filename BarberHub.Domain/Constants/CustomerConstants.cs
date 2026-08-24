@@ -1,6 +1,6 @@
 ﻿namespace BarberHub.Domain.Constants;
 
-public class CustomerConstants
+public static class CustomerConstants
 {
     public const string FirstNameColumnType = "varchar";
     public const int FirstNameMaxLength = 50;

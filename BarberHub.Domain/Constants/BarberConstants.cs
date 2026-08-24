@@ -1,6 +1,6 @@
 ﻿namespace BarberHub.Domain.Constants;
 
-public class BarberConstants
+public static class BarberConstants
 {
     public const int FirstNameMaxLength = 50;
     public const int LastNameMaxLength = 50;

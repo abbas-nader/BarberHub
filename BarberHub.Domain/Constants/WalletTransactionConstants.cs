@@ -1,6 +1,6 @@
 ﻿namespace BarberHub.Domain.Constants;
 
-public class WalletTransactionConstants
+public static class WalletTransactionConstants
 {
     public const string AmountValueColumnName = "AmountValue";
     public const string AmountValueColumnTypeName = "decimal(18,2)";
