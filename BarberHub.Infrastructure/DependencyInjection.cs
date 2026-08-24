@@ -30,7 +30,7 @@ public static class DependencyInjection
         services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
         services.AddScoped<IWorkScheduleRepository, WorkScheduleRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
-
+        services.AddScoped<IPlatformRepository, PlatformAdminRepository>();
         services.AddMongo(configuration);
     }
 
