@@ -1,4 +1,4 @@
-﻿namespace BarberHub.Application.DTOs;
+﻿namespace BarberHub.Application.DTOs.ExceptionLog;
 
 public record ExceptionLogDto(
     string Id,

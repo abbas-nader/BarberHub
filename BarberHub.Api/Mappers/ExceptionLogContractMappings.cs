@@ -1,5 +1,6 @@
 ﻿using BarberHub.Api.Contracts.ExceptionLog;
 using BarberHub.Application.DTOs;
+using BarberHub.Application.DTOs.ExceptionLog;
 
 namespace BarberHub.Api.Mappers;
 
