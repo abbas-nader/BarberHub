@@ -19,11 +19,4 @@ public static class UpdateBarberValidationMessages
     public const string DescriptionProperty = "Description";
     
     public const string SalonIdInvalid = "Salon id must be a positive number.";
-    
-    
-    public static string PropertyRequired(string propertyName) => $"{propertyName} is required.";
-    public static string PropertyMaxLength(string propertyName) =>
-        $"{propertyName} exceeds the maximum allowed length.";
-    public static string PropertyMinLength(string propertyName) =>
-        $"{propertyName} is shorter than the minimum required length.";
 }
