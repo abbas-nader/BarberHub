@@ -2,8 +2,9 @@
 
 public record UpdateSalonDto(
     long Id,
-    string Name, 
+    string Name,
     string Address,
     string City,
     string PhoneNumber,
-    string? Description);
+    string? Description
+);
