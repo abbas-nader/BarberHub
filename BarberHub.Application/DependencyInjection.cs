@@ -9,5 +9,6 @@ public static class DependencyInjection
     {
         services.AddScoped<BarberService>();
         services.AddScoped<ExceptionLogService>();
+        services.AddScoped<SalonService>();
     }
 }
