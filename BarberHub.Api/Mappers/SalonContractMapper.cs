@@ -6,7 +6,7 @@ namespace BarberHub.Api.Mappers;
 
 public static class SalonContractMapper
 {
-    public static SalonResponse ToResponse(SalonDto salonDto)
+    public static SalonResponse ToResponse(this SalonDto salonDto)
         => new(
             salonDto.Id,
             salonDto.Name,
@@ -19,7 +19,7 @@ public static class SalonContractMapper
             salonDto.IsActive
         );
 
-    public static CreateSalonDto ToDto(CreateSalonRequest request)
+    public static CreateSalonDto ToDto(this CreateSalonRequest request)
         => new(
             request.Name,
             request.Address,
@@ -30,7 +30,7 @@ public static class SalonContractMapper
             request.Description
         );
 
-    public static UpdateSalonDto ToDto(UpdateSalonRequest request)
+    public static UpdateSalonDto ToDto(this UpdateSalonRequest request)
         => new(
             request.Id,
             request.Name,
