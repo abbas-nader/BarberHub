@@ -1,4 +1,4 @@
-﻿namespace BarberHub.Application.DTOs;
+﻿namespace BarberHub.Application.DTOs.Barber;
 
 public record CreateBarberDto(
     string FirstName,
