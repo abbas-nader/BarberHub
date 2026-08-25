@@ -38,7 +38,7 @@ public class BarberController(BarberService barberService) : BaseController
     public async Task<ApiResult<BarberResponse>> UpdateAsync(long id, [FromBody] UpdateBarberRequest request,
         long modifiedBy, CancellationToken cancellationToken)
     {
-        var barber = await barberService.Update(request.ToDto(), modifiedBy, cancellationToken);
+        var barber = await barberService.UpdateAsync(request.ToDto(), modifiedBy, cancellationToken);
         return barber.ToResponse();
     }
 

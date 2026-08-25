@@ -41,7 +41,7 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         return ToDto(barber);
     }
 
-    public async Task<BarberDto> Update(UpdateBarberDto updateBarberDto, long modifiedBy,
+    public async Task<BarberDto> UpdateAsync(UpdateBarberDto updateBarberDto, long modifiedBy,
         CancellationToken cancellationToken = default)
     {
         var barber = await barberRepository.GetByIdAsync(updateBarberDto.Id, cancellationToken);
@@ -58,7 +58,7 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         return ToDto(barber);
     }
 
-    public async Task<BarberDto> DeleteAsync(long id,long deletedBy, CancellationToken cancellationToken = default)
+    public async Task<BarberDto> DeleteAsync(long id, long deletedBy, CancellationToken cancellationToken = default)
     {
         var barber = await barberRepository.GetByIdAsync(id, cancellationToken);
         if (barber == null)
@@ -67,6 +67,7 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
     }
+
     public async Task<BarberDto> ActivateAsync(long id, long modifiedBy, CancellationToken cancellationToken = default)
     {
         var barber = await barberRepository.GetByIdAsync(id, cancellationToken);
@@ -78,7 +79,8 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         return ToDto(barber);
     }
 
-    public async Task<BarberDto> DeactivateAsync(long id, long modifiedBy, CancellationToken cancellationToken = default)
+    public async Task<BarberDto> DeactivateAsync(long id, long modifiedBy,
+        CancellationToken cancellationToken = default)
     {
         var barber = await barberRepository.GetByIdAsync(id, cancellationToken);
         if (barber == null)
@@ -87,6 +89,7 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
     }
+
     private static BarberDto ToDto(Barber barber)
         => new(
             barber.Id,
