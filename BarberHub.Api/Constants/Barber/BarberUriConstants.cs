@@ -1,6 +1,6 @@
 ﻿namespace BarberHub.Api.Constants.Barber;
 
-public class BarberUriConstants
+public static class BarberUriConstants
 {
     private const string ControllerName = "Barber";
     public const string GetAllBySalonId = $"{ControllerName}";
