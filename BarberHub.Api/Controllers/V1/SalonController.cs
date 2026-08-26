@@ -44,36 +44,37 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPatch(SalonUriConstants.Delete)]
-    public async Task<ApiResult<SalonResponse>> DeleteAsync(long id, long deletedBy,
+    public async Task<ApiResult<SalonResponse>> DeleteAsync(long salonId, long deletedBy,
         CancellationToken cancellationToken)
     {
-        var salon = await salonService.DeleteAsync(id, deletedBy, cancellationToken);
+        var salon = await salonService.DeleteAsync(salonId, deletedBy, cancellationToken);
         return salon.ToResponse();
     }
 
     [HttpPatch(SalonUriConstants.Activate)]
-    public async Task<ApiResult<SalonResponse>> ActivateAsync(long id, long modifiedBy,
+    public async Task<ApiResult<SalonResponse>> ActivateAsync(long salonId, long modifiedBy,
         CancellationToken cancellationToken)
     {
-        var salon = await salonService.ActivateAsync(id, modifiedBy, cancellationToken);
+        var salon = await salonService.ActivateAsync(salonId, modifiedBy, cancellationToken);
         return salon.ToResponse();
     }
 
     [HttpPatch(SalonUriConstants.Deactivate)]
-    public async Task<ApiResult<SalonResponse>> DeactivateAsync(long id, long modifiedBy,
+    public async Task<ApiResult<SalonResponse>> DeactivateAsync(long salonId, long modifiedBy,
         CancellationToken cancellationToken)
     {
-        var salon = await salonService.DeactivateAsync(id, modifiedBy, cancellationToken);
+        var salon = await salonService.DeactivateAsync(salonId, modifiedBy, cancellationToken);
         return salon.ToResponse();
     }
 
     [HttpPatch(SalonUriConstants.UpdateDepositAmount)]
-    public async Task<ApiResult<SalonResponse>> UpdateDepositAmountAsync(long id, decimal depositAmountValue,
+    public async Task<ApiResult<SalonResponse>> UpdateDepositAmountAsync(long salonId, decimal depositAmountValue,
         Currency depositAmountCurrency,
         long modifiedBy,
         CancellationToken cancellationToken)
     {
-        var salon =await salonService.UpdateDepositAmount(id, depositAmountValue, depositAmountCurrency, modifiedBy,
+        var salon = await salonService.UpdateDepositAmount(salonId, depositAmountValue, depositAmountCurrency,
+            modifiedBy,
             cancellationToken);
         return salon.ToResponse();
     }
