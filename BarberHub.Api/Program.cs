@@ -4,6 +4,7 @@ using BarberHub.Api.Middleware;
 using BarberHub.Application;
 using BarberHub.Infrastructure;
 using FluentValidation;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,7 @@ if (app.Environment.IsDevelopment())
             options.SwaggerEndpoint(
                 $"/swagger/{description.GroupName}/swagger.json",
                 description.GroupName.ToUpperInvariant());
+            options.DocExpansion(DocExpansion.None);
         }
     });
 }
