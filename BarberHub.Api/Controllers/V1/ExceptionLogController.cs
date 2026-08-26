@@ -27,10 +27,10 @@ public class ExceptionLogController(ExceptionLogService exceptionLogService) : B
     }
 
     [HttpGet(ExceptionLogUriConstants.GetById)]
-    public async Task<ApiResult<ExceptionLogResponse>> GetByIdAsync(string id,
+    public async Task<ApiResult<ExceptionLogResponse>> GetByIdAsync(string exceptionId,
         CancellationToken cancellationToken)
     {
-        var log = await exceptionLogService.GetByIdAsync(id, cancellationToken);
+        var log = await exceptionLogService.GetByIdAsync(exceptionId, cancellationToken);
         return log.ToResponse();
     }
 }
