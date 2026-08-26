@@ -1,5 +1,6 @@
 ﻿using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.Constants;
+using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Domain.Entities;
@@ -9,25 +10,32 @@ public class File : BaseEntity
     public string FileName { get; private set; } = null!;
     public string OriginFileName { get; private set; } = null!;
     public string Url { get; private set; } = null!;
+    public string StorageKey { get; private set; } = null!;
     public string ContentType { get; private set; } = null!;
     public long Size { get; private set; }
+    public StorageProvider StorageProvider { get; private set; }
 
     private File()
     {
     }
 
-    public File(string fileName, string originFileName, string url, string contentType, long size, long creationBy)
+    public File(string fileName, string originFileName, string url, string storageKey, string contentType, long size,
+        StorageProvider storageProvider,
+        long creationBy)
     {
         ValidateFileName(fileName);
         ValidateOriginFileName(originFileName);
         ValidateUrl(url);
+        ValidateStorageKey(storageKey);
         ValidateContentType(contentType);
         ValidateSize(size);
         FileName = fileName;
         OriginFileName = originFileName;
         Url = url;
+        StorageKey = storageKey;
         ContentType = contentType;
         Size = size;
+        StorageProvider = storageProvider;
 
         Creation(creationBy);
     }
@@ -48,6 +56,12 @@ public class File : BaseEntity
     {
         if (string.IsNullOrWhiteSpace(url))
             throw new RequiredFieldException(nameof(url));
+    }
+
+    private static void ValidateStorageKey(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            throw new RequiredFieldException(nameof(key));
     }
 
     private static void ValidateContentType(string contentType)
