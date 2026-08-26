@@ -43,26 +43,26 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpPatch(BarberUriConstants.Delete)]
-    public async Task<ApiResult<BarberResponse>> DeleteAsync(long id, long deletedBy,
+    public async Task<ApiResult<BarberResponse>> DeleteAsync(long barberId, long deletedBy,
         CancellationToken cancellationToken)
     {
-        var barber = await barberService.DeleteAsync(id, deletedBy, cancellationToken);
+        var barber = await barberService.DeleteAsync(barberId, deletedBy, cancellationToken);
         return barber.ToResponse();
     }
 
     [HttpPatch(BarberUriConstants.Activate)]
-    public async Task<ApiResult<BarberResponse>> ActivateAsync(long id, long modifiedBy,
+    public async Task<ApiResult<BarberResponse>> ActivateAsync(long barberId, long modifiedBy,
         CancellationToken cancellationToken)
     {
-        var barber = await barberService.ActivateAsync(id, modifiedBy, cancellationToken);
+        var barber = await barberService.ActivateAsync(barberId, modifiedBy, cancellationToken);
         return barber.ToResponse();
     }
 
     [HttpPatch(BarberUriConstants.Deactivate)]
-    public async Task<ApiResult<BarberResponse>> DeactivateAsync(long id, long modifiedBy,
+    public async Task<ApiResult<BarberResponse>> DeactivateAsync(long barberId, long modifiedBy,
         CancellationToken cancellationToken)
     {
-        var barber = await barberService.DeactivateAsync(id, modifiedBy, cancellationToken);
+        var barber = await barberService.DeactivateAsync(barberId, modifiedBy, cancellationToken);
         return barber.ToResponse();
     }
 }
