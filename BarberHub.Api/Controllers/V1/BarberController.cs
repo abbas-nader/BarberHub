@@ -35,7 +35,7 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpPut(BarberUriConstants.Update)]
-    public async Task<ApiResult<BarberResponse>> UpdateAsync(long id, [FromBody] UpdateBarberRequest request,
+    public async Task<ApiResult<BarberResponse>> UpdateAsync([FromBody] UpdateBarberRequest request,
         long modifiedBy, CancellationToken cancellationToken)
     {
         var barber = await barberService.UpdateAsync(request.ToDto(), modifiedBy, cancellationToken);
