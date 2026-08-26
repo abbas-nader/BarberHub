@@ -14,10 +14,10 @@ public class ExceptionLogService(IExceptionLogRepository exceptionLogRepository)
         return logs.Select(ToDto).ToList();
     }
 
-    public async Task<ExceptionLogDto> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<ExceptionLogDto> GetByIdAsync(string exceptionId, CancellationToken cancellationToken = default)
     {
-        var log = await exceptionLogRepository.GetByIdAsync(id, cancellationToken)
-                  ?? throw new EntityNotFoundException(nameof(ExceptionLog), id);
+        var log = await exceptionLogRepository.GetByIdAsync(exceptionId, cancellationToken)
+                  ?? throw new EntityNotFoundException(nameof(ExceptionLog), exceptionId);
 
         return ToDto(log);
     }
