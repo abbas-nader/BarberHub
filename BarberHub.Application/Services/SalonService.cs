@@ -15,10 +15,10 @@ public class SalonService(ISalonRepository salonRepository)
         return salons.Select(ToDto).ToList();
     }
 
-    public async Task<SalonDto> GetById(long id, CancellationToken cancellationToken = default)
+    public async Task<SalonDto> GetById(long salonId, CancellationToken cancellationToken = default)
     {
-        var salon = await salonRepository.GetByIdAsync(id, cancellationToken) ??
-                    throw new EntityNotFoundException(nameof(Salon), id);
+        var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken) ??
+                    throw new EntityNotFoundException(nameof(Salon), salonId);
 
         return ToDto(salon);
     }
@@ -47,44 +47,44 @@ public class SalonService(ISalonRepository salonRepository)
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> DeleteAsync(long id, long modifiedBy, CancellationToken cancellationToken = default)
+    public async Task<SalonDto> DeleteAsync(long salonId, long modifiedBy, CancellationToken cancellationToken = default)
     {
-        var salon = await salonRepository.GetByIdAsync(id, cancellationToken) ??
-                    throw new EntityNotFoundException(nameof(Salon), id);
+        var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken) ??
+                    throw new EntityNotFoundException(nameof(Salon), salonId);
         salon.SoftDelete(modifiedBy);
         await salonRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> ActivateAsync(long id, long modifiedBy, CancellationToken cancellationToken = default)
+    public async Task<SalonDto> ActivateAsync(long salonId, long modifiedBy, CancellationToken cancellationToken = default)
     {
-        var salon = await salonRepository.GetByIdAsync(id, cancellationToken);
+        var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken);
         if (salon == null)
-            throw new EntityNotFoundException(nameof(Barber), id);
+            throw new EntityNotFoundException(nameof(Barber), salonId);
 
         salon.Activate(modifiedBy);
         await salonRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> DeactivateAsync(long id, long modifiedBy,
+    public async Task<SalonDto> DeactivateAsync(long salonId, long modifiedBy,
         CancellationToken cancellationToken = default)
     {
-        var salon = await salonRepository.GetByIdAsync(id, cancellationToken);
+        var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken);
         if (salon == null)
-            throw new EntityNotFoundException(nameof(Barber), id);
+            throw new EntityNotFoundException(nameof(Barber), salonId);
         salon.Deactivate(modifiedBy);
         await salonRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> UpdateDepositAmount(long id, decimal depositAmountValue, Currency depositAmountCurrency,
+    public async Task<SalonDto> UpdateDepositAmount(long salonId, decimal depositAmountValue, Currency depositAmountCurrency,
         long modifiedBy,
         CancellationToken cancellationToken)
     {
-        var salon = await salonRepository.GetByIdAsync(id, cancellationToken);
+        var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken);
         if (salon == null)
-            throw new EntityNotFoundException(nameof(Barber), id);
+            throw new EntityNotFoundException(nameof(Barber), salonId);
         salon.UpdateDepositAmount(new Money(depositAmountValue, depositAmountCurrency), modifiedBy);
         await salonRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salon);
