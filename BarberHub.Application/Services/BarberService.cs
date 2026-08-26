@@ -16,10 +16,10 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         return barbers.Select(ToDto).ToList();
     }
 
-    public async Task<BarberDto> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+    public async Task<BarberDto> GetByIdAsync(long barberId, CancellationToken cancellationToken = default)
     {
-        var barber = await barberRepository.GetByIdAsync(id, cancellationToken) ??
-                     throw new EntityNotFoundException(nameof(Barber), id);
+        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken) ??
+                     throw new EntityNotFoundException(nameof(Barber), barberId);
         return ToDto(barber);
     }
 
@@ -47,6 +47,9 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         var barber = await barberRepository.GetByIdAsync(updateBarberDto.Id, cancellationToken);
         if (barber == null)
             throw new EntityNotFoundException(nameof(Barber), updateBarberDto.Id);
+        var checkUserName = await barberRepository.ExistsByUserNameAsync(updateBarberDto.Username, cancellationToken);
+        if (checkUserName)
+            throw new DuplicateUserNameException();
         var passwordHash = string.IsNullOrWhiteSpace(updateBarberDto.Password)
             ? barber.PasswordHash
             : passwordHasher.Hash(updateBarberDto.Password);
@@ -58,33 +61,34 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         return ToDto(barber);
     }
 
-    public async Task<BarberDto> DeleteAsync(long id, long deletedBy, CancellationToken cancellationToken = default)
+    public async Task<BarberDto> DeleteAsync(long barberId, long deletedBy,
+        CancellationToken cancellationToken = default)
     {
-        var barber = await barberRepository.GetByIdAsync(id, cancellationToken);
+        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
-            throw new EntityNotFoundException(nameof(Barber), id);
+            throw new EntityNotFoundException(nameof(Barber), barberId);
         barber.SoftDelete(deletedBy);
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
     }
 
-    public async Task<BarberDto> ActivateAsync(long id, long modifiedBy, CancellationToken cancellationToken = default)
+    public async Task<BarberDto> ActivateAsync(long barberId, long modifiedBy, CancellationToken cancellationToken = default)
     {
-        var barber = await barberRepository.GetByIdAsync(id, cancellationToken);
+        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
-            throw new EntityNotFoundException(nameof(Barber), id);
+            throw new EntityNotFoundException(nameof(Barber), barberId);
 
         barber.Activate(modifiedBy);
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
     }
 
-    public async Task<BarberDto> DeactivateAsync(long id, long modifiedBy,
+    public async Task<BarberDto> DeactivateAsync(long barberId, long modifiedBy,
         CancellationToken cancellationToken = default)
     {
-        var barber = await barberRepository.GetByIdAsync(id, cancellationToken);
+        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
-            throw new EntityNotFoundException(nameof(Barber), id);
+            throw new EntityNotFoundException(nameof(Barber), barberId);
         barber.Deactivate(modifiedBy);
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
