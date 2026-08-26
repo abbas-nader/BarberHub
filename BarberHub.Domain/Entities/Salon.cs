@@ -48,7 +48,7 @@ public class Salon : BaseEntity
         PhoneNumber = phoneNumber;
         DepositAmount = depositAmount;
         Description = description;
-        IsActive = false;
+        IsActive = true;
 
         Creation(creationBy);
     }
