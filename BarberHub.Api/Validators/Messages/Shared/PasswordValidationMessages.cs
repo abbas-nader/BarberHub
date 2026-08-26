@@ -2,6 +2,6 @@
 
 public static class PasswordValidationMessages
 {
-    public const int MinLength = 8;
+    public const int MinLength = 4;
     public const int MaxLength = 72;
 }
