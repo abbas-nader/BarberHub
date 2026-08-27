@@ -36,10 +36,11 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPut(SalonUriConstants.Update)]
-    public async Task<ApiResult<SalonResponse>> UpdateAsync([FromBody] UpdateSalonRequest request, long modifiedBy,
+    public async Task<ApiResult<SalonResponse>> UpdateAsync(long salonId, [FromBody] UpdateSalonRequest request,
+        long modifiedBy,
         CancellationToken cancellationToken = default)
     {
-        var salon = await salonService.UpdateAsync(request.ToDto(), modifiedBy, cancellationToken);
+        var salon = await salonService.UpdateAsync(salonId, request.ToDto(), modifiedBy, cancellationToken);
         return salon.ToResponse();
     }
 
