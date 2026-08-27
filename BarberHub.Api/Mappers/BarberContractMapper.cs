@@ -29,7 +29,6 @@ public static class BarberContractMapper
 
     public static UpdateBarberDto ToDto(this UpdateBarberRequest request) =>
         new(
-            request.Id,
             request.FirstName,
             request.LastName,
             request.MobileNumber,
