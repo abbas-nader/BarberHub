@@ -10,9 +10,6 @@ public class UpdateSalonAdminValidator : AbstractValidator<UpdateSalonAdminReque
 {
     public UpdateSalonAdminValidator()
     {
-        RuleFor(x => x.Id)
-            .GreaterThan(SalonAdminConstants.SalonMinValidValue)
-            .WithMessage(UpdateSalonAdminValidationMessages.IdInvalid);
         RuleFor(x => x.FirstName)
             .NotEmpty()
             .WithMessage(
