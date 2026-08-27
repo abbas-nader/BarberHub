@@ -32,7 +32,6 @@ public static class SalonContractMapper
 
     public static UpdateSalonDto ToDto(this UpdateSalonRequest request)
         => new(
-            request.Id,
             request.Name,
             request.Address,
             request.City,
