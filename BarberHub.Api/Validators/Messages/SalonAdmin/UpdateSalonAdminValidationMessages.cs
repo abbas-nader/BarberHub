@@ -2,8 +2,6 @@
 
 public static class UpdateSalonAdminValidationMessages
 {
-    public const string IdInvalid = "Id must be a positive number.";
-    
     public const string FirstNameProperty = "FirstName";
     
     public const string LastNameProperty = "LastName";
