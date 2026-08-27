@@ -40,12 +40,12 @@ public class SalonAdminService(ISalonAdminRepository salonAdminRepository, IPass
         return ToDto(salonAdmin);
     }
 
-    public async Task<SalonAdminDto> UpdateAsync(UpdateSalonAdminDto updateSalonAdminDto,long modifiedBy,
+    public async Task<SalonAdminDto> UpdateAsync(long salonAdminId,UpdateSalonAdminDto updateSalonAdminDto,long modifiedBy,
         CancellationToken cancellationToken = default)
     {
-        var salonAdmin = await salonAdminRepository.GetByIdAsync(updateSalonAdminDto.Id, cancellationToken);
+        var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken);
         if (salonAdmin == null)
-            throw new EntityNotFoundException(nameof(SalonAdmin), updateSalonAdminDto.Id);
+            throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
         var checkUserName =
             await salonAdminRepository.ExistsByUserNameAsync(updateSalonAdminDto.Username, cancellationToken);
         if (checkUserName)
