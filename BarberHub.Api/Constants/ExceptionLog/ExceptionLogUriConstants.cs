@@ -6,5 +6,5 @@ public static class ExceptionLogUriConstants
 
     public const string GetAll = $"{ControllerName}";
     public const string GetRecent = $"{ControllerName}/recent";
-    public const string GetById = $"{ControllerName}/{{id}}";
+    public const string GetById = $"{ControllerName}/{{exceptionId}}";
 }
