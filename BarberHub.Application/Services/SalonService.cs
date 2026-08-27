@@ -35,11 +35,11 @@ public class SalonService(ISalonRepository salonRepository)
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> UpdateAsync(UpdateSalonDto updateSalonDto, long modifiedBy,
+    public async Task<SalonDto> UpdateAsync(long salonId,UpdateSalonDto updateSalonDto, long modifiedBy,
         CancellationToken cancellationToken = default)
     {
-        var salon = await salonRepository.GetByIdAsync(updateSalonDto.Id, cancellationToken) ??
-                    throw new EntityNotFoundException(nameof(Salon), updateSalonDto.Id);
+        var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken) ??
+                    throw new EntityNotFoundException(nameof(Salon), salonId);
         salon.UpdateInfo(updateSalonDto.Name, updateSalonDto.Address, updateSalonDto.City, updateSalonDto.PhoneNumber,
             updateSalonDto.Description, modifiedBy);
         salonRepository.Update(salon);
