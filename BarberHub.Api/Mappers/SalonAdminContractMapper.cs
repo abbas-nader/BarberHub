@@ -25,7 +25,6 @@ public static class SalonAdminContractMapper
 
     public static UpdateSalonAdminDto ToDto(this UpdateSalonAdminRequest request)
         => new(
-            request.Id,
             request.FirstName,
             request.LastName,
             request.Username,
