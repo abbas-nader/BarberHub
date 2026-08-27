@@ -40,12 +40,14 @@ public class SalonAdminController(SalonAdminService salonAdminService) : BaseCon
 
     [HttpPut(SalonAdminUriConstants.Update)]
     public async Task<ApiResult<SalonAdminResponse>> UpdateAsync(
+        long salonAdminId,
         [FromBody] UpdateSalonAdminRequest updateSalonAdminRequest,
         long modifiedBy,
         CancellationToken cancellationToken = default)
     {
         var salonAdmin =
-            await salonAdminService.UpdateAsync(updateSalonAdminRequest.ToDto(), modifiedBy, cancellationToken);
+            await salonAdminService.UpdateAsync(salonAdminId, updateSalonAdminRequest.ToDto(), modifiedBy,
+                cancellationToken);
         return salonAdmin.ToResponse();
     }
 
