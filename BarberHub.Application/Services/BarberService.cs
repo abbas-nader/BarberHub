@@ -41,12 +41,12 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         return ToDto(barber);
     }
 
-    public async Task<BarberDto> UpdateAsync(UpdateBarberDto updateBarberDto, long modifiedBy,
+    public async Task<BarberDto> UpdateAsync(long barberId, UpdateBarberDto updateBarberDto, long modifiedBy,
         CancellationToken cancellationToken = default)
     {
-        var barber = await barberRepository.GetByIdAsync(updateBarberDto.Id, cancellationToken);
+        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
-            throw new EntityNotFoundException(nameof(Barber), updateBarberDto.Id);
+            throw new EntityNotFoundException(nameof(Barber), barberId);
         var checkUserName = await barberRepository.ExistsByUserNameAsync(updateBarberDto.Username, cancellationToken);
         if (checkUserName)
             throw new DuplicateUserNameException();
@@ -72,7 +72,8 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         return ToDto(barber);
     }
 
-    public async Task<BarberDto> ActivateAsync(long barberId, long modifiedBy, CancellationToken cancellationToken = default)
+    public async Task<BarberDto> ActivateAsync(long barberId, long modifiedBy,
+        CancellationToken cancellationToken = default)
     {
         var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
