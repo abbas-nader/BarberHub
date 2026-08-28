@@ -35,7 +35,7 @@ public class SalonService(ISalonRepository salonRepository)
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> UpdateAsync(long salonId,UpdateSalonDto updateSalonDto, long modifiedBy,
+    public async Task<SalonDto> UpdateAsync(long salonId, UpdateSalonDto updateSalonDto, long modifiedBy,
         CancellationToken cancellationToken = default)
     {
         var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken) ??
@@ -47,7 +47,8 @@ public class SalonService(ISalonRepository salonRepository)
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> DeleteAsync(long salonId, long modifiedBy, CancellationToken cancellationToken = default)
+    public async Task<SalonDto> DeleteAsync(long salonId, long modifiedBy,
+        CancellationToken cancellationToken = default)
     {
         var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken) ??
                     throw new EntityNotFoundException(nameof(Salon), salonId);
@@ -56,7 +57,8 @@ public class SalonService(ISalonRepository salonRepository)
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> ActivateAsync(long salonId, long modifiedBy, CancellationToken cancellationToken = default)
+    public async Task<SalonDto> ActivateAsync(long salonId, long modifiedBy,
+        CancellationToken cancellationToken = default)
     {
         var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken);
         if (salon == null)
@@ -78,14 +80,17 @@ public class SalonService(ISalonRepository salonRepository)
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> UpdateDepositAmount(long salonId, decimal depositAmountValue, Currency depositAmountCurrency,
+    public async Task<SalonDto> UpdateDepositAmount(long salonId,
+        UpdateSalonDepositAmountDto updateSalonDepositAmountDto,
         long modifiedBy,
         CancellationToken cancellationToken)
     {
         var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken);
         if (salon == null)
             throw new EntityNotFoundException(nameof(Barber), salonId);
-        salon.UpdateDepositAmount(new Money(depositAmountValue, depositAmountCurrency), modifiedBy);
+        salon.UpdateDepositAmount(
+            new Money(updateSalonDepositAmountDto.DepositAmountValue, updateSalonDepositAmountDto.Currency),
+            modifiedBy);
         await salonRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salon);
     }
