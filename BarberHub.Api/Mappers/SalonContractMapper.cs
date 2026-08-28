@@ -38,4 +38,10 @@ public static class SalonContractMapper
             request.PhoneNumber,
             request.Description
         );
+
+    public static UpdateSalonDepositAmountDto ToDto(this UpdateSalonDepositAmountRequest request)
+        => new(
+            request.DepositAmountValue,
+            request.DepositAmountCurrency
+        );
 }
