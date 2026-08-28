@@ -20,7 +20,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpGet(SalonUriConstants.GetById)]
-    public async Task<ApiResult<SalonResponse>> GetByIdAsync(long salonId,
+    public async Task<ApiResult<SalonResponse>> GetByIdAsync([FromRoute] long salonId,
         CancellationToken cancellationToken = default)
     {
         var salon = await salonService.GetById(salonId, cancellationToken);
@@ -36,7 +36,8 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPut(SalonUriConstants.Update)]
-    public async Task<ApiResult<SalonResponse>> UpdateAsync(long salonId, [FromBody] UpdateSalonRequest request,
+    public async Task<ApiResult<SalonResponse>> UpdateAsync([FromRoute] long salonId,
+        [FromBody] UpdateSalonRequest request,
         long modifiedBy,
         CancellationToken cancellationToken = default)
     {
@@ -45,7 +46,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPatch(SalonUriConstants.Delete)]
-    public async Task<ApiResult<SalonResponse>> DeleteAsync(long salonId, long deletedBy,
+    public async Task<ApiResult<SalonResponse>> DeleteAsync([FromRoute] long salonId, long deletedBy,
         CancellationToken cancellationToken)
     {
         var salon = await salonService.DeleteAsync(salonId, deletedBy, cancellationToken);
@@ -53,7 +54,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPatch(SalonUriConstants.Activate)]
-    public async Task<ApiResult<SalonResponse>> ActivateAsync(long salonId, long modifiedBy,
+    public async Task<ApiResult<SalonResponse>> ActivateAsync([FromRoute] long salonId, long modifiedBy,
         CancellationToken cancellationToken)
     {
         var salon = await salonService.ActivateAsync(salonId, modifiedBy, cancellationToken);
@@ -61,7 +62,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPatch(SalonUriConstants.Deactivate)]
-    public async Task<ApiResult<SalonResponse>> DeactivateAsync(long salonId, long modifiedBy,
+    public async Task<ApiResult<SalonResponse>> DeactivateAsync([FromRoute] long salonId, long modifiedBy,
         CancellationToken cancellationToken)
     {
         var salon = await salonService.DeactivateAsync(salonId, modifiedBy, cancellationToken);
@@ -69,13 +70,12 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPatch(SalonUriConstants.UpdateDepositAmount)]
-    public async Task<ApiResult<SalonResponse>> UpdateDepositAmountAsync(long salonId, decimal depositAmountValue,
-        Currency depositAmountCurrency,
+    public async Task<ApiResult<SalonResponse>> UpdateDepositAmountAsync([FromRoute] long salonId,
+        UpdateSalonDepositAmountRequest updateSalonDepositAmountRequest,
         long modifiedBy,
         CancellationToken cancellationToken)
     {
-        var salon = await salonService.UpdateDepositAmount(salonId, depositAmountValue, depositAmountCurrency,
-            modifiedBy,
+        var salon = await salonService.UpdateDepositAmount(salonId, updateSalonDepositAmountRequest.ToDto(), modifiedBy,
             cancellationToken);
         return salon.ToResponse();
     }
