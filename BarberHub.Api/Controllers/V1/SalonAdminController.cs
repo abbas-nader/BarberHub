@@ -12,15 +12,15 @@ namespace BarberHub.Api.Controllers.V1;
 public class SalonAdminController(SalonAdminService salonAdminService) : BaseController
 {
     [HttpGet(SalonAdminUriConstants.GetAll)]
-    public async Task<ApiResult<IReadOnlyList<SalonAdminResponse>>> GetAllAsync(long salonAdminId,
+    public async Task<ApiResult<IReadOnlyList<SalonAdminResponse>>> GetAllAsync(long salonId,
         CancellationToken cancellationToken = default)
     {
-        var salonAdmins = await salonAdminService.GetAllBySalonIdAsync(salonAdminId, cancellationToken);
+        var salonAdmins = await salonAdminService.GetAllBySalonIdAsync(salonId, cancellationToken);
         return salonAdmins.Select(x => x.ToResponse()).ToList();
     }
 
     [HttpGet(SalonAdminUriConstants.GetById)]
-    public async Task<ApiResult<SalonAdminResponse>> GetByIdAsync(long salonAdminId,
+    public async Task<ApiResult<SalonAdminResponse>> GetByIdAsync([FromRoute] long salonAdminId,
         CancellationToken cancellationToken = default)
     {
         var salonAdmin = await salonAdminService.GetByIdAsync(salonAdminId, cancellationToken);
@@ -40,7 +40,7 @@ public class SalonAdminController(SalonAdminService salonAdminService) : BaseCon
 
     [HttpPut(SalonAdminUriConstants.Update)]
     public async Task<ApiResult<SalonAdminResponse>> UpdateAsync(
-        long salonAdminId,
+        [FromRoute] long salonAdminId,
         [FromBody] UpdateSalonAdminRequest updateSalonAdminRequest,
         long modifiedBy,
         CancellationToken cancellationToken = default)
@@ -52,7 +52,7 @@ public class SalonAdminController(SalonAdminService salonAdminService) : BaseCon
     }
 
     [HttpPatch(SalonAdminUriConstants.Delete)]
-    public async Task<ApiResult<SalonAdminResponse>> DeleteAsync(long salonAdminId, long deletedBy,
+    public async Task<ApiResult<SalonAdminResponse>> DeleteAsync([FromRoute] long salonAdminId, long deletedBy,
         CancellationToken cancellationToken = default)
     {
         var salonAdmin = await salonAdminService.DeleteAsync(salonAdminId, deletedBy, cancellationToken);
