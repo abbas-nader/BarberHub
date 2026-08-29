@@ -35,7 +35,8 @@ public static class DependencyInjection
         services.AddScoped<IPlatformRepository, PlatformAdminRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<ITokenHasher, TokenHasher>();
-
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+    
         services.AddMongo(configuration);
     }
 
