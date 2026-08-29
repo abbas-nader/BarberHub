@@ -20,6 +20,7 @@ public class BarberHubDbContext(DbContextOptions<BarberHubDbContext> options) : 
     public DbSet<WalletTransaction> WalletTransactions { get; set; }
     public DbSet<WorkSchedule> WorkSchedules { get; set; }
     public DbSet<PlatformAdmin> PlatformAdmins { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
