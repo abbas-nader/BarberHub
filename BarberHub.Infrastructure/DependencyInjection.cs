@@ -1,10 +1,12 @@
 ﻿using BarberHub.Application.Repositories;
-using BarberHub.Application.Security;
+using BarberHub.Application.Security.Hash;
+using BarberHub.Application.Security.JwtToken;
 using BarberHub.Infrastructure.Persistence.Mongo;
 using BarberHub.Infrastructure.Persistence.Mongo.Repositories;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
-using BarberHub.Infrastructure.Security;
+using BarberHub.Infrastructure.Security.Hash;
+using BarberHub.Infrastructure.Security.JwtToken;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +33,10 @@ public static class DependencyInjection
         services.AddScoped<IWorkScheduleRepository, WorkScheduleRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IPlatformRepository, PlatformAdminRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        
         services.AddMongo(configuration);
+       
     }
 
     private static void AddMongo(this IServiceCollection services, IConfiguration configuration)
