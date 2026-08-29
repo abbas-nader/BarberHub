@@ -34,9 +34,9 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IPlatformRepository, PlatformAdminRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-        
+        services.AddScoped<ITokenHasher, TokenHasher>();
+
         services.AddMongo(configuration);
-       
     }
 
     private static void AddMongo(this IServiceCollection services, IConfiguration configuration)
