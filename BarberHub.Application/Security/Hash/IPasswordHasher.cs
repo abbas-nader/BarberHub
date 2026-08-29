@@ -1,4 +1,4 @@
-﻿namespace BarberHub.Application.Security;
+﻿namespace BarberHub.Application.Security.Hash;
 
 public interface IPasswordHasher
 {

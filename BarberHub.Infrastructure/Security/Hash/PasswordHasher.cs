@@ -1,7 +1,7 @@
-﻿using BarberHub.Application.Security;
+﻿using BarberHub.Application.Security.Hash;
 using BarberHub.Domain.Exceptions.SharedExceptions;
 
-namespace BarberHub.Infrastructure.Security;
+namespace BarberHub.Infrastructure.Security.Hash;
 
 public class PasswordHasher : IPasswordHasher
 {

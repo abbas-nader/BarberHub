@@ -2,6 +2,7 @@
 using BarberHub.Application.DTOs.SalonAdmin;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security;
+using BarberHub.Application.Security.Hash;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 

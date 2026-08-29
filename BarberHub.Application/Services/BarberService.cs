@@ -1,7 +1,6 @@
-﻿using BarberHub.Application.DTOs;
-using BarberHub.Application.DTOs.Barber;
+﻿using BarberHub.Application.DTOs.Barber;
 using BarberHub.Application.Repositories;
-using BarberHub.Application.Security;
+using BarberHub.Application.Security.Hash;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 
