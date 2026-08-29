@@ -36,8 +36,9 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<ITokenHasher, TokenHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-    
+
         services.AddMongo(configuration);
+        services.AddJwt(configuration);
     }
 
     private static void AddMongo(this IServiceCollection services, IConfiguration configuration)
@@ -48,5 +49,10 @@ public static class DependencyInjection
 
         services.AddSingleton<MongoContext>();
         services.AddScoped<IExceptionLogRepository, ExceptionLogRepository>();
+    }
+
+    private static void AddJwt(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<JwtSetting>(configuration.GetSection(JwtSetting.JwtSettingsSectionName));
     }
 }
