@@ -6,6 +6,9 @@ namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
 
 public class RefreshTokenRepository(BarberHubDbContext context) : IRefreshTokenRepository
 {
+    public async Task<RefreshToken?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+        => await context.RefreshTokens.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
     public async Task<RefreshToken?> GetByTokenHashAsync(string tokenHash,
         CancellationToken cancellationToken = default)
         => await context.RefreshTokens.FirstOrDefaultAsync(x => x.TokenHash == tokenHash && x.IsRevoked == false,
@@ -15,8 +18,8 @@ public class RefreshTokenRepository(BarberHubDbContext context) : IRefreshTokenR
         => await context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
 
     public void Update(RefreshToken refreshToken)
-    => context.RefreshTokens.Update(refreshToken);
+        => context.RefreshTokens.Update(refreshToken);
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    => context.SaveChangesAsync(cancellationToken);
+        => context.SaveChangesAsync(cancellationToken);
 }
