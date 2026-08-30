@@ -27,6 +27,10 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
     {
         EntityNotFoundException => HttpStatusCode.NotFound,
 
+        InvalidCredentialsException
+            or InvalidRefreshTokenException
+            or RefreshTokenReuseDetectedException => HttpStatusCode.Unauthorized,
+            
         DuplicateUserNameException
             or EntityAlreadyDeletedException
             or ReviewAlreadyApprovedException
