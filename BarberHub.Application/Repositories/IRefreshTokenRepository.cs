@@ -4,6 +4,7 @@ namespace BarberHub.Application.Repositories;
 
 public interface IRefreshTokenRepository
 {
+    Task<RefreshToken?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
     Task<RefreshToken?> GetByTokenHashAsync(string tokenHash,  CancellationToken cancellationToken =  default);
     Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default);
     void Update(RefreshToken refreshToken);
