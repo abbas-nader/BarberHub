@@ -12,6 +12,10 @@ public class SalonAdminRepository(BarberHubDbContext context)
         return await BarberHubDbContext.SalonAdmins.AnyAsync(x => x.UserName == userName, cancellationToken);
     }
 
+    public async Task<SalonAdmin?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+        => await BarberHubDbContext.SalonAdmins.FirstOrDefaultAsync(x => x.UserName == userName && x.IsDeleted == false,
+            cancellationToken);
+
     public async Task<IReadOnlyCollection<SalonAdmin>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
     {
