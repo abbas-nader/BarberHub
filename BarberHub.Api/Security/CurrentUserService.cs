@@ -29,5 +29,5 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICur
 
     private static string GetRequiredClaim(ClaimsPrincipal user, string claimType)
         => user.FindFirst(claimType)?.Value
-           ?? throw new RequiredClaimMissingException(nameof(claimType));
+           ?? throw new RequiredClaimMissingException(claimType);
 }
