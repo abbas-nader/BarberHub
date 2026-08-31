@@ -17,7 +17,7 @@ public class JwtTokenGenerator(IOptions<JwtSetting> options) : IJwtTokenGenerato
         var accessTokenExpirest = DateTimeOffset.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes);
         var accessToken = GenerateAccessToken(tokenClaims, accessTokenExpirest);
 
-        var refreshTokenExpirest = DateTimeOffset.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationMinutes);
+        var refreshTokenExpirest = DateTimeOffset.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays);
         var refreshToken = GenerateRefreshToken();
 
         return new TokenResult(accessToken, accessTokenExpirest, refreshToken, refreshTokenExpirest);
