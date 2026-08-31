@@ -96,7 +96,7 @@ public class AuthenticationService(
 
         if (existingToken.ExpiresAt < DateTimeOffset.UtcNow)
             throw new InvalidRefreshTokenException();
-        var claims = await BuildClaimsAsync(existingToken.UserId, UserRole.SalonAdmin, cancellationToken);
+        var claims = await BuildClaimsAsync(existingToken.UserId, existingToken.Role, cancellationToken);
         var tokenResult = jwtTokenGenerator.Generate(claims);
         var newTokenHash = tokenHasher.Hash(tokenResult.RefreshToken);
         var newRefreshToken = new RefreshToken(newTokenHash, claims.UserId, existingToken.Role,
