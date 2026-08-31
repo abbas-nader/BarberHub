@@ -27,15 +27,13 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
             .HasMaxLength(BarberConstants.PasswordHashMaxLength);
         builder.Property(x => x.Description)
             .HasMaxLength(BarberConstants.DescriptionMaxLength);
-        builder.Property(x=> x.Description)
-            .HasMaxLength(BarberConstants.DescriptionMaxLength);
         builder.Property(x => x.IsActive)
             .IsRequired();
         
         builder.HasOne<Salon>()
             .WithMany(b => b.Barbers)
             .HasForeignKey(m => m.SalonId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(b => b.WorkSchedules)
             .WithOne()
             .HasForeignKey(w => w.BarberId)
