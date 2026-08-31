@@ -1,9 +1,14 @@
+using System.Text;
 using Asp.Versioning;
 using BarberHub.Api.Filters;
 using BarberHub.Api.Middleware;
 using BarberHub.Application;
 using BarberHub.Infrastructure;
+using BarberHub.Infrastructure.Security.JwtToken;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +41,26 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<ApiResultFilter>();
     options.Filters.Add<ValidationFilter>();
 });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer();
+builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+    .Configure<IOptions<JwtSetting>>((bearerOptions, jwtSettingOptions) =>
+    {
+        var jwtSetting = jwtSettingOptions.Value;
+        bearerOptions.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtSetting.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtSetting.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.SecretKey)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 // Configure the HTTP request pipeline.
@@ -57,7 +82,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
