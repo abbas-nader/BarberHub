@@ -29,8 +29,10 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
 
         InvalidCredentialsException
             or InvalidRefreshTokenException
-            or RefreshTokenReuseDetectedException => HttpStatusCode.Unauthorized,
-            
+            or RefreshTokenReuseDetectedException
+            or RequiredClaimMissingException
+            or UserNotAuthenticatedException => HttpStatusCode.Unauthorized,
+
         DuplicateUserNameException
             or EntityAlreadyDeletedException
             or ReviewAlreadyApprovedException
@@ -39,7 +41,8 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or InsufficientMoneyException => HttpStatusCode.Conflict,
 
         RequiredFieldException
-            or InvalidDepositAmountException
+            or InvalidAuditUserIdException
+            or InvalidMoneyAmountException
             or InvalidServiceDurationSnapshotException
             or InvalidRatingException
             or InvalidSalonDescriptionException
