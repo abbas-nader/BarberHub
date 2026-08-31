@@ -10,7 +10,7 @@ public sealed record Money
 
     public Money(decimal value, Currency currency)
     {
-        if (value < 0) throw new InvalidDepositAmountException();
+        if (value < 0) throw new InvalidMoneyAmountException();
         Value = value;
         Currency = currency;
     }
