@@ -11,7 +11,7 @@ public class RefreshTokenRepository(BarberHubDbContext context) : IRefreshTokenR
 
     public async Task<RefreshToken?> GetByTokenHashAsync(string tokenHash,
         CancellationToken cancellationToken = default)
-        => await context.RefreshTokens.FirstOrDefaultAsync(x => x.TokenHash == tokenHash && x.IsRevoked == false,
+        => await context.RefreshTokens.FirstOrDefaultAsync(x => x.TokenHash == tokenHash,
             cancellationToken);
 
     public async Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
