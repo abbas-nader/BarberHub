@@ -1,6 +1,5 @@
 ﻿using BarberHub.Application.Repositories;
 using BarberHub.Domain.Entities;
-using BarberHub.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
@@ -9,7 +8,8 @@ public class BarberRepository(BarberHubDbContext context) : BaseRepository<Barbe
 {
     public async Task<bool> ExistsByUserNameAsync(string userName, CancellationToken cancellationToken = default)
     {
-        return await BarberHubDbContext.Barbers.AnyAsync(x => x.UserName == userName, cancellationToken);
+        return await BarberHubDbContext.Barbers.AnyAsync(x => x.UserName == userName && x.IsDeleted == false,
+            cancellationToken);
     }
 
     public async Task<Barber?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
