@@ -10,5 +10,5 @@ public class JwtSetting
     public string Issuer { get; set; } = "BarberHub";
     public string Audience { get; set; } = "BarberHubClient";
     public int AccessTokenExpirationMinutes { get; set; } = 15;
-    public int RefreshTokenExpirationMinutes { get; set; } = 7;
+    public int RefreshTokenExpirationDays { get; set; } = 7;
 }
