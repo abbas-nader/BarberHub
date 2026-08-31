@@ -117,7 +117,7 @@ public class Salon : BaseEntity
     private static void ValidateDepositAmount(Money depositAmount)
     {
         if (depositAmount is null)
-            throw new InvalidDepositAmountException();
+            throw new InvalidMoneyAmountException();
     }
 
     private static void ValidateDescription(string? description)
