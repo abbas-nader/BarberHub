@@ -9,7 +9,8 @@ public class SalonAdminRepository(BarberHubDbContext context)
 {
     public async Task<bool> ExistsByUserNameAsync(string userName, CancellationToken cancellationToken = default)
     {
-        return await BarberHubDbContext.SalonAdmins.AnyAsync(x => x.UserName == userName, cancellationToken);
+        return await BarberHubDbContext.SalonAdmins.AnyAsync(x => x.UserName == userName && x.IsDeleted == false,
+            cancellationToken);
     }
 
     public async Task<SalonAdmin?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
