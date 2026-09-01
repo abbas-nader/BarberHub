@@ -1,5 +1,4 @@
-﻿using BarberHub.Application.DTOs;
-using BarberHub.Application.DTOs.ExceptionLog;
+﻿using BarberHub.Application.DTOs.ExceptionLog;
 using BarberHub.Application.Repositories;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
