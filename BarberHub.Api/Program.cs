@@ -2,7 +2,9 @@ using System.Text;
 using Asp.Versioning;
 using BarberHub.Api.Filters;
 using BarberHub.Api.Middleware;
+using BarberHub.Api.Security;
 using BarberHub.Application;
+using BarberHub.Application.Security.JwtToken;
 using BarberHub.Infrastructure;
 using BarberHub.Infrastructure.Security.JwtToken;
 using FluentValidation;
@@ -20,7 +22,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplications();
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 builder.Services.AddApiVersioning(options =>
