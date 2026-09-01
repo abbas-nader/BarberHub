@@ -1,7 +1,6 @@
 ﻿using BarberHub.Application.DTOs.Salon;
 using BarberHub.Application.Repositories;
 using BarberHub.Domain.Entities;
-using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.ValueObjects;
 
