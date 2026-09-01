@@ -23,8 +23,8 @@ public abstract class BaseRepository<TEntity>(BarberHubDbContext barberHubDbCont
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet.Where(x => x.IsDeleted == false);
-        var totalCount =await _dbSet.CountAsync(cancellationToken);
-        var items = await _dbSet.AsNoTracking()
+        var totalCount =await query.CountAsync(cancellationToken);
+        var items = await query.AsNoTracking()
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
