@@ -46,9 +46,12 @@ public class BarberService(IBarberRepository barberRepository, IPasswordHasher p
         var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
             throw new EntityNotFoundException(nameof(Barber), barberId);
-        var checkUserName = await barberRepository.ExistsByUserNameAsync(updateBarberDto.Username, cancellationToken);
-        if (checkUserName)
-            throw new DuplicateUserNameException();
+        if (!string.Equals(barber.UserName, updateBarberDto.Username,StringComparison.Ordinal))
+        {
+            var checkUserName = await barberRepository.ExistsByUserNameAsync(updateBarberDto.Username, cancellationToken);
+            if (checkUserName)
+                throw new DuplicateUserNameException();
+        }
         var passwordHash = string.IsNullOrWhiteSpace(updateBarberDto.Password)
             ? barber.PasswordHash
             : passwordHasher.Hash(updateBarberDto.Password);
