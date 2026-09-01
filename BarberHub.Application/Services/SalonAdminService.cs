@@ -1,7 +1,5 @@
-﻿using BarberHub.Application.DTOs.Barber;
-using BarberHub.Application.DTOs.SalonAdmin;
+﻿using BarberHub.Application.DTOs.SalonAdmin;
 using BarberHub.Application.Repositories;
-using BarberHub.Application.Security;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
@@ -47,10 +45,12 @@ public class SalonAdminService(ISalonAdminRepository salonAdminRepository, IPass
         var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken);
         if (salonAdmin == null)
             throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
-        var checkUserName =
-            await salonAdminRepository.ExistsByUserNameAsync(updateSalonAdminDto.Username, cancellationToken);
-        if (checkUserName)
-            throw new DuplicateUserNameException();
+        if (!string.Equals(salonAdmin.UserName, updateSalonAdminDto.Username, StringComparison.Ordinal))
+        {
+            var checkUserName = await salonAdminRepository.ExistsByUserNameAsync(updateSalonAdminDto.Username, cancellationToken);
+            if (checkUserName)
+                throw new DuplicateUserNameException();
+        }
         var passwordHash = string.IsNullOrWhiteSpace(updateSalonAdminDto.Password)
             ? salonAdmin.PasswordHash
             : passwordHasher.Hash(updateSalonAdminDto.Password);
