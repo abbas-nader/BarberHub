@@ -17,6 +17,9 @@ public class FileConfiguration : IEntityTypeConfiguration<File>
         builder.Property(x=> x.Url)
             .IsRequired()
             .HasMaxLength(FileConstants.UrlMaxLength);
+        builder.Property(x => x.StorageKey)
+            .IsRequired()
+            .HasMaxLength(FileConstants.StorageKeyMaxLength);
         builder.Property(x=> x.OriginFileName)
             .IsRequired()
             .HasMaxLength(FileConstants.OriginFileNameMaxLength);
