@@ -39,7 +39,7 @@ public class JwtTokenGenerator(IOptions<JwtSetting> options) : IJwtTokenGenerato
             issuer: _jwtSettings.Issuer,
             audience: _jwtSettings.Audience,
             claims: claimsList,
-            expiresAt.UtcDateTime,
+            expires: expiresAt.UtcDateTime,
             signingCredentials: credentials
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
