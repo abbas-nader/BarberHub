@@ -30,59 +30,55 @@ public class SalonController(SalonService salonService) : BaseController
 
     [HttpPost(SalonUriConstants.Create)]
     [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
-    public async Task<ApiResult<SalonResponse>> CreateAsync([FromBody] CreateSalonRequest request, long creationBy,
+    public async Task<ApiResult<SalonResponse>> CreateAsync([FromBody] CreateSalonRequest request,
         CancellationToken cancellationToken = default)
     {
-        var salon = await salonService.CreateAsync(request.ToDto(), creationBy, cancellationToken);
+        var salon = await salonService.CreateAsync(request.ToDto(), cancellationToken);
         return salon.ToResponse();
     }
 
     [HttpPut(SalonUriConstants.Update)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<SalonResponse>> UpdateAsync([FromRoute] long salonId,
-        [FromBody] UpdateSalonRequest request,
-        long modifiedBy,
-        CancellationToken cancellationToken = default)
+        [FromBody] UpdateSalonRequest request, CancellationToken cancellationToken = default)
     {
-        var salon = await salonService.UpdateAsync(salonId, request.ToDto(), modifiedBy, cancellationToken);
+        var salon = await salonService.UpdateAsync(salonId, request.ToDto(), cancellationToken);
         return salon.ToResponse();
     }
 
     [HttpPatch(SalonUriConstants.Delete)]
     [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
-    public async Task<ApiResult<SalonResponse>> DeleteAsync([FromRoute] long salonId, long deletedBy,
+    public async Task<ApiResult<SalonResponse>> DeleteAsync([FromRoute] long salonId,
         CancellationToken cancellationToken)
     {
-        var salon = await salonService.DeleteAsync(salonId, deletedBy, cancellationToken);
+        var salon = await salonService.DeleteAsync(salonId, cancellationToken);
         return salon.ToResponse();
     }
 
     [HttpPatch(SalonUriConstants.Activate)]
     [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
-    public async Task<ApiResult<SalonResponse>> ActivateAsync([FromRoute] long salonId, long modifiedBy,
+    public async Task<ApiResult<SalonResponse>> ActivateAsync([FromRoute] long salonId,
         CancellationToken cancellationToken)
     {
-        var salon = await salonService.ActivateAsync(salonId, modifiedBy, cancellationToken);
+        var salon = await salonService.ActivateAsync(salonId, cancellationToken);
         return salon.ToResponse();
     }
 
     [HttpPatch(SalonUriConstants.Deactivate)]
     [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
-    public async Task<ApiResult<SalonResponse>> DeactivateAsync([FromRoute] long salonId, long modifiedBy,
+    public async Task<ApiResult<SalonResponse>> DeactivateAsync([FromRoute] long salonId,
         CancellationToken cancellationToken)
     {
-        var salon = await salonService.DeactivateAsync(salonId, modifiedBy, cancellationToken);
+        var salon = await salonService.DeactivateAsync(salonId, cancellationToken);
         return salon.ToResponse();
     }
 
     [HttpPatch(SalonUriConstants.UpdateDepositAmount)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<SalonResponse>> UpdateDepositAmountAsync([FromRoute] long salonId,
-        UpdateSalonDepositAmountRequest updateSalonDepositAmountRequest,
-        long modifiedBy,
-        CancellationToken cancellationToken)
+        UpdateSalonDepositAmountRequest updateSalonDepositAmountRequest, CancellationToken cancellationToken)
     {
-        var salon = await salonService.UpdateDepositAmount(salonId, updateSalonDepositAmountRequest.ToDto(), modifiedBy,
+        var salon = await salonService.UpdateDepositAmount(salonId, updateSalonDepositAmountRequest.ToDto(),
             cancellationToken);
         return salon.ToResponse();
     }
