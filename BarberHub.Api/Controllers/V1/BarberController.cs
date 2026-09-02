@@ -4,6 +4,8 @@ using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.Barber;
 using BarberHub.Api.Mappers;
 using BarberHub.Application.Services;
+using BarberHub.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberHub.Api.Controllers.V1;
@@ -27,6 +29,7 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpPost(BarberUriConstants.Create)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<BarberResponse>> CreateAsync([FromBody] CreateBarberRequest request,
         long creationBy, CancellationToken cancellationToken)
     {
@@ -35,6 +38,7 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpPut(BarberUriConstants.Update)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<BarberResponse>> UpdateAsync(long barberId, [FromBody] UpdateBarberRequest request,
         long modifiedBy, CancellationToken cancellationToken)
     {
@@ -43,6 +47,7 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpPatch(BarberUriConstants.Delete)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<BarberResponse>> DeleteAsync(long barberId, long deletedBy,
         CancellationToken cancellationToken)
     {
@@ -51,6 +56,7 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpPatch(BarberUriConstants.Activate)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<BarberResponse>> ActivateAsync(long barberId, long modifiedBy,
         CancellationToken cancellationToken)
     {
@@ -59,6 +65,7 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpPatch(BarberUriConstants.Deactivate)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<BarberResponse>> DeactivateAsync(long barberId, long modifiedBy,
         CancellationToken cancellationToken)
     {
