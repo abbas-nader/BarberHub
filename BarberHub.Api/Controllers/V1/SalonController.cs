@@ -5,6 +5,7 @@ using BarberHub.Api.Contracts.Salon;
 using BarberHub.Api.Mappers;
 using BarberHub.Application.Services;
 using BarberHub.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberHub.Api.Controllers.V1;
@@ -28,6 +29,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPost(SalonUriConstants.Create)]
+    [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
     public async Task<ApiResult<SalonResponse>> CreateAsync([FromBody] CreateSalonRequest request, long creationBy,
         CancellationToken cancellationToken = default)
     {
@@ -36,6 +38,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPut(SalonUriConstants.Update)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<SalonResponse>> UpdateAsync([FromRoute] long salonId,
         [FromBody] UpdateSalonRequest request,
         long modifiedBy,
@@ -46,6 +49,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPatch(SalonUriConstants.Delete)]
+    [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
     public async Task<ApiResult<SalonResponse>> DeleteAsync([FromRoute] long salonId, long deletedBy,
         CancellationToken cancellationToken)
     {
@@ -54,6 +58,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPatch(SalonUriConstants.Activate)]
+    [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
     public async Task<ApiResult<SalonResponse>> ActivateAsync([FromRoute] long salonId, long modifiedBy,
         CancellationToken cancellationToken)
     {
@@ -62,6 +67,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPatch(SalonUriConstants.Deactivate)]
+    [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
     public async Task<ApiResult<SalonResponse>> DeactivateAsync([FromRoute] long salonId, long modifiedBy,
         CancellationToken cancellationToken)
     {
@@ -70,6 +76,7 @@ public class SalonController(SalonService salonService) : BaseController
     }
 
     [HttpPatch(SalonUriConstants.UpdateDepositAmount)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<SalonResponse>> UpdateDepositAmountAsync([FromRoute] long salonId,
         UpdateSalonDepositAmountRequest updateSalonDepositAmountRequest,
         long modifiedBy,
