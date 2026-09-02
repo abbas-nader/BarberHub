@@ -31,45 +31,44 @@ public class BarberController(BarberService barberService) : BaseController
     [HttpPost(BarberUriConstants.Create)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<BarberResponse>> CreateAsync([FromBody] CreateBarberRequest request,
-        long creationBy, CancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
-        var barber = await barberService.CreateAsync(request.ToDto(), creationBy, cancellationToken);
+        var barber = await barberService.CreateAsync(request.ToDto(), cancellationToken);
         return barber.ToResponse();
     }
 
     [HttpPut(BarberUriConstants.Update)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<BarberResponse>> UpdateAsync(long barberId, [FromBody] UpdateBarberRequest request,
-        long modifiedBy, CancellationToken cancellationToken)
+        CancellationToken cancellationToken)
     {
-        var barber = await barberService.UpdateAsync(barberId, request.ToDto(), modifiedBy, cancellationToken);
+        var barber = await barberService.UpdateAsync(barberId, request.ToDto(), cancellationToken);
         return barber.ToResponse();
     }
 
     [HttpPatch(BarberUriConstants.Delete)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<BarberResponse>> DeleteAsync(long barberId, long deletedBy,
-        CancellationToken cancellationToken)
+    public async Task<ApiResult<BarberResponse>> DeleteAsync(long barberId, CancellationToken cancellationToken)
     {
-        var barber = await barberService.DeleteAsync(barberId, deletedBy, cancellationToken);
+        var barber = await barberService.DeleteAsync(barberId, cancellationToken);
         return barber.ToResponse();
     }
 
     [HttpPatch(BarberUriConstants.Activate)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<BarberResponse>> ActivateAsync(long barberId, long modifiedBy,
+    public async Task<ApiResult<BarberResponse>> ActivateAsync(long barberId,
         CancellationToken cancellationToken)
     {
-        var barber = await barberService.ActivateAsync(barberId, modifiedBy, cancellationToken);
+        var barber = await barberService.ActivateAsync(barberId, cancellationToken);
         return barber.ToResponse();
     }
 
     [HttpPatch(BarberUriConstants.Deactivate)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<BarberResponse>> DeactivateAsync(long barberId, long modifiedBy,
+    public async Task<ApiResult<BarberResponse>> DeactivateAsync(long barberId,
         CancellationToken cancellationToken)
     {
-        var barber = await barberService.DeactivateAsync(barberId, modifiedBy, cancellationToken);
+        var barber = await barberService.DeactivateAsync(barberId, cancellationToken);
         return barber.ToResponse();
     }
 }
