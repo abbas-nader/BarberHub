@@ -34,9 +34,12 @@ public class BarberService(
         if (checkUserName)
             throw new DuplicateUserNameException();
 
+        var salonId = currentUserService.CurrentUser.SalonId
+                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+
         var passwordHash = passwordHasher.Hash(createBarberDto.Password);
         var barber = new Barber(createBarberDto.FirstName, createBarberDto.LastName, createBarberDto.MobileNumber,
-            createBarberDto.Username, passwordHash, createBarberDto.Description, createBarberDto.SalonId,
+            createBarberDto.Username, passwordHash, createBarberDto.Description, salonId,
             currentUserService.CurrentUser.UserId);
 
         await barberRepository.AddAsync(barber, cancellationToken);
@@ -50,6 +53,11 @@ public class BarberService(
         var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
             throw new EntityNotFoundException(nameof(Barber), barberId);
+        var salonId = currentUserService.CurrentUser.SalonId
+                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        if (barber.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(Barber), barber.Id);
+
         if (!string.Equals(barber.UserName, updateBarberDto.Username, StringComparison.Ordinal))
         {
             var checkUserName =
@@ -63,7 +71,8 @@ public class BarberService(
             : passwordHasher.Hash(updateBarberDto.Password);
 
         barber.Update(updateBarberDto.FirstName, updateBarberDto.LastName, updateBarberDto.MobileNumber,
-            updateBarberDto.Username, passwordHash, updateBarberDto.Description, currentUserService.CurrentUser.UserId);
+            updateBarberDto.Username, passwordHash, updateBarberDto.Description,
+            currentUserService.CurrentUser.UserId);
         barberRepository.Update(barber);
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
@@ -74,6 +83,11 @@ public class BarberService(
         var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
             throw new EntityNotFoundException(nameof(Barber), barberId);
+        var salonId = currentUserService.CurrentUser.SalonId
+                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        if (barber.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(Barber), barber.Id);
+
         barber.SoftDelete(currentUserService.CurrentUser.UserId);
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
@@ -84,6 +98,10 @@ public class BarberService(
         var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
             throw new EntityNotFoundException(nameof(Barber), barberId);
+        var salonId = currentUserService.CurrentUser.SalonId
+                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        if (barber.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(Barber), barber.Id);
 
         barber.Activate(currentUserService.CurrentUser.UserId);
         await barberRepository.SaveChangesAsync(cancellationToken);
@@ -95,6 +113,11 @@ public class BarberService(
         var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
         if (barber == null)
             throw new EntityNotFoundException(nameof(Barber), barberId);
+        var salonId = currentUserService.CurrentUser.SalonId
+                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        if (barber.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(Barber), barber.Id);
+
         barber.Deactivate(currentUserService.CurrentUser.UserId);
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
