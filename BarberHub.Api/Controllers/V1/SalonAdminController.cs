@@ -33,11 +33,10 @@ public class SalonAdminController(SalonAdminService salonAdminService) : BaseCon
     [HttpPost(SalonAdminUriConstants.Create)]
     public async Task<ApiResult<SalonAdminResponse>> CreateAsync(
         [FromBody] CreateSalonAdminRequest createSalonAdminRequest,
-        long creationBy,
         CancellationToken cancellationToken = default)
     {
         var salonAdmin =
-            await salonAdminService.CreateAsync(createSalonAdminRequest.ToDto(), creationBy, cancellationToken);
+            await salonAdminService.CreateAsync(createSalonAdminRequest.ToDto(), cancellationToken);
         return salonAdmin.ToResponse();
     }
 
@@ -45,20 +44,17 @@ public class SalonAdminController(SalonAdminService salonAdminService) : BaseCon
     public async Task<ApiResult<SalonAdminResponse>> UpdateAsync(
         [FromRoute] long salonAdminId,
         [FromBody] UpdateSalonAdminRequest updateSalonAdminRequest,
-        long modifiedBy,
         CancellationToken cancellationToken = default)
     {
         var salonAdmin =
-            await salonAdminService.UpdateAsync(salonAdminId, updateSalonAdminRequest.ToDto(), modifiedBy,
-                cancellationToken);
+            await salonAdminService.UpdateAsync(salonAdminId, updateSalonAdminRequest.ToDto(), cancellationToken);
         return salonAdmin.ToResponse();
     }
 
     [HttpPatch(SalonAdminUriConstants.Delete)]
-    public async Task<ApiResult<SalonAdminResponse>> DeleteAsync([FromRoute] long salonAdminId, long deletedBy,
-        CancellationToken cancellationToken = default)
+    public async Task<ApiResult<SalonAdminResponse>> DeleteAsync([FromRoute] long salonAdminId, CancellationToken cancellationToken = default)
     {
-        var salonAdmin = await salonAdminService.DeleteAsync(salonAdminId, deletedBy, cancellationToken);
+        var salonAdmin = await salonAdminService.DeleteAsync(salonAdminId, cancellationToken);
         return salonAdmin.ToResponse();
     }
 }
