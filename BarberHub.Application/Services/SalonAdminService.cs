@@ -1,12 +1,16 @@
 ﻿using BarberHub.Application.DTOs.SalonAdmin;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
+using BarberHub.Application.Security.JwtToken;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 
 namespace BarberHub.Application.Services;
 
-public class SalonAdminService(ISalonAdminRepository salonAdminRepository, IPasswordHasher passwordHasher)
+public class SalonAdminService(
+    ISalonAdminRepository salonAdminRepository,
+    IPasswordHasher passwordHasher,
+    ICurrentUserService currentUserService)
 {
     public async Task<IReadOnlyList<SalonAdminDto>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
@@ -23,7 +27,7 @@ public class SalonAdminService(ISalonAdminRepository salonAdminRepository, IPass
         return ToDto(salonAdmin);
     }
 
-    public async Task<SalonAdminDto> CreateAsync(CreateSalonAdminDto createSalonAdminDto, long creationBy,
+    public async Task<SalonAdminDto> CreateAsync(CreateSalonAdminDto createSalonAdminDto,
         CancellationToken cancellationToken = default)
     {
         var checkUserName =
@@ -33,13 +37,13 @@ public class SalonAdminService(ISalonAdminRepository salonAdminRepository, IPass
         var passwordHash = passwordHasher.Hash(createSalonAdminDto.Password);
         var salonAdmin = new SalonAdmin(createSalonAdminDto.FirstName, createSalonAdminDto.LastName,
             createSalonAdminDto.Username, passwordHash, createSalonAdminDto.MobileNumber, createSalonAdminDto.SalonId,
-            creationBy);
+            currentUserService.CurrentUser.UserId);
         await salonAdminRepository.AddAsync(salonAdmin, cancellationToken);
         await salonAdminRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salonAdmin);
     }
 
-    public async Task<SalonAdminDto> UpdateAsync(long salonAdminId,UpdateSalonAdminDto updateSalonAdminDto,long modifiedBy,
+    public async Task<SalonAdminDto> UpdateAsync(long salonAdminId, UpdateSalonAdminDto updateSalonAdminDto,
         CancellationToken cancellationToken = default)
     {
         var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken);
@@ -47,26 +51,28 @@ public class SalonAdminService(ISalonAdminRepository salonAdminRepository, IPass
             throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
         if (!string.Equals(salonAdmin.UserName, updateSalonAdminDto.Username, StringComparison.Ordinal))
         {
-            var checkUserName = await salonAdminRepository.ExistsByUserNameAsync(updateSalonAdminDto.Username, cancellationToken);
+            var checkUserName =
+                await salonAdminRepository.ExistsByUserNameAsync(updateSalonAdminDto.Username, cancellationToken);
             if (checkUserName)
                 throw new DuplicateUserNameException();
         }
+
         var passwordHash = string.IsNullOrWhiteSpace(updateSalonAdminDto.Password)
             ? salonAdmin.PasswordHash
             : passwordHasher.Hash(updateSalonAdminDto.Password);
         salonAdmin.Update(updateSalonAdminDto.FirstName, updateSalonAdminDto.LastName, updateSalonAdminDto.Username,
-            passwordHash, updateSalonAdminDto.MobileNumber, modifiedBy);
+            passwordHash, updateSalonAdminDto.MobileNumber, currentUserService.CurrentUser.UserId);
         salonAdminRepository.Update(salonAdmin);
         await salonAdminRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salonAdmin);
     }
 
-    public async Task<SalonAdminDto> DeleteAsync(long salonAdminId,long deletedBy, CancellationToken cancellationToken = default)
+    public async Task<SalonAdminDto> DeleteAsync(long salonAdminId, CancellationToken cancellationToken = default)
     {
         var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken);
         if (salonAdmin == null)
             throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
-        salonAdmin.SoftDelete(deletedBy);
+        salonAdmin.SoftDelete(currentUserService.CurrentUser.UserId);
         await salonAdminRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salonAdmin);
     }
