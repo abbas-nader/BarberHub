@@ -4,11 +4,14 @@ using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.ExceptionLog;
 using BarberHub.Api.Mappers;
 using BarberHub.Application.Services;
+using BarberHub.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberHub.Api.Controllers.V1;
 
 [ApiVersion("1.0")]
+[Authorize(Roles = nameof(UserRole.PlatformAdmin))]
 public class ExceptionLogController(ExceptionLogService exceptionLogService) : BaseController
 {
     [HttpGet(ExceptionLogUriConstants.GetAll)]
