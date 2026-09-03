@@ -33,7 +33,7 @@ public class ServiceCatalogService(IServiceRepository serviceRepository, ICurren
         return ToDto(newService);
     }
 
-    public async Task<ServiceDto> UpdateAsync(long serviceId, CreateServiceDto service,
+    public async Task<ServiceDto> UpdateAsync(long serviceId, UpdateServiceDto service,
         CancellationToken cancellationToken = default)
     {
         var serviceToUpdate = await serviceRepository.GetByIdAsync(serviceId, cancellationToken) ??
