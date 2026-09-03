@@ -3,7 +3,7 @@ using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Domain.ValueObjects;
 
-public abstract record ServiceSnapshot
+public sealed record ServiceSnapshot
 {
     public string ServiceName { get; private set; } = null!;
     public TimeSpan ServiceDuration { get; private set; }
@@ -13,7 +13,7 @@ public abstract record ServiceSnapshot
     {
     }
 
-    protected ServiceSnapshot(string serviceName, TimeSpan serviceDuration, Money servicePrice)
+    public ServiceSnapshot(string serviceName, TimeSpan serviceDuration, Money servicePrice)
     {
         if (serviceDuration.Ticks <= 0) throw new InvalidServiceDurationSnapshotException();
         if (string.IsNullOrWhiteSpace(serviceName))
