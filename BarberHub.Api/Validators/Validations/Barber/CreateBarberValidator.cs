@@ -48,8 +48,5 @@ public class CreateBarberValidator : AbstractValidator<CreateBarberRequest>
             .MaximumLength(BarberConstants.DescriptionMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(CreateBarberValidationMessages.DescriptionProperty));
-        RuleFor(x => x.SalonId)
-            .GreaterThan(BarberConstants.SalonMinValidValue)
-            .WithMessage(CreateBarberValidationMessages.SalonIdInvalid);
     }
 }
