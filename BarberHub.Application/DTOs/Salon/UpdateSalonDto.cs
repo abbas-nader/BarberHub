@@ -5,5 +5,6 @@ public record UpdateSalonDto(
     string Address,
     string City,
     string PhoneNumber,
-    string? Description
+    string? Description,
+    long SalonId
 );
