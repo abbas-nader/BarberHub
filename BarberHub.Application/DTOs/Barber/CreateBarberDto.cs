@@ -6,6 +6,5 @@ public record CreateBarberDto(
     string MobileNumber,
     string Username,
     string Password,
-    string? Description,
-    long SalonId
+    string? Description
 );
