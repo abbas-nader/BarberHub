@@ -40,6 +40,8 @@ public class Review : BaseEntity
     {
         ValidateRating(rating);
         ValidateComment(comment);
+        Rating = rating;
+        Comment = comment;
         if (IsApproved)
         {
             IsApproved = false;
