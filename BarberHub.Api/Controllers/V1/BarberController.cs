@@ -14,7 +14,7 @@ namespace BarberHub.Api.Controllers.V1;
 public class BarberController(BarberService barberService) : BaseController
 {
     [HttpGet(BarberUriConstants.GetAllBySalonId)]
-    public async Task<ApiResult<IReadOnlyList<BarberResponse>>> GetAllBySalonIdAsync(long salonId,
+    public async Task<ApiResult<IReadOnlyList<BarberResponse>>> GetAllBySalonIdAsync([FromRoute]long salonId,
         CancellationToken cancellationToken)
     {
         var barbers = await barberService.GetAllBySalonIdAsync(salonId, cancellationToken);
