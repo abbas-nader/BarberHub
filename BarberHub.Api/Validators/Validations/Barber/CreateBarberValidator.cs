@@ -37,13 +37,14 @@ public class CreateBarberValidator : AbstractValidator<CreateBarberRequest>
                 SharedValidationMessages.PropertyMaxLength(CreateBarberValidationMessages.UsernameProperty))
             .Matches(@"^\S+$").WithMessage(CreateBarberValidationMessages.UsernameInvalidFormat);
         RuleFor(x => x.Password)
+            .NotEmpty()
+            .WithMessage(CreateBarberValidationMessages.PasswordProperty)
             .MinimumLength(PasswordValidationMessages.MinLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMinLength(CreateBarberValidationMessages.PasswordProperty))
             .MaximumLength(PasswordValidationMessages.MaxLength)
             .WithMessage(
-                SharedValidationMessages.PropertyMaxLength(CreateBarberValidationMessages.PasswordProperty))
-            .When(x => !string.IsNullOrWhiteSpace(x.Password));
+                SharedValidationMessages.PropertyMaxLength(CreateBarberValidationMessages.PasswordProperty));
         RuleFor(x => x.Description)
             .MaximumLength(BarberConstants.DescriptionMaxLength)
             .WithMessage(
