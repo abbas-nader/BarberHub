@@ -151,6 +151,8 @@ public class AuthenticationService(
             {
                 var barber = await barberRepository.GetByIdAsync(userId, cancellationToken)
                              ?? throw new EntityNotFoundException(nameof(Barber), userId);
+                if (!barber.IsActive)
+                    throw new InvalidCredentialsException();
                 return new TokenClaims(barber.Id, UserRole.Barber, barber.SalonId);
             }
             case UserRole.Customer:
