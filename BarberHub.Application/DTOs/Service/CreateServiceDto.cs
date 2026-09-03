@@ -3,6 +3,5 @@
 public record CreateServiceDto(
     string Name,
     string? Description,
-    TimeSpan Duration,
-    long SalonId
+    TimeSpan Duration
 );
