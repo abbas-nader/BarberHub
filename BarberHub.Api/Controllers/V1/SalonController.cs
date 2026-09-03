@@ -39,10 +39,10 @@ public class SalonController(SalonService salonService) : BaseController
 
     [HttpPut(SalonUriConstants.Update)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<SalonResponse>> UpdateAsync([FromRoute] long salonId,
-        [FromBody] UpdateSalonRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiResult<SalonResponse>> UpdateAsync([FromBody] UpdateSalonRequest request,
+        CancellationToken cancellationToken = default)
     {
-        var salon = await salonService.UpdateAsync(salonId, request.ToDto(), cancellationToken);
+        var salon = await salonService.UpdateAsync(request.ToDto(), cancellationToken);
         return salon.ToResponse();
     }
 
@@ -75,11 +75,10 @@ public class SalonController(SalonService salonService) : BaseController
 
     [HttpPatch(SalonUriConstants.UpdateDepositAmount)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<SalonResponse>> UpdateDepositAmountAsync([FromRoute] long salonId,
+    public async Task<ApiResult<SalonResponse>> UpdateDepositAmountAsync(
         UpdateSalonDepositAmountRequest updateSalonDepositAmountRequest, CancellationToken cancellationToken)
     {
-        var salon = await salonService.UpdateDepositAmount(salonId, updateSalonDepositAmountRequest.ToDto(),
-            cancellationToken);
+        var salon = await salonService.UpdateDepositAmount(updateSalonDepositAmountRequest.ToDto(), cancellationToken);
         return salon.ToResponse();
     }
 }
