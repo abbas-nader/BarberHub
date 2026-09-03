@@ -13,6 +13,7 @@ public class SalonAdmin : BaseEntity
     public string MobileNumber { get; private set; } = null!;
 
     public long SalonId { get; private set; }
+    public Salon Salon { get; private set; } = null!;
 
     private SalonAdmin()
     {
