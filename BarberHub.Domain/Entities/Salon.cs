@@ -26,7 +26,6 @@ public class Salon : BaseEntity
     public IReadOnlyCollection<Service> Services => _services.AsReadOnly();
     public IReadOnlyCollection<Gallery> Galleries => _galleries.AsReadOnly();
     public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
-    public SalonAdmin SalonAdmin { get; private set; } = null!;
 
     private Salon()
     {
