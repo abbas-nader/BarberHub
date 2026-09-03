@@ -14,8 +14,8 @@ namespace BarberHub.Api.Controllers.V1;
 [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
 public class SalonAdminController(SalonAdminService salonAdminService) : BaseController
 {
-    [HttpGet(SalonAdminUriConstants.GetAll)]
-    public async Task<ApiResult<IReadOnlyList<SalonAdminResponse>>> GetAllAsync(long salonId,
+    [HttpGet(SalonAdminUriConstants.GetAllBySalonId)]
+    public async Task<ApiResult<IReadOnlyList<SalonAdminResponse>>> GetAllAsync([FromRoute]long salonId,
         CancellationToken cancellationToken = default)
     {
         var salonAdmins = await salonAdminService.GetAllBySalonIdAsync(salonId, cancellationToken);
