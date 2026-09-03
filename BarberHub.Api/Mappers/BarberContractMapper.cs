@@ -23,8 +23,7 @@ public static class BarberContractMapper
             request.MobileNumber,
             request.Username,
             request.Password,
-            request.Description,
-            request.SalonId
+            request.Description
         );
 
     public static UpdateBarberDto ToDto(this UpdateBarberRequest request) =>
