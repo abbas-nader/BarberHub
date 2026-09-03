@@ -6,6 +6,5 @@ public record CreateBarberRequest(
     string MobileNumber,
     string Username,
     string Password,
-    string? Description,
-    long SalonId
+    string? Description
 );
