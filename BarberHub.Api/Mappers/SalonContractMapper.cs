@@ -36,12 +36,14 @@ public static class SalonContractMapper
             request.Address,
             request.City,
             request.PhoneNumber,
-            request.Description
+            request.Description,
+            request.SalonId
         );
 
     public static UpdateSalonDepositAmountDto ToDto(this UpdateSalonDepositAmountRequest request)
         => new(
             request.DepositAmountValue,
-            request.DepositAmountCurrency
+            request.DepositAmountCurrency,
+            request.SalonId
         );
 }
