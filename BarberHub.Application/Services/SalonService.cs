@@ -35,9 +35,13 @@ public class SalonService(ISalonRepository salonRepository, ICurrentUserService 
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> UpdateAsync(long salonId, UpdateSalonDto updateSalonDto,
+    public async Task<SalonDto> UpdateAsync(UpdateSalonDto updateSalonDto,
         CancellationToken cancellationToken = default)
     {
+        var salonId = currentUserService.CurrentUser.SalonId ??
+                      throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        if (updateSalonDto.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(Service), updateSalonDto.SalonId);
         var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken) ??
                     throw new EntityNotFoundException(nameof(Salon), salonId);
         salon.UpdateInfo(updateSalonDto.Name, updateSalonDto.Address, updateSalonDto.City, updateSalonDto.PhoneNumber,
@@ -77,9 +81,13 @@ public class SalonService(ISalonRepository salonRepository, ICurrentUserService 
         return ToDto(salon);
     }
 
-    public async Task<SalonDto> UpdateDepositAmount(long salonId,
+    public async Task<SalonDto> UpdateDepositAmount(
         UpdateSalonDepositAmountDto updateSalonDepositAmountDto, CancellationToken cancellationToken)
     {
+        var salonId = currentUserService.CurrentUser.SalonId ??
+                      throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        if (updateSalonDepositAmountDto.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(Service), updateSalonDepositAmountDto.SalonId);
         var salon = await salonRepository.GetByIdAsync(salonId, cancellationToken);
         if (salon == null)
             throw new EntityNotFoundException(nameof(Barber), salonId);
