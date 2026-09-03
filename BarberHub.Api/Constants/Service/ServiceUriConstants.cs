@@ -1,6 +1,6 @@
 ﻿namespace BarberHub.Api.Constants.Service;
 
-public class ServiceUriConstants
+public static class ServiceUriConstants
 {
     private const string ControllerName = "Service";
     public const string GetAll = $"{ControllerName}";
