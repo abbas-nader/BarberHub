@@ -12,5 +12,6 @@ public static class DependencyInjection
         services.AddScoped<SalonService>();
         services.AddScoped<SalonAdminService>();
         services.AddScoped<AuthenticationService>();
+        services.AddScoped<ServiceCatalogService>();
     }
 }
