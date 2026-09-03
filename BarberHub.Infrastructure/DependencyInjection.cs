@@ -36,6 +36,7 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<ITokenHasher, TokenHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IServiceRepository, ServiceRepository>();
 
         services.AddMongo(configuration);
         services.AddJwt(configuration);
