@@ -66,6 +66,7 @@ public class Appointment : BaseEntity
     {
         EnsureIsConfirmed();
         AppointmentStatus = AppointmentStatus.CancelledByCustomer;
+        CancelledAt = DateTimeOffset.UtcNow;
         Modified(modifiedBy);
     }
 
@@ -73,13 +74,15 @@ public class Appointment : BaseEntity
     {
         EnsureIsConfirmed();
         AppointmentStatus = AppointmentStatus.CancelledBySalon;
+        CancelledAt = DateTimeOffset.UtcNow;
         Modified(modifiedBy);
     }
 
-    public void NoShow(long modifiedBy)
+    public void NoShow(NoShowDetectionType noShowDetectionType, long modifiedBy)
     {
         EnsureIsConfirmed();
         AppointmentStatus = AppointmentStatus.NoShow;
+        NoShowDetectionType = noShowDetectionType;
         Modified(modifiedBy);
     }
 
