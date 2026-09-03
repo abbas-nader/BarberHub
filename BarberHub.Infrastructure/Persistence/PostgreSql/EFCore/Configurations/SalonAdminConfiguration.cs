@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Configurations;
 
-public class SalonAdminConfiguration  :IEntityTypeConfiguration<SalonAdmin>
+public class SalonAdminConfiguration : IEntityTypeConfiguration<SalonAdmin>
 {
     public void Configure(EntityTypeBuilder<SalonAdmin> builder)
     {
@@ -18,19 +18,19 @@ public class SalonAdminConfiguration  :IEntityTypeConfiguration<SalonAdmin>
         builder.Property(x => x.LastName)
             .HasMaxLength(SalonAdminConstants.LastNameMaxLength)
             .IsRequired();
-        builder.Property(x=> x.UserName)
+        builder.Property(x => x.UserName)
             .HasMaxLength(SalonAdminConstants.UsernameMaxLength)
             .IsRequired();
-        builder.Property(x=> x.PasswordHash)
+        builder.Property(x => x.PasswordHash)
             .HasMaxLength(SalonAdminConstants.PasswordMaxLength)
             .IsRequired();
-        builder.Property(x=> x.MobileNumber)
+        builder.Property(x => x.MobileNumber)
             .HasMaxLength(SalonAdminConstants.PhoneNumberMaxLength)
             .IsRequired();
-        
-        builder.HasOne<Salon>()
-            .WithOne(x=> x.SalonAdmin)
-            .HasForeignKey<SalonAdmin>(x=>x.SalonId)
+
+        builder.HasOne(x => x.Salon)
+            .WithMany()
+            .HasForeignKey(x => x.SalonId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(x => x.UserName).IsUnique();
