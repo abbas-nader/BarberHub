@@ -13,7 +13,8 @@ public class BarberRepository(BarberHubDbContext context) : BaseRepository<Barbe
     }
 
     public async Task<Barber?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
-        => await BarberHubDbContext.Barbers.FirstOrDefaultAsync(x => x.UserName == userName && x.IsDeleted == false,
+        => await BarberHubDbContext.Barbers.FirstOrDefaultAsync(
+            x => x.UserName == userName && !x.IsDeleted && x.IsActive,
             cancellationToken);
 
     public async Task<IReadOnlyCollection<Barber>> GetAllBySalonIdAsync(long salonId,
