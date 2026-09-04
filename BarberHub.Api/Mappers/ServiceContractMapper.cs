@@ -22,7 +22,6 @@ public static class ServiceContractMapper
 
     public static UpdateServiceDto ToDto(this UpdateServiceRequest request)
         => new(
-            request.Id,
             request.Name,
             request.Description,
             request.Duration
