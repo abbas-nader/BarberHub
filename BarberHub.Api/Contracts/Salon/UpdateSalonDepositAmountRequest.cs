@@ -4,6 +4,5 @@ namespace BarberHub.Api.Contracts.Salon;
 
 public record UpdateSalonDepositAmountRequest(
     decimal DepositAmountValue,
-    Currency DepositAmountCurrency,
-    long SalonId
+    Currency DepositAmountCurrency
     );
