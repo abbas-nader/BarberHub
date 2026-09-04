@@ -13,6 +13,7 @@ public class AuthenticationService(
     IBarberRepository barberRepository,
     ICustomerRepository customerRepository,
     IPlatformRepository platformAdminRepository,
+    ISalonRepository salonRepository,
     IPasswordHasher passwordHasher,
     IJwtTokenGenerator jwtTokenGenerator,
     ITokenHasher tokenHasher,
@@ -24,7 +25,9 @@ public class AuthenticationService(
         var user = await salonAdminRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
                    ?? throw new InvalidCredentialsException();
         VerifyPassword(loginDto.Password, user.PasswordHash);
-
+        var salon = await salonRepository.GetByIdAsync(user.SalonId, cancellationToken);
+        if (salon is null || !salon.IsActive)
+            throw new InvalidCredentialsException();
         var claims = new TokenClaims(user.Id, UserRole.SalonAdmin, user.SalonId);
         return await IssueTokenAsync(claims, cancellationToken);
     }
@@ -35,7 +38,9 @@ public class AuthenticationService(
         var user = await barberRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
                    ?? throw new InvalidCredentialsException();
         VerifyPassword(loginDto.Password, user.PasswordHash);
-
+        var salon = await salonRepository.GetByIdAsync(user.SalonId, cancellationToken);
+        if (salon is null || !salon.IsActive)
+            throw new InvalidCredentialsException();
         var claims = new TokenClaims(user.Id, UserRole.Barber, user.SalonId);
         return await IssueTokenAsync(claims, cancellationToken);
     }
@@ -145,6 +150,9 @@ public class AuthenticationService(
             {
                 var salonAdmin = await salonAdminRepository.GetByIdAsync(userId, cancellationToken)
                                  ?? throw new EntityNotFoundException(nameof(SalonAdmin), userId);
+                var salon = await salonRepository.GetByIdAsync(salonAdmin.SalonId, cancellationToken);
+                if (salon is null || !salon.IsActive)
+                    throw new InvalidCredentialsException();
                 return new TokenClaims(salonAdmin.Id, UserRole.SalonAdmin, salonAdmin.SalonId);
             }
             case UserRole.Barber:
@@ -152,6 +160,9 @@ public class AuthenticationService(
                 var barber = await barberRepository.GetByIdAsync(userId, cancellationToken)
                              ?? throw new EntityNotFoundException(nameof(Barber), userId);
                 if (!barber.IsActive)
+                    throw new InvalidCredentialsException();
+                var salon = await salonRepository.GetByIdAsync(barber.SalonId, cancellationToken);
+                if (salon is null || !salon.IsActive)
                     throw new InvalidCredentialsException();
                 return new TokenClaims(barber.Id, UserRole.Barber, barber.SalonId);
             }
