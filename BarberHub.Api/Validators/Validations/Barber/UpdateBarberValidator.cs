@@ -16,7 +16,7 @@ public class UpdateBarberValidator : AbstractValidator<UpdateBarberRequest>
                 SharedValidationMessages.PropertyRequired(UpdateBarberValidationMessages.FirstNameProperty))
             .MaximumLength(BarberConstants.FirstNameMaxLength)
             .WithMessage(
-                SharedValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.LastNameProperty));
+                SharedValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.FirstNameProperty));
         RuleFor(x => x.LastName)
             .NotEmpty()
             .MaximumLength(BarberConstants.LastNameMaxLength)
