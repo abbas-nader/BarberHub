@@ -22,6 +22,6 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
         builder.HasOne<Salon>()
             .WithMany(x => x.Services)
             .HasForeignKey(x => x.SalonId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
