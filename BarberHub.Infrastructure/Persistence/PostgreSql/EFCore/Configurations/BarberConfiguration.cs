@@ -37,7 +37,7 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
         builder.HasMany(b => b.WorkSchedules)
             .WithOne()
             .HasForeignKey(w => w.BarberId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.HasIndex(x => x.UserName).IsUnique();
     }
