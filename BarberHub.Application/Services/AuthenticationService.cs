@@ -17,7 +17,8 @@ public class AuthenticationService(
     IPasswordHasher passwordHasher,
     IJwtTokenGenerator jwtTokenGenerator,
     ITokenHasher tokenHasher,
-    IRefreshTokenRepository refreshTokenRepository)
+    IRefreshTokenRepository refreshTokenRepository,
+    IUnitOfWork  unitOfWork)
 {
     public async Task<TokenResult> LoginSalonAdminAsync(LoginDto loginDto,
         CancellationToken cancellationToken = default)
@@ -106,11 +107,24 @@ public class AuthenticationService(
         var newTokenHash = tokenHasher.Hash(tokenResult.RefreshToken);
         var newRefreshToken = new RefreshToken(newTokenHash, claims.UserId, existingToken.Role,
             tokenResult.RefreshTokenExpiresAt);
-        await refreshTokenRepository.AddAsync(newRefreshToken, cancellationToken);
-        await refreshTokenRepository.SaveChangesAsync(cancellationToken);
-        existingToken.MarkReplacedBy(newRefreshToken.Id);
-        refreshTokenRepository.Update(existingToken);
-        await refreshTokenRepository.SaveChangesAsync(cancellationToken);
+
+        await unitOfWork.BeginTransaction(cancellationToken);
+        try
+        {
+            await refreshTokenRepository.AddAsync(newRefreshToken, cancellationToken);
+            await refreshTokenRepository.SaveChangesAsync(cancellationToken);
+            existingToken.MarkReplacedBy(newRefreshToken.Id);
+            refreshTokenRepository.Update(existingToken);
+            await refreshTokenRepository.SaveChangesAsync(cancellationToken);
+            
+            await unitOfWork.CommitTransaction(cancellationToken);
+        }
+        catch 
+        {
+            await unitOfWork.RollbackTransaction(cancellationToken);
+            throw;
+        }
+        
         return tokenResult;
     }
 
