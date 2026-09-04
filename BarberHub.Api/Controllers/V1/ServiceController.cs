@@ -4,6 +4,8 @@ using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.Service;
 using BarberHub.Api.Mappers;
 using BarberHub.Application.Services;
+using BarberHub.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarberHub.Api.Controllers.V1;
@@ -28,6 +30,7 @@ public class ServiceController(ServiceCatalogService catalogService) : BaseContr
     }
 
     [HttpPost(ServiceUriConstants.Create)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<ServiceResponse>> CreateAsync([FromBody] CreateServiceRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -35,7 +38,8 @@ public class ServiceController(ServiceCatalogService catalogService) : BaseContr
         return services.ToResponse();
     }
 
-    [HttpPost(ServiceUriConstants.Update)]
+    [HttpPut(ServiceUriConstants.Update)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<ServiceResponse>> UpdateAsync(long serviceId, [FromBody] UpdateServiceRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -43,7 +47,8 @@ public class ServiceController(ServiceCatalogService catalogService) : BaseContr
         return service.ToResponse();
     }
 
-    [HttpPost(ServiceUriConstants.Delete)]
+    [HttpPatch(ServiceUriConstants.Delete)]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<ServiceResponse>> DeleteAsync(long serviceId,
         CancellationToken cancellationToken = default)
     {
