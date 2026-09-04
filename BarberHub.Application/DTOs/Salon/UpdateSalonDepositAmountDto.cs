@@ -4,6 +4,5 @@ namespace BarberHub.Application.DTOs.Salon;
 
 public record UpdateSalonDepositAmountDto(
     decimal DepositAmountValue,
-    Currency Currency,
-    long SalonId
-    );
+    Currency Currency
+);
