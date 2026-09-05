@@ -7,6 +7,6 @@ public record BarberServiceDto(
     long BarberId,
     long ServiceId,
     decimal PriceValue,
-    Currency Currency,
+    Currency PriceCurrency,
     TimeSpan Duration
     );
