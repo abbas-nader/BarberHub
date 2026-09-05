@@ -21,6 +21,8 @@ public class BarberServiceConfiguration : IEntityTypeConfiguration<BarberService
                     .IsRequired();
             }
         );
+        builder.Property(x => x.Duration)
+            .IsRequired();
         builder.HasOne(x => x.Service)
             .WithMany()
             .HasForeignKey(x => x.ServiceId)
