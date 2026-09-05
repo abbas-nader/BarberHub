@@ -2,6 +2,5 @@
 
 public record UpdateServiceDto(
     string Name,
-    string? Description,
-    TimeSpan Duration
+    string? Description
 );
