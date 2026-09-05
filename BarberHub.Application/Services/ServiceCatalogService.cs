@@ -26,8 +26,7 @@ public class ServiceCatalogService(IServiceRepository serviceRepository, ICurren
     {
         var salonId = currentUserService.CurrentUser.SalonId ??
                       throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
-        var newService = new Service(service.Name, service.Description, salonId,
-            currentUserService.CurrentUser.UserId);
+        var newService = new Service(service.Name, service.Description, salonId, currentUserService.CurrentUser.UserId);
         await serviceRepository.AddAsync(newService, cancellationToken);
         await serviceRepository.SaveChangesAsync(cancellationToken);
         return ToDto(newService);
