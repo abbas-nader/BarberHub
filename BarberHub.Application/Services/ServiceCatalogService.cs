@@ -26,7 +26,7 @@ public class ServiceCatalogService(IServiceRepository serviceRepository, ICurren
     {
         var salonId = currentUserService.CurrentUser.SalonId ??
                       throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
-        var newService = new Service(service.Name, service.Description, service.Duration, salonId,
+        var newService = new Service(service.Name, service.Description, salonId,
             currentUserService.CurrentUser.UserId);
         await serviceRepository.AddAsync(newService, cancellationToken);
         await serviceRepository.SaveChangesAsync(cancellationToken);
@@ -42,8 +42,7 @@ public class ServiceCatalogService(IServiceRepository serviceRepository, ICurren
                       throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
         if (serviceToUpdate.SalonId != salonId)
             throw new EntityNotFoundException(nameof(Service), serviceToUpdate.SalonId);
-        serviceToUpdate.UpdateService(service.Name, service.Description, service.Duration,
-            currentUserService.CurrentUser.UserId);
+        serviceToUpdate.UpdateService(service.Name, service.Description, currentUserService.CurrentUser.UserId);
         serviceRepository.Update(serviceToUpdate);
         await serviceRepository.SaveChangesAsync(cancellationToken);
         return ToDto(serviceToUpdate);
@@ -66,7 +65,6 @@ public class ServiceCatalogService(IServiceRepository serviceRepository, ICurren
         => new(
             service.Id,
             service.Name,
-            service.Description,
-            service.Duration
+            service.Description
         );
 }
