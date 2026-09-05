@@ -19,9 +19,5 @@ public class CreateServiceValidator : AbstractValidator<CreateServiceRequest>
         RuleFor(x => x.Description)
             .MaximumLength(ServiceConstants.DescriptionMaxLength)
             .WithMessage(SharedValidationMessages.PropertyMaxLength(CreateServiceValidationMessages.DescriptionProperty));
-
-        RuleFor(x => x.Duration)
-            .GreaterThan(TimeSpan.Zero)
-            .WithMessage(CreateServiceValidationMessages.DurationInvalid);
     }
 }
