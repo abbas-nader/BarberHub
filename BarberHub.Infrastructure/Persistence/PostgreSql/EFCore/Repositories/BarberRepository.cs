@@ -21,7 +21,7 @@ public class BarberRepository(BarberHubDbContext context) : BaseRepository<Barbe
         CancellationToken cancellationToken = default)
     {
         return await BarberHubDbContext.Barbers
-            .Where(x => x.SalonId == salonId && x.IsDeleted == false)
+            .Where(x => x.SalonId == salonId && !x.IsDeleted && x.IsActive)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
