@@ -21,9 +21,5 @@ public class UpdateServiceValidator : AbstractValidator<UpdateServiceRequest>
         RuleFor(x => x.Description)
             .MaximumLength(ServiceConstants.DescriptionMaxLength)
             .WithMessage(SharedValidationMessages.PropertyMaxLength(UpdateServiceValidationMessages.DescriptionProperty));
-
-        RuleFor(x => x.Duration)
-            .GreaterThan(TimeSpan.Zero)
-            .WithMessage(UpdateServiceValidationMessages.DurationInvalid);
     }
 }
