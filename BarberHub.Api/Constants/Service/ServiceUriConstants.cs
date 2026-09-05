@@ -2,7 +2,7 @@
 
 public static class ServiceUriConstants
 {
-    private const string ControllerName = "Service";
+    private const string ControllerName = "service";
     public const string GetAll = $"{ControllerName}/salon/{{salonId}}";
     public const string GetById = $"{ControllerName}/{{serviceId}}";
     public const string Create = $"{ControllerName}/create";
