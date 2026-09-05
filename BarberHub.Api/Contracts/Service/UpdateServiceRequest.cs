@@ -2,6 +2,5 @@
 
 public record UpdateServiceRequest(
     string Name,
-    string? Description,
-    TimeSpan Duration
+    string? Description
 );
