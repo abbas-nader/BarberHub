@@ -3,6 +3,5 @@
 public record ServiceResponse(
     long Id,
     string Name,
-    string? Description,
-    TimeSpan Duration
+    string? Description
 );
