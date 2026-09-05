@@ -1,7 +1,7 @@
 ﻿using BarberHub.Application.DTOs.SalonAdmin;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
-using BarberHub.Application.Security.JwtToken;
+using BarberHub.Application.Security.Jwt;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 

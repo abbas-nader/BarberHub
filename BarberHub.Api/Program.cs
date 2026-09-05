@@ -4,7 +4,7 @@ using BarberHub.Api.Filters;
 using BarberHub.Api.Middleware;
 using BarberHub.Api.Security;
 using BarberHub.Application;
-using BarberHub.Application.Security.JwtToken;
+using BarberHub.Application.Security.Jwt;
 using BarberHub.Infrastructure;
 using BarberHub.Infrastructure.Security.JwtToken;
 using FluentValidation;

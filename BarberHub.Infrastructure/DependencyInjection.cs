@@ -1,11 +1,12 @@
 ﻿using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
-using BarberHub.Application.Security.JwtToken;
+using BarberHub.Application.Security.Jwt;
 using BarberHub.Infrastructure.Persistence.Mongo;
 using BarberHub.Infrastructure.Persistence.Mongo.Repositories;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
 using BarberHub.Infrastructure.Security.Hash;
+using BarberHub.Infrastructure.Security.Jwt;
 using BarberHub.Infrastructure.Security.JwtToken;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +36,7 @@ public static class DependencyInjection
         services.AddScoped<IPlatformRepository, PlatformAdminRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<ITokenHasher, TokenHasher>();
-        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IJwtGenerator, JwtGenerator>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

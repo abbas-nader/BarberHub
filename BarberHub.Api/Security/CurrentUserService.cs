@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using BarberHub.Application.Security.JwtToken;
+using BarberHub.Application.Security.Jwt;
 using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 

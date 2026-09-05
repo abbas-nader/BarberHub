@@ -1,6 +1,6 @@
 ﻿using BarberHub.Application.DTOs.Service;
 using BarberHub.Application.Repositories;
-using BarberHub.Application.Security.JwtToken;
+using BarberHub.Application.Security.Jwt;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 

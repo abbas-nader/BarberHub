@@ -2,13 +2,14 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using BarberHub.Application.Security.JwtToken;
+using BarberHub.Application.Security.Jwt;
+using BarberHub.Infrastructure.Security.JwtToken;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BarberHub.Infrastructure.Security.JwtToken;
+namespace BarberHub.Infrastructure.Security.Jwt;
 
-public class JwtTokenGenerator(IOptions<JwtSetting> options) : IJwtTokenGenerator
+public class JwtGenerator(IOptions<JwtSetting> options) : IJwtGenerator
 {
     private readonly JwtSetting _jwtSettings = options.Value;
 

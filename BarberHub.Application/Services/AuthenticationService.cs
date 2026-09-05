@@ -1,7 +1,7 @@
 ﻿using BarberHub.Application.DTOs.Auth;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
-using BarberHub.Application.Security.JwtToken;
+using BarberHub.Application.Security.Jwt;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
@@ -15,7 +15,7 @@ public class AuthenticationService(
     IPlatformRepository platformAdminRepository,
     ISalonRepository salonRepository,
     IPasswordHasher passwordHasher,
-    IJwtTokenGenerator jwtTokenGenerator,
+    IJwtGenerator jwtGenerator,
     ITokenHasher tokenHasher,
     IRefreshTokenRepository refreshTokenRepository,
     IUnitOfWork  unitOfWork)
@@ -76,7 +76,7 @@ public class AuthenticationService(
 
     private async Task<TokenResult> IssueTokenAsync(TokenClaims claims, CancellationToken cancellationToken)
     {
-        var tokenResult = jwtTokenGenerator.Generate(claims);
+        var tokenResult = jwtGenerator.Generate(claims);
 
         var tokenHash = tokenHasher.Hash(tokenResult.RefreshToken);
         var refreshToken = new RefreshToken(tokenHash, claims.UserId, claims.UserRole,
@@ -103,7 +103,7 @@ public class AuthenticationService(
         if (existingToken.ExpiresAt < DateTimeOffset.UtcNow)
             throw new InvalidRefreshTokenException();
         var claims = await BuildClaimsAsync(existingToken.UserId, existingToken.Role, cancellationToken);
-        var tokenResult = jwtTokenGenerator.Generate(claims);
+        var tokenResult = jwtGenerator.Generate(claims);
         var newTokenHash = tokenHasher.Hash(tokenResult.RefreshToken);
         var newRefreshToken = new RefreshToken(newTokenHash, claims.UserId, existingToken.Role,
             tokenResult.RefreshTokenExpiresAt);

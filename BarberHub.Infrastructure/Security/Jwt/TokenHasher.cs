@@ -1,9 +1,9 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using BarberHub.Application.Security.JwtToken;
+using BarberHub.Application.Security.Jwt;
 using BarberHub.Domain.Exceptions.SharedExceptions;
 
-namespace BarberHub.Infrastructure.Security.JwtToken;
+namespace BarberHub.Infrastructure.Security.Jwt;
 
 public class TokenHasher: ITokenHasher
 {

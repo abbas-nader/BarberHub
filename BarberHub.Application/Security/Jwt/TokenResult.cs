@@ -1,4 +1,4 @@
-﻿namespace BarberHub.Application.Security.JwtToken;
+﻿namespace BarberHub.Application.Security.Jwt;
 
 public record TokenResult(
     string AccessToken,

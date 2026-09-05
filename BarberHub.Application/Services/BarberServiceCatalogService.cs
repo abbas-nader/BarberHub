@@ -1,7 +1,7 @@
 ﻿using System.Security.Authentication;
 using BarberHub.Application.DTOs.BarberService;
 using BarberHub.Application.Repositories;
-using BarberHub.Application.Security.JwtToken;
+using BarberHub.Application.Security.Jwt;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.ValueObjects;
