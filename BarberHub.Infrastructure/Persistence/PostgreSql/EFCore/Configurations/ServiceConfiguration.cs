@@ -15,9 +15,7 @@ public class ServiceConfiguration : IEntityTypeConfiguration<Service>
             .HasMaxLength(ServiceConstants.NameMaxLength)
             .IsRequired();
         builder.Property(x => x.Description)
-            .HasMaxLength(ServiceConstants.DescriptionMaxLength);
-        builder.Property(x => x.Duration)
-            .IsRequired();
+            .HasMaxLength(ServiceConstants.DescriptionMaxLength); ;
         
         builder.HasOne<Salon>()
             .WithMany(x => x.Services)
