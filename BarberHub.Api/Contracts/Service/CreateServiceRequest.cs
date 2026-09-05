@@ -2,6 +2,5 @@
 
 public record CreateServiceRequest(
     string Name,
-    string? Description,
-    TimeSpan Duration
+    string? Description
 );
