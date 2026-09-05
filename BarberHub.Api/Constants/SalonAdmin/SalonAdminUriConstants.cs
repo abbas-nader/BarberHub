@@ -2,7 +2,7 @@
 
 public static class SalonAdminUriConstants
 {
-    private const string ControllerName = "SalonAdmin";
+    private const string ControllerName = "salon-admin";
     public const string GetAllBySalonId = $"{ControllerName}/salon/{{salonId}}";
     public const string GetById = $"{ControllerName}/{{salonAdminId}}";
     public const string Create = $"{ControllerName}/create";
