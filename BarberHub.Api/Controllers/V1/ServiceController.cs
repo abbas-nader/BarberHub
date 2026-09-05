@@ -14,7 +14,7 @@ namespace BarberHub.Api.Controllers.V1;
 public class ServiceController(ServiceCatalogService catalogService) : BaseController
 {
     [HttpGet(ServiceUriConstants.GetAll)]
-    public async Task<ApiResult<IReadOnlyList<ServiceResponse>>> GetAll([FromRoute] long salonId,
+    public async Task<ApiResult<IReadOnlyList<ServiceResponse>>> GetAllAsync([FromRoute] long salonId,
         CancellationToken cancellationToken = default)
     {
         var services = await catalogService.GetAllBySalonIdAsync(salonId, cancellationToken);
@@ -40,7 +40,8 @@ public class ServiceController(ServiceCatalogService catalogService) : BaseContr
 
     [HttpPut(ServiceUriConstants.Update)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<ServiceResponse>> UpdateAsync(long serviceId, [FromBody] UpdateServiceRequest request,
+    public async Task<ApiResult<ServiceResponse>> UpdateAsync([FromRoute] long serviceId,
+        [FromBody] UpdateServiceRequest request,
         CancellationToken cancellationToken = default)
     {
         var service = await catalogService.UpdateAsync(serviceId, request.ToDto(), cancellationToken);
@@ -49,7 +50,7 @@ public class ServiceController(ServiceCatalogService catalogService) : BaseContr
 
     [HttpPatch(ServiceUriConstants.Delete)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<ServiceResponse>> DeleteAsync(long serviceId,
+    public async Task<ApiResult<ServiceResponse>> DeleteAsync([FromRoute] long serviceId,
         CancellationToken cancellationToken = default)
     {
         var service = await catalogService.DeleteAsync(serviceId, cancellationToken);
