@@ -9,7 +9,6 @@ public class Service : BaseEntity
 {
     public string Name { get; private set; } = null!;
     public string? Description { get; private set; }
-    public TimeSpan Duration { get; private set; }
 
     public long SalonId { get; private set; }
 
@@ -17,26 +16,22 @@ public class Service : BaseEntity
     {
     }
 
-    public Service(string name, string? description, TimeSpan duration, long salonId, long creationBy)
+    public Service(string name, string? description, long salonId, long creationBy)
     {
         ValidateName(name);
         ValidateDescription(description);
-        ValidateDuration(duration);
         Name = name;
         Description = description;
-        Duration = duration;
         SalonId = salonId;
         Creation(creationBy);
     }
 
-    public void UpdateService(string name, string? description, TimeSpan duration, long modifiedBy)
+    public void UpdateService(string name, string? description, long modifiedBy)
     {
         ValidateName(name);
         ValidateDescription(description);
-        ValidateDuration(duration);
         Name = name;
         Description = description;
-        Duration = duration;
         Modified(modifiedBy);
     }
 
@@ -52,11 +47,5 @@ public class Service : BaseEntity
     {
         if (description is { Length: > ServiceConstants.DescriptionMaxLength })
             throw new InvalidServiceDescriptionException();
-    }
-
-    private static void ValidateDuration(TimeSpan duration)
-    {
-        if (duration.Ticks < ServiceConstants.DurationMinValue)
-            throw new InvalidServiceDurationException();
     }
 }
