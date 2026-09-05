@@ -7,7 +7,6 @@ using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
 using BarberHub.Infrastructure.Security.Hash;
 using BarberHub.Infrastructure.Security.Jwt;
-using BarberHub.Infrastructure.Security.JwtToken;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using BarberHub.Application.Security.Jwt;
-using BarberHub.Infrastructure.Security.JwtToken;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

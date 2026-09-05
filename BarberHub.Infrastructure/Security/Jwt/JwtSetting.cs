@@ -1,4 +1,4 @@
-﻿namespace BarberHub.Infrastructure.Security.JwtToken;
+﻿namespace BarberHub.Infrastructure.Security.Jwt;
 
 public class JwtSetting
 {

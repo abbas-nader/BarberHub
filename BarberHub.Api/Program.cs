@@ -6,7 +6,7 @@ using BarberHub.Api.Security;
 using BarberHub.Application;
 using BarberHub.Application.Security.Jwt;
 using BarberHub.Infrastructure;
-using BarberHub.Infrastructure.Security.JwtToken;
+using BarberHub.Infrastructure.Security.Jwt;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
