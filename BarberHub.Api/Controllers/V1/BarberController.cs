@@ -14,7 +14,7 @@ namespace BarberHub.Api.Controllers.V1;
 public class BarberController(BarberService barberService) : BaseController
 {
     [HttpGet(BarberUriConstants.GetAllBySalonId)]
-    public async Task<ApiResult<IReadOnlyList<BarberResponse>>> GetAllBySalonIdAsync([FromRoute]long salonId,
+    public async Task<ApiResult<IReadOnlyList<BarberResponse>>> GetAllBySalonIdAsync([FromRoute] long salonId,
         CancellationToken cancellationToken)
     {
         var barbers = await barberService.GetAllBySalonIdAsync(salonId, cancellationToken);
@@ -22,7 +22,8 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpGet(BarberUriConstants.GetById)]
-    public async Task<ApiResult<BarberResponse>> GetByIdAsync(long barberId, CancellationToken cancellationToken)
+    public async Task<ApiResult<BarberResponse>> GetByIdAsync([FromRoute] long barberId,
+        CancellationToken cancellationToken)
     {
         var barber = await barberService.GetByIdAsync(barberId, cancellationToken);
         return barber.ToResponse();
@@ -39,7 +40,8 @@ public class BarberController(BarberService barberService) : BaseController
 
     [HttpPut(BarberUriConstants.Update)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<BarberResponse>> UpdateAsync(long barberId, [FromBody] UpdateBarberRequest request,
+    public async Task<ApiResult<BarberResponse>> UpdateAsync([FromRoute] long barberId,
+        [FromBody] UpdateBarberRequest request,
         CancellationToken cancellationToken)
     {
         var barber = await barberService.UpdateAsync(barberId, request.ToDto(), cancellationToken);
@@ -48,7 +50,8 @@ public class BarberController(BarberService barberService) : BaseController
 
     [HttpPatch(BarberUriConstants.Delete)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<BarberResponse>> DeleteAsync(long barberId, CancellationToken cancellationToken)
+    public async Task<ApiResult<BarberResponse>> DeleteAsync([FromRoute] long barberId,
+        CancellationToken cancellationToken)
     {
         var barber = await barberService.DeleteAsync(barberId, cancellationToken);
         return barber.ToResponse();
@@ -56,7 +59,7 @@ public class BarberController(BarberService barberService) : BaseController
 
     [HttpPatch(BarberUriConstants.Activate)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<BarberResponse>> ActivateAsync(long barberId,
+    public async Task<ApiResult<BarberResponse>> ActivateAsync([FromRoute] long barberId,
         CancellationToken cancellationToken)
     {
         var barber = await barberService.ActivateAsync(barberId, cancellationToken);
@@ -65,7 +68,7 @@ public class BarberController(BarberService barberService) : BaseController
 
     [HttpPatch(BarberUriConstants.Deactivate)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<BarberResponse>> DeactivateAsync(long barberId,
+    public async Task<ApiResult<BarberResponse>> DeactivateAsync([FromRoute] long barberId,
         CancellationToken cancellationToken)
     {
         var barber = await barberService.DeactivateAsync(barberId, cancellationToken);
