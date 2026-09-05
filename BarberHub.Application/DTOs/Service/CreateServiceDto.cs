@@ -2,6 +2,5 @@
 
 public record CreateServiceDto(
     string Name,
-    string? Description,
-    TimeSpan Duration
+    string? Description
 );
