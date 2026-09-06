@@ -11,7 +11,7 @@ namespace BarberHub.Application.Services;
 public class AuthenticationService(
     ISalonAdminRepository salonAdminRepository,
     IBarberRepository barberRepository,
-    ICustomerRepository customerRepository,
+    IUserRepository userRepository,
     IPlatformRepository platformAdminRepository,
     ISalonRepository salonRepository,
     IPasswordHasher passwordHasher,
@@ -49,7 +49,7 @@ public class AuthenticationService(
     public async Task<TokenResult> LoginCustomerAsync(LoginDto loginDto,
         CancellationToken cancellationToken = default)
     {
-        var user = await customerRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
+        var user = await userRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
                    ?? throw new InvalidCredentialsException();
         VerifyPassword(loginDto.Password, user.PasswordHash);
 
@@ -182,8 +182,8 @@ public class AuthenticationService(
             }
             case UserRole.Customer:
             {
-                var customer = await customerRepository.GetByIdAsync(userId, cancellationToken)
-                               ?? throw new EntityNotFoundException(nameof(Customer), userId);
+                var customer = await userRepository.GetByIdAsync(userId, cancellationToken)
+                               ?? throw new EntityNotFoundException(nameof(User), userId);
                 return new TokenClaims(customer.Id, UserRole.Customer, null);
             }
             case UserRole.PlatformAdmin:
