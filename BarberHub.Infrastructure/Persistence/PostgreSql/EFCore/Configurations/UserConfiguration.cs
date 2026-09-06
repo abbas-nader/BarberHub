@@ -5,33 +5,33 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Configurations;
 
-public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
+public class UserConfiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<Customer> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(m => m.Id);
         
         builder.Property(x=> x. FirstName)
-            .HasColumnType(CustomerConstants.FirstNameColumnType)
-            .HasMaxLength(CustomerConstants.FirstNameMaxLength)
+            .HasColumnType(UserConstants.FirstNameColumnType)
+            .HasMaxLength(UserConstants.FirstNameMaxLength)
             .IsRequired();
         builder.Property(x => x.LastName)
-            .HasColumnType(CustomerConstants.LastNameColumnType)
-            .HasMaxLength(CustomerConstants.LastNameMaxLength)
+            .HasColumnType(UserConstants.LastNameColumnType)
+            .HasMaxLength(UserConstants.LastNameMaxLength)
             .IsRequired();
         builder.Property(x=> x.MobileNumber)
-            .HasColumnType(CustomerConstants.MobileNumberColumnType)
-            .HasMaxLength(CustomerConstants.MobileNumberMaxLength)
+            .HasColumnType(UserConstants.MobileNumberColumnType)
+            .HasMaxLength(UserConstants.MobileNumberMaxLength)
             .IsRequired();
         builder.Property(x=> x.IsMobileVerified)
             .IsRequired();
         builder.Property(x=> x.UserName)
-            .HasColumnType(CustomerConstants.UsernameColumnType)
-            .HasMaxLength(CustomerConstants.UsernameMaxLength)
+            .HasColumnType(UserConstants.UsernameColumnType)
+            .HasMaxLength(UserConstants.UsernameMaxLength)
             .IsRequired();
         builder.Property(x=> x.PasswordHash)
-            .HasColumnType(CustomerConstants.PasswordColumnType)
-            .HasMaxLength(CustomerConstants.PasswordMaxLength)
+            .HasColumnType(UserConstants.PasswordColumnType)
+            .HasMaxLength(UserConstants.PasswordMaxLength)
             .IsRequired();
         
         builder.HasIndex(x => x.UserName).IsUnique();

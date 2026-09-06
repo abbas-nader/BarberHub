@@ -21,7 +21,7 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
         builder.Property(x => x.Reply)
             .HasMaxLength(ReviewConstants.ReplyMaxLength);
         
-        builder.HasOne<Customer>()
+        builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(x => x.CustomerId)
             .OnDelete(DeleteBehavior.Restrict);
