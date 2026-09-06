@@ -1,19 +1,18 @@
-﻿using BarberHub.Domain.Exceptions.SharedExceptions;
+﻿using BarberHub.Domain.Enums;
+using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Domain.Entities;
 
-public class Barber : BaseEntity
+public class Barber : BaseUser
 {
     private readonly List<WorkSchedule> _workSchedules = [];
     private readonly List<BarberService> _barberServices = [];
     private readonly List<Appointment> _appointments = [];
     private readonly List<Gallery> _galleries = [];
     private readonly List<Review> _reviews = [];
-    public string FirstName { get; private set; } = null!;
-    public string LastName { get; private set; } = null!;
+
     public string MobileNumber { get; private set; } = null!;
-    public string UserName { get; private set; } = null!;
-    public string PasswordHash { get; private set; } = null!;
+    public bool IsMobileVerified { get; private set; }
     public string? Description { get; private set; }
     public bool IsActive { get; private set; }
 
@@ -30,17 +29,11 @@ public class Barber : BaseEntity
 
     public Barber(string firstName, string lastName, string mobileNumber, string userName, string passwordHash,
         string? description, long salonId, long creationBy)
+        : base(firstName, lastName, userName, passwordHash)
     {
-        ValidateFirstName(firstName);
-        ValidateLastName(lastName);
         ValidateMobileNumber(mobileNumber);
-        ValidateUserName(userName);
-        ValidatePasswordHash(passwordHash);
-        FirstName = firstName;
-        LastName = lastName;
         MobileNumber = mobileNumber;
-        UserName = userName;
-        PasswordHash = passwordHash;
+        IsMobileVerified = true;
         Description = description;
         IsActive = true;
         SalonId = salonId;
@@ -48,21 +41,12 @@ public class Barber : BaseEntity
     }
 
     public void Update(string firstName, string lastName, string mobileNumber, string userName,
-        string passwordHash,
-        string? description, long modifiedBy)
+        string passwordHash, string? description, long modifiedBy)
     {
-        ValidateFirstName(firstName);
-        ValidateLastName(lastName);
+        Update(firstName, lastName, userName, modifiedBy);
         ValidateMobileNumber(mobileNumber);
-        ValidateUserName(userName);
-        ValidatePasswordHash(passwordHash);
-        FirstName = firstName;
-        LastName = lastName;
         MobileNumber = mobileNumber;
-        UserName = userName;
-        PasswordHash = passwordHash;
         Description = description;
-        Modified(modifiedBy);
     }
 
     public void Activate(long modifiedBy)
@@ -77,33 +61,9 @@ public class Barber : BaseEntity
         Modified(modifiedBy);
     }
 
-    private static void ValidateFirstName(string firstName)
-    {
-        if (string.IsNullOrWhiteSpace(firstName))
-            throw new RequiredFieldException(nameof(firstName));
-    }
-
-    private static void ValidateLastName(string lastName)
-    {
-        if (string.IsNullOrWhiteSpace(lastName))
-            throw new RequiredFieldException(nameof(lastName));
-    }
-
     private static void ValidateMobileNumber(string mobileNumber)
     {
         if (string.IsNullOrWhiteSpace(mobileNumber))
             throw new RequiredFieldException(nameof(mobileNumber));
-    }
-
-    private static void ValidateUserName(string userName)
-    {
-        if (string.IsNullOrWhiteSpace(userName))
-            throw new RequiredFieldException(nameof(userName));
-    }
-
-    private static void ValidatePasswordHash(string passwordHash)
-    {
-        if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new RequiredFieldException(nameof(passwordHash));
     }
 }
