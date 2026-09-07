@@ -5,6 +5,5 @@ public record UpdateBarberDto(
     string LastName,
     string MobileNumber,
     string Username,
-    string? Password,
     string? Description
 );
