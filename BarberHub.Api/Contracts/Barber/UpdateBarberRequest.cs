@@ -5,6 +5,5 @@ public record UpdateBarberRequest(
     string LastName,
     string MobileNumber,
     string Username,
-    string? Password,
     string? Description
 );
