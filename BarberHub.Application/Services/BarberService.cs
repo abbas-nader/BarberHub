@@ -1,4 +1,5 @@
 ﻿using BarberHub.Application.DTOs.Barber;
+using BarberHub.Application.DTOs.Shared;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Security.Jwt;
@@ -66,12 +67,8 @@ public class BarberService(
                 throw new DuplicateUserNameException();
         }
 
-        var passwordHash = string.IsNullOrWhiteSpace(updateBarberDto.Password)
-            ? barber.PasswordHash
-            : passwordHasher.Hash(updateBarberDto.Password);
-
         barber.Update(updateBarberDto.FirstName, updateBarberDto.LastName, updateBarberDto.MobileNumber,
-            updateBarberDto.Username, passwordHash, updateBarberDto.Description,
+            updateBarberDto.Username, updateBarberDto.Description,
             currentUserService.CurrentUser.UserId);
         barberRepository.Update(barber);
         await barberRepository.SaveChangesAsync(cancellationToken);
@@ -119,6 +116,22 @@ public class BarberService(
             throw new EntityNotFoundException(nameof(Barber), barber.Id);
 
         barber.Deactivate(currentUserService.CurrentUser.UserId);
+        await barberRepository.SaveChangesAsync(cancellationToken);
+        return ToDto(barber);
+    }
+
+    public async Task<BarberDto> ChangePasswordAsync(ChangePasswordDto changePasswordDto,
+        CancellationToken cancellationToken = default)
+    {
+        var barberId = currentUserService.CurrentUser.UserId;
+        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken) ??
+                     throw new EntityNotFoundException(nameof(Barber), barberId);
+
+        if (!passwordHasher.Verify(changePasswordDto.OldPassword, barber.PasswordHash))
+            throw new InvalidCurrentPasswordException();
+
+        var newPasswordHash = passwordHasher.Hash(changePasswordDto.NewPassword);
+        barber.ChangePassword(newPasswordHash, currentUserService.CurrentUser.UserId);
         await barberRepository.SaveChangesAsync(cancellationToken);
         return ToDto(barber);
     }
