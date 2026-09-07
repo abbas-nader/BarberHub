@@ -2,7 +2,7 @@
 
 namespace BarberHub.Domain.Entities;
 
-public class BaseUser : BaseEntity
+public abstract class BaseUser : BaseEntity
 {
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
