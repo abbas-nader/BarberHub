@@ -25,12 +25,17 @@ public class SalonAdmin : BaseUser
         Creation(creationBy);
     }
 
-    public void Update(string firstName, string lastName, string userName, string passwordHash, string mobileNumber,
+    public void Update(string firstName, string lastName, string userName, string mobileNumber,
         long modifiedBy)
     {
         Update(firstName, lastName, userName, modifiedBy);
         ValidateMobileNumber(mobileNumber);
         MobileNumber = mobileNumber;
+    }
+
+    public new void ChangePassword(string passwordHash, long modifiedBy)
+    {
+        base.ChangePassword(passwordHash, modifiedBy);
     }
 
     private static void ValidateMobileNumber(string mobileNumber)
