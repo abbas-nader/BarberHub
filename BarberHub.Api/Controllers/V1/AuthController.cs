@@ -1,5 +1,5 @@
 ﻿using Asp.Versioning;
-using BarberHub.Api.Constants.Authentication;
+using BarberHub.Api.Constants.Auth;
 using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.Auth;
 using BarberHub.Api.Mappers;
@@ -13,38 +13,13 @@ namespace BarberHub.Api.Controllers.V1;
 [AllowAnonymous]
 public class AuthController(AuthenticationService authenticationService) : BaseController
 {
-    [HttpPost(AuthUriConstants.LoginSalonAdmin)]
-    public async Task<ApiResult<TokenResponse>> LoginSalonAdmin([FromBody] LoginRequest request,
+    [HttpPost(AuthUriConstants.Login)]
+    public async Task<ApiResult<TokenResponse>> Login([FromBody] LoginRequest request,
         CancellationToken cancellationToken = default)
     {
-        var result = await authenticationService.LoginSalonAdminAsync(request.ToDto(), cancellationToken);
+        var result = await authenticationService.LoginAsync(request.ToDto(), cancellationToken);
         return result.ToResponse();
     }
-
-    [HttpPost(AuthUriConstants.LoginBarber)]
-    public async Task<ApiResult<TokenResponse>> LoginBarber([FromBody] LoginRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await authenticationService.LoginBarberAsync(request.ToDto(), cancellationToken);
-        return result.ToResponse();
-    }
-
-    [HttpPost(AuthUriConstants.LoginCustomer)]
-    public async Task<ApiResult<TokenResponse>> LoginCustomer([FromBody] LoginRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await authenticationService.LoginCustomerAsync(request.ToDto(), cancellationToken);
-        return result.ToResponse();
-    }
-
-    [HttpPost(AuthUriConstants.LoginPlatformAdmin)]
-    public async Task<ApiResult<TokenResponse>> LoginPlatformAdmin([FromBody] LoginRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await authenticationService.LoginPlatformAdminAsync(request.ToDto(), cancellationToken);
-        return result.ToResponse();
-    }
-
     [HttpPost(AuthUriConstants.Refresh)]
     public async Task<ApiResult<TokenResponse>> Refresh([FromBody] RefreshRequest request,
         CancellationToken cancellationToken = default)
