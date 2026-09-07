@@ -8,4 +8,5 @@ public static class SalonAdminUriConstants
     public const string Create = $"{ControllerName}/create";
     public const string Update = $"{ControllerName}/update/{{salonAdminId}}";
     public const string Delete = $"{ControllerName}/delete/{{salonAdminId}}";
+    public const string ChangePassword = $"{ControllerName}/change-password";
 }
