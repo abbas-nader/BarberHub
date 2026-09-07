@@ -30,7 +30,7 @@ public class CreateSalonAdminValidator : AbstractValidator<CreateSalonAdminReque
             .NotEmpty()
             .WithMessage(
                 SharedValidationMessages.PropertyRequired(CreateSalonAdminValidationMessages.MobileNumberProperty))
-            .Matches(@"^09\d{9}$")
+            .Matches(CreateSalonAdminValidationMessages.MobileNumberRegex)
             .WithMessage(CreateSalonAdminValidationMessages.MobileNumberInvalidFormat);
 
         RuleFor(x => x.Username)
@@ -40,7 +40,7 @@ public class CreateSalonAdminValidator : AbstractValidator<CreateSalonAdminReque
             .MaximumLength(SalonAdminConstants.UsernameMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(CreateSalonAdminValidationMessages.UsernameProperty))
-            .Matches(@"^\S+$")
+            .Matches(CreateSalonAdminValidationMessages.UserNameRegex)
             .WithMessage(CreateSalonAdminValidationMessages.UsernameInvalidFormat);
 
         RuleFor(x => x.Password)
