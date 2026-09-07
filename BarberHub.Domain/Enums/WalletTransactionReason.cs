@@ -1,8 +1,9 @@
 ﻿namespace BarberHub.Domain.Enums;
 
-public enum WalletTransactionReason  : byte
+public enum WalletTransactionReason : byte
 {
     DepositRefundOnSalonCancellation = 1,
     RaceConditionRefund = 2,
-    DepositPaymentUsage = 3
+    DepositPaymentUsage = 3,
+    DepositRefundOnCustomerCancellation = 4
 }
