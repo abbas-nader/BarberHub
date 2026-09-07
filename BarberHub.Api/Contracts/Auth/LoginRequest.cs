@@ -1,6 +1,9 @@
-﻿namespace BarberHub.Api.Contracts.Auth;
+﻿using BarberHub.Domain.Enums;
+
+namespace BarberHub.Api.Contracts.Auth;
 
 public record LoginRequest(
     string Username,
-    string Password
+    string Password,
+    UserRole Role
 );
