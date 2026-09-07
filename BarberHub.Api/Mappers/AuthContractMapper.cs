@@ -9,7 +9,8 @@ public static class AuthContractMapper
     public static LoginDto ToDto(this LoginRequest request)
         => new(
             request.Username,
-            request.Password
+            request.Password,
+            request.Role
         );
 
     public static TokenResponse ToResponse(this TokenResult tokenResult)
