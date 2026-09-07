@@ -37,14 +37,6 @@ public class UpdateBarberValidator : AbstractValidator<UpdateBarberRequest>
                 SharedValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.UsernameProperty))
             .Matches(UpdateBarberValidationMessages.UserNameRegex)
             .WithMessage(UpdateBarberValidationMessages.UsernameInvalidFormat);
-        RuleFor(x => x.Password)
-            .MinimumLength(PasswordValidationMessages.MinLength)
-            .WithMessage(
-                SharedValidationMessages.PropertyMinLength(UpdateBarberValidationMessages.PasswordProperty))
-            .MaximumLength(PasswordValidationMessages.MaxLength)
-            .WithMessage(
-                SharedValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.PasswordProperty))
-            .When(x => !string.IsNullOrWhiteSpace(x.Password));
         RuleFor(x => x.Description)
             .MaximumLength(BarberConstants.DescriptionMaxLength).WithMessage(
                 SharedValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.DescriptionProperty));
