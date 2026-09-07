@@ -26,7 +26,7 @@ public class UpdateBarberValidator : AbstractValidator<UpdateBarberRequest>
             .NotEmpty()
             .WithMessage(
                 SharedValidationMessages.PropertyRequired(UpdateBarberValidationMessages.MobileNumberProperty))
-            .Matches(@"^09\d{9}$")
+            .Matches(UpdateBarberValidationMessages.MobileNumberRegex)
             .WithMessage(UpdateBarberValidationMessages.MobileNumberInvalidFormat);
         RuleFor(x => x.Username)
             .NotEmpty()
@@ -35,7 +35,7 @@ public class UpdateBarberValidator : AbstractValidator<UpdateBarberRequest>
             .MaximumLength(BarberConstants.UserNameMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.UsernameProperty))
-            .Matches(@"^\S+$")
+            .Matches(UpdateBarberValidationMessages.UserNameRegex)
             .WithMessage(UpdateBarberValidationMessages.UsernameInvalidFormat);
         RuleFor(x => x.Password)
             .MinimumLength(PasswordValidationMessages.MinLength)
