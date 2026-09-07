@@ -27,6 +27,8 @@ public class SalonAdminConfiguration : IEntityTypeConfiguration<SalonAdmin>
         builder.Property(x => x.MobileNumber)
             .HasMaxLength(SalonAdminConstants.PhoneNumberMaxLength)
             .IsRequired();
+        builder.Property(x => x.IsMobileVerified)
+            .IsRequired();
 
         builder.HasOne(x => x.Salon)
             .WithMany()
