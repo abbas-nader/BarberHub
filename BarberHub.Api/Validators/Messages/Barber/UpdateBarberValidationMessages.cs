@@ -16,8 +16,6 @@ public static class UpdateBarberValidationMessages
     public const string UsernameInvalidFormat = "Username format is invalid.";
     public const string UserNameRegex = @"^\S+$";
     
-    public const string PasswordProperty = "Password";
-    
     public const string DescriptionProperty = "Description";
     
     public const string SalonIdInvalid = "Salon id must be a positive number.";
