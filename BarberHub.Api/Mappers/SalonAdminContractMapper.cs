@@ -28,7 +28,6 @@ public static class SalonAdminContractMapper
             request.FirstName,
             request.LastName,
             request.Username,
-            request.Password,
             request.MobileNumber
         );
 
