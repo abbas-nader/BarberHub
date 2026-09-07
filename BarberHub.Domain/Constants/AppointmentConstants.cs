@@ -11,4 +11,6 @@ public static class AppointmentConstants
     public const string ServicePriceValueColumnName  = "ServicePriceValue";
     public const string ServicePriceColumnType  = "numeric(18,2)";
     public const string ServicePriceCurrencyColumnName  = "ServicePriceCurrency";
+    public const int FullRefundWindowHours = 24;
+    public const int CancellationDeadlineHours = 12;
 }

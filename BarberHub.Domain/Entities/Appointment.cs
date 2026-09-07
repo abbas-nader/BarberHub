@@ -1,4 +1,5 @@
-﻿using BarberHub.Domain.Enums;
+﻿using BarberHub.Domain.Constants;
+using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.Exceptions.SharedExceptions;
 using BarberHub.Domain.ValueObjects;
@@ -65,6 +66,16 @@ public class Appointment : BaseEntity
     public void CancelByCustomer(long modifiedBy)
     {
         EnsureIsConfirmed();
+
+        var hoursUntilAppointment = GetHoursUntilAppointment();
+
+        if (hoursUntilAppointment < AppointmentConstants.CancellationDeadlineHours)
+            throw new CancellationWindowExpiredException();
+
+        DepositStatus = hoursUntilAppointment >= AppointmentConstants.FullRefundWindowHours
+            ? DepositStatus.Refunded
+            : DepositStatus.Forfeited;
+
         AppointmentStatus = AppointmentStatus.CancelledByCustomer;
         CancelledAt = DateTimeOffset.UtcNow;
         Modified(modifiedBy);
@@ -97,6 +108,16 @@ public class Appointment : BaseEntity
     {
         if (AppointmentStatus != AppointmentStatus.Confirmed)
             throw new InvalidAppointmentStatusTransitionException();
+    }
+
+    private double GetHoursUntilAppointment()
+    {
+        var appointmentStartUtc = new DateTimeOffset(
+            AppointmentDate.Year, AppointmentDate.Month, AppointmentDate.Day,
+            StartTime.Hour, StartTime.Minute, StartTime.Second,
+            TimeSpan.Zero);
+
+        return (appointmentStartUtc - DateTimeOffset.UtcNow).TotalHours;
     }
 
     private static void ValidateDate(DateOnly appointmentDate)
