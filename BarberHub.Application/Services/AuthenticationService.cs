@@ -18,10 +18,23 @@ public class AuthenticationService(
     IJwtGenerator jwtGenerator,
     ITokenHasher tokenHasher,
     IRefreshTokenRepository refreshTokenRepository,
-    IUnitOfWork  unitOfWork)
+    IUnitOfWork unitOfWork)
 {
-    public async Task<TokenResult> LoginSalonAdminAsync(LoginDto loginDto,
-        CancellationToken cancellationToken = default)
+    public async Task<TokenResult> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken = default)
+    {
+        var claims = loginDto.Role switch
+        {
+            UserRole.SalonAdmin => await LoginSalonAdminAsync(loginDto, cancellationToken),
+            UserRole.Barber => await LoginBarberAsync(loginDto, cancellationToken),
+            UserRole.Customer => await LoginCustomerAsync(loginDto, cancellationToken),
+            UserRole.PlatformAdmin => await LoginPlatformAdminAsync(loginDto, cancellationToken),
+            _ => throw new InvalidCredentialsException()
+        };
+
+        return await IssueTokenAsync(claims, cancellationToken);
+    }
+
+    private async Task<TokenClaims> LoginSalonAdminAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
         var user = await salonAdminRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
                    ?? throw new InvalidCredentialsException();
@@ -29,12 +42,10 @@ public class AuthenticationService(
         var salon = await salonRepository.GetByIdAsync(user.SalonId, cancellationToken);
         if (salon is null || !salon.IsActive)
             throw new InvalidCredentialsException();
-        var claims = new TokenClaims(user.Id, UserRole.SalonAdmin, user.SalonId);
-        return await IssueTokenAsync(claims, cancellationToken);
+        return new TokenClaims(user.Id, UserRole.SalonAdmin, user.SalonId);
     }
 
-    public async Task<TokenResult> LoginBarberAsync(LoginDto loginDto,
-        CancellationToken cancellationToken = default)
+    private async Task<TokenClaims> LoginBarberAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
         var user = await barberRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
                    ?? throw new InvalidCredentialsException();
@@ -42,30 +53,23 @@ public class AuthenticationService(
         var salon = await salonRepository.GetByIdAsync(user.SalonId, cancellationToken);
         if (salon is null || !salon.IsActive)
             throw new InvalidCredentialsException();
-        var claims = new TokenClaims(user.Id, UserRole.Barber, user.SalonId);
-        return await IssueTokenAsync(claims, cancellationToken);
+        return new TokenClaims(user.Id, UserRole.Barber, user.SalonId);
     }
 
-    public async Task<TokenResult> LoginCustomerAsync(LoginDto loginDto,
-        CancellationToken cancellationToken = default)
+    private async Task<TokenClaims> LoginCustomerAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
         var user = await userRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
                    ?? throw new InvalidCredentialsException();
         VerifyPassword(loginDto.Password, user.PasswordHash);
-
-        var claims = new TokenClaims(user.Id, UserRole.Customer, null);
-        return await IssueTokenAsync(claims, cancellationToken);
+        return new TokenClaims(user.Id, UserRole.Customer, null);
     }
 
-    public async Task<TokenResult> LoginPlatformAdminAsync(LoginDto loginDto,
-        CancellationToken cancellationToken = default)
+    private async Task<TokenClaims> LoginPlatformAdminAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
         var user = await platformAdminRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
                    ?? throw new InvalidCredentialsException();
         VerifyPassword(loginDto.Password, user.PasswordHash);
-
-        var claims = new TokenClaims(user.Id, UserRole.PlatformAdmin, null);
-        return await IssueTokenAsync(claims, cancellationToken);
+        return new TokenClaims(user.Id, UserRole.PlatformAdmin, null);
     }
 
     private void VerifyPassword(string plainPassword, string passwordHash)
@@ -116,15 +120,15 @@ public class AuthenticationService(
             existingToken.MarkReplacedBy(newRefreshToken.Id);
             refreshTokenRepository.Update(existingToken);
             await refreshTokenRepository.SaveChangesAsync(cancellationToken);
-            
+
             await unitOfWork.CommitTransaction(cancellationToken);
         }
-        catch 
+        catch
         {
             await unitOfWork.RollbackTransaction(cancellationToken);
             throw;
         }
-        
+
         return tokenResult;
     }
 
