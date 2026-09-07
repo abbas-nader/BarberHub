@@ -19,6 +19,8 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
         builder.Property(x => x.MobileNumber)
             .IsRequired()
             .HasMaxLength(BarberConstants.MobileMaxLength);
+        builder.Property(x => x.IsMobileVerified)
+            .IsRequired();
         builder.Property(x => x.UserName)
             .IsRequired()
             .HasMaxLength(BarberConstants.UserNameMaxLength);
