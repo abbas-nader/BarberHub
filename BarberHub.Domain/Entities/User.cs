@@ -28,9 +28,9 @@ public class User : BaseUser
         Creation(creationBy);
     }
 
-    public void UpdateProfile(string firstName, string lastName, string userName, string passwordHash, long modifiedBy)
+    public new void Update(string firstName, string lastName, string userName, long modifiedBy)
     {
-        Update(firstName, lastName, userName, modifiedBy);
+        base.Update(firstName, lastName, userName, modifiedBy);
     }
 
     public void RequestMobileNumberChange(string newMobileNumber, long modifiedBy)
@@ -47,7 +47,10 @@ public class User : BaseUser
         IsMobileVerified = true;
         Modified(modifiedBy);
     }
-
+    public new void ChangePassword(string passwordHash, long modifiedBy)
+    {
+        base.ChangePassword(passwordHash, modifiedBy);
+    }
     private static void ValidateMobileNumber(string mobileNumber)
     {
         if (string.IsNullOrWhiteSpace(mobileNumber))
