@@ -12,7 +12,6 @@ public class Barber : BaseUser
     private readonly List<Review> _reviews = [];
 
     public string MobileNumber { get; private set; } = null!;
-    public bool IsMobileVerified { get; private set; }
     public string? Description { get; private set; }
     public bool IsActive { get; private set; }
 
@@ -33,7 +32,6 @@ public class Barber : BaseUser
     {
         ValidateMobileNumber(mobileNumber);
         MobileNumber = mobileNumber;
-        IsMobileVerified = true;
         Description = description;
         IsActive = true;
         SalonId = salonId;
