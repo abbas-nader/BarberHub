@@ -13,4 +13,14 @@ public class PlatformAdmin : BaseUser
     {
         Creation(creationBy);
     }
+
+    public new void Update(string firstName, string lastName, string userName, long modifiedBy)
+    {
+        base.Update(firstName, lastName, userName, modifiedBy);
+    }
+
+    public new void ChangePassword(string passwordHash, long modifiedBy)
+    {
+        base.ChangePassword(passwordHash, modifiedBy);
+    }
 }
