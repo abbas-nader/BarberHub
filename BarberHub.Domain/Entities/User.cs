@@ -38,7 +38,7 @@ public class User : BaseUser
         ValidateMobileNumber(newMobileNumber);
         if (newMobileNumber == MobileNumber) return;
         MobileNumber = newMobileNumber;
-        IsMobileVerified = true;
+       ConfirmMobileNumberChange(modifiedBy);
         Modified(modifiedBy);
     }
 
