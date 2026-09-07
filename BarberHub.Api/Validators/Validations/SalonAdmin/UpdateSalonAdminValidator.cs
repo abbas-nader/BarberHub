@@ -33,7 +33,7 @@ public class UpdateSalonAdminValidator : AbstractValidator<UpdateSalonAdminReque
             .MaximumLength(SalonAdminConstants.UsernameMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(UpdateSalonAdminValidationMessages.UsernameProperty))
-            .Matches(@"^\S+$")
+            .Matches(UpdateSalonAdminValidationMessages.UserNameRegex)
             .WithMessage(UpdateSalonAdminValidationMessages.UsernameInvalidFormat);
 
         RuleFor(x => x.Password)
@@ -49,7 +49,7 @@ public class UpdateSalonAdminValidator : AbstractValidator<UpdateSalonAdminReque
             .NotEmpty()
             .WithMessage(
                 SharedValidationMessages.PropertyRequired(UpdateSalonAdminValidationMessages.MobileNumberProperty))
-            .Matches(@"^09\d{9}$")
+            .Matches(UpdateSalonAdminValidationMessages.MobileNumberRegex)
             .WithMessage(UpdateSalonAdminValidationMessages.MobileNumberInvalidFormat);
     }
 }
