@@ -5,7 +5,6 @@ namespace BarberHub.Domain.Entities;
 public class SalonAdmin : BaseUser
 {
     public string MobileNumber { get; private set; } = null!;
-    public bool IsMobileVerified { get; private set; }
 
     public long SalonId { get; private set; }
     public Salon Salon { get; private set; } = null!;
@@ -20,7 +19,6 @@ public class SalonAdmin : BaseUser
     {
         ValidateMobileNumber(mobileNumber);
         MobileNumber = mobileNumber;
-        IsMobileVerified = true;
         SalonId = salonId;
         Creation(creationBy);
     }
