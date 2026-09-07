@@ -13,6 +13,4 @@ public static class UpdateSalonAdminValidationMessages
     public const string UsernameProperty = "Username";
     public const string UsernameInvalidFormat = "Username format is invalid."; 
     public const string UserNameRegex = @"^\S+$";
-
-    public const string PasswordProperty = "Password";
 }
