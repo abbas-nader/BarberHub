@@ -40,8 +40,8 @@ public class Barber : BaseUser
         Creation(creationBy);
     }
 
-    public void Update(string firstName, string lastName, string mobileNumber, string userName,
-        string passwordHash, string? description, long modifiedBy)
+    public void Update(string firstName, string lastName, string mobileNumber, string userName, string? description,
+        long modifiedBy)
     {
         Update(firstName, lastName, userName, modifiedBy);
         ValidateMobileNumber(mobileNumber);
@@ -59,6 +59,11 @@ public class Barber : BaseUser
     {
         IsActive = false;
         Modified(modifiedBy);
+    }
+
+    public new void ChangePassword(string passwordHash, long modifiedBy)
+    {
+        base.ChangePassword(passwordHash, modifiedBy);
     }
 
     private static void ValidateMobileNumber(string mobileNumber)
