@@ -1,7 +1,10 @@
 ﻿using Asp.Versioning;
 using BarberHub.Api.Constants.Salon;
 using BarberHub.Api.Contracts;
+using BarberHub.Api.Contracts.Auth;
 using BarberHub.Api.Contracts.Salon;
+using BarberHub.Api.Contracts.SalonAdmin;
+using BarberHub.Api.Contracts.Shared;
 using BarberHub.Api.Mappers;
 using BarberHub.Application.Services;
 using BarberHub.Domain.Enums;
@@ -14,10 +17,19 @@ namespace BarberHub.Api.Controllers.V1;
 public class SalonController(SalonService salonService) : BaseController
 {
     [HttpGet(SalonUriConstants.GetAll)]
-    public async Task<ApiResult<IReadOnlyList<SalonResponse>>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<ApiResult<IReadOnlyList<SalonResponse>>> GetAllAsync(
+        CancellationToken cancellationToken = default)
     {
         var salons = await salonService.GetAll(cancellationToken);
         return salons.Select(x => x.ToResponse()).ToList();
+    }
+
+    [HttpGet(SalonUriConstants.GetAllPaginated)]
+    public async Task<ApiResult<PaginatedResponse<SalonResponse>>> GetAllPaginatedAsync(
+        [FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken = default)
+    {
+        var salons = await salonService.PaginatedGetAllAsync(pageNumber, pageSize, cancellationToken);
+        return salons.ToResponse(x => x.ToResponse());
     }
 
     [HttpGet(SalonUriConstants.GetById)]
