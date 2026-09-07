@@ -2,6 +2,7 @@
 using BarberHub.Api.Constants.Barber;
 using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.Barber;
+using BarberHub.Api.Contracts.Shared;
 using BarberHub.Api.Mappers;
 using BarberHub.Application.Services;
 using BarberHub.Domain.Enums;
@@ -72,6 +73,14 @@ public class BarberController(BarberService barberService) : BaseController
         CancellationToken cancellationToken)
     {
         var barber = await barberService.DeactivateAsync(barberId, cancellationToken);
+        return barber.ToResponse();
+    }
+    [HttpPatch(BarberUriConstants.ChangePassword)]
+    [Authorize(Roles = nameof(UserRole.Barber))]
+    public async Task<ApiResult<BarberResponse>> ChangePasswordAsync([FromBody] ChangePasswordRequest request,
+        CancellationToken cancellationToken)
+    {
+        var barber = await barberService.ChangePasswordAsync(request.ToDto(), cancellationToken);
         return barber.ToResponse();
     }
 }
