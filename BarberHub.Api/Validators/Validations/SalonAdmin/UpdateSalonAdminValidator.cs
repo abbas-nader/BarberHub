@@ -35,16 +35,7 @@ public class UpdateSalonAdminValidator : AbstractValidator<UpdateSalonAdminReque
                 SharedValidationMessages.PropertyMaxLength(UpdateSalonAdminValidationMessages.UsernameProperty))
             .Matches(UpdateSalonAdminValidationMessages.UserNameRegex)
             .WithMessage(UpdateSalonAdminValidationMessages.UsernameInvalidFormat);
-
-        RuleFor(x => x.Password)
-            .MinimumLength(PasswordValidationMessages.MinLength)
-            .WithMessage(
-                SharedValidationMessages.PropertyMinLength(UpdateSalonAdminValidationMessages.PasswordProperty))
-            .MaximumLength(PasswordValidationMessages.MaxLength)
-            .WithMessage(
-                SharedValidationMessages.PropertyMaxLength(UpdateSalonAdminValidationMessages.PasswordProperty))
-            .When(x => !string.IsNullOrWhiteSpace(x.Password));
-
+        
         RuleFor(x => x.MobileNumber)
             .NotEmpty()
             .WithMessage(
