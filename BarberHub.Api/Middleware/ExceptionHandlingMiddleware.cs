@@ -31,6 +31,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or InvalidRefreshTokenException
             or RefreshTokenReuseDetectedException
             or RequiredClaimMissingException
+            or InvalidCurrentPasswordException
             or UserNotAuthenticatedException => HttpStatusCode.Unauthorized,
 
         DuplicateUserNameException
