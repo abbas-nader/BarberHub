@@ -5,6 +5,7 @@ public static class SalonUriConstants
     private const string ControllerName = "salon";
     public const string GetAll = $"{ControllerName}";
     public const string GetById = $"{ControllerName}/{{salonId}}";
+    public const string GetAllPaginated = $"{ControllerName}/paginated";
     public const string Create = $"{ControllerName}/create";
     public const string Update = $"{ControllerName}/update";
     public const string Delete = $"{ControllerName}/delete/{{salonId}}";
