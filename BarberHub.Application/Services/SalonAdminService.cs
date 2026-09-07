@@ -1,4 +1,5 @@
 ﻿using BarberHub.Application.DTOs.SalonAdmin;
+using BarberHub.Application.DTOs.Shared;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Security.Jwt;
@@ -57,11 +58,8 @@ public class SalonAdminService(
                 throw new DuplicateUserNameException();
         }
 
-        var passwordHash = string.IsNullOrWhiteSpace(updateSalonAdminDto.Password)
-            ? salonAdmin.PasswordHash
-            : passwordHasher.Hash(updateSalonAdminDto.Password);
         salonAdmin.Update(updateSalonAdminDto.FirstName, updateSalonAdminDto.LastName, updateSalonAdminDto.Username,
-            passwordHash, updateSalonAdminDto.MobileNumber, currentUserService.CurrentUser.UserId);
+            updateSalonAdminDto.MobileNumber, currentUserService.CurrentUser.UserId);
         salonAdminRepository.Update(salonAdmin);
         await salonAdminRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salonAdmin);
@@ -76,7 +74,21 @@ public class SalonAdminService(
         await salonAdminRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salonAdmin);
     }
+    public async Task<SalonAdminDto> ChangePasswordAsync(ChangePasswordDto changePasswordDto,
+        CancellationToken cancellationToken = default)
+    {
+        var salonAdminId = currentUserService.CurrentUser.UserId;
+        var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken) ??
+                         throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
 
+        if (!passwordHasher.Verify(changePasswordDto.OldPassword, salonAdmin.PasswordHash))
+            throw new InvalidCurrentPasswordException();
+
+        var newPasswordHash = passwordHasher.Hash(changePasswordDto.NewPassword);
+        salonAdmin.ChangePassword(newPasswordHash, currentUserService.CurrentUser.UserId);
+        await salonAdminRepository.SaveChangesAsync(cancellationToken);
+        return ToDto(salonAdmin);
+    }
     private static SalonAdminDto ToDto(SalonAdmin salonAdmin)
         => new(
             salonAdmin.Id,
