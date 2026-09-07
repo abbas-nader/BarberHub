@@ -32,7 +32,6 @@ public static class BarberContractMapper
             request.LastName,
             request.MobileNumber,
             request.Username,
-            request.Password,
             request.Description
         );
 }
