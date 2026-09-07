@@ -10,4 +10,5 @@ public static class BarberUriConstants
     public const string Delete = $"{ControllerName}/delete/{{barberId}}";
     public const string Activate = $"{ControllerName}/activate/{{barberId}}";
     public const string Deactivate = $"{ControllerName}/deactivate/{{barberId}}";
+    public const string ChangePassword = $"{ControllerName}/change-password";
 }
