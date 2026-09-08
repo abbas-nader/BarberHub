@@ -6,12 +6,15 @@ using BarberHub.Domain.Exceptions;
 
 namespace BarberHub.Application.Services;
 
-public class WorkScheduleService(IWorkScheduleRepository workScheduleRepository, ICurrentUserService currentUserService)
+public class WorkScheduleService(
+    IWorkScheduleRepository workScheduleRepository,
+    ICurrentUserService currentUserService,
+    IBarberRepository barberRepository)
 {
-    public async Task<IReadOnlyList<WorkScheduleDto>> GetAllByBarberIdsAsync(long barberId,
+    public async Task<IReadOnlyList<WorkScheduleDto>> GetAllByBarberIdAsync(long barberId,
         CancellationToken cancellationToken = default)
     {
-        var workSchedule = await workScheduleRepository.GetAllByBarberIdsAsync(barberId, cancellationToken);
+        var workSchedule = await workScheduleRepository.GetAllByBarberIdAsync(barberId, cancellationToken);
         return workSchedule.Select(ToDto).ToList();
     }
 
@@ -27,6 +30,9 @@ public class WorkScheduleService(IWorkScheduleRepository workScheduleRepository,
     {
         var salonId = currentUserService.CurrentUser.SalonId ??
                       throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        var barber = await barberRepository.GetByIdAsync(createWorkScheduleDto.BarberId, cancellationToken);
+        if (barber is null || barber.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(Barber), createWorkScheduleDto.BarberId);
         var workSchedule = new WorkSchedule(
             createWorkScheduleDto.StartTime, createWorkScheduleDto.EndTime, createWorkScheduleDto.DayOfWeek,
             createWorkScheduleDto.BarberId, currentUserService.CurrentUser.UserId);
@@ -42,23 +48,31 @@ public class WorkScheduleService(IWorkScheduleRepository workScheduleRepository,
                            throw new EntityNotFoundException(nameof(WorkSchedule), workScheduleId);
         var salonId = currentUserService.CurrentUser.SalonId ??
                       throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        var barber = await barberRepository.GetByIdAsync(workSchedule.BarberId, cancellationToken);
+        if (barber is null || barber.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(Barber), workSchedule.BarberId);
         workSchedule.Update(updateWorkScheduleDto.StartTime, updateWorkScheduleDto.EndTime,
             updateWorkScheduleDto.DayOfWeek, currentUserService.CurrentUser.UserId);
         workScheduleRepository.Update(workSchedule);
         await workScheduleRepository.SaveChangesAsync(cancellationToken);
         return ToDto(workSchedule);
     }
+
     public async Task<WorkScheduleDto> DeleteAsync(long workScheduleId, CancellationToken cancellationToken = default)
     {
-        var barber = await workScheduleRepository.GetByIdAsync(workScheduleId, cancellationToken);
-        if (barber == null)
-            throw new EntityNotFoundException(nameof(Barber), workScheduleId);
+        var workSchedule = await workScheduleRepository.GetByIdAsync(workScheduleId, cancellationToken);
+        if (workSchedule == null)
+            throw new EntityNotFoundException(nameof(WorkSchedule), workScheduleId);
         var salonId = currentUserService.CurrentUser.SalonId
                       ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
-        barber.SoftDelete(currentUserService.CurrentUser.UserId);
+        var barber = await barberRepository.GetByIdAsync(workSchedule.BarberId, cancellationToken);
+        if (barber is null || barber.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(Barber), workSchedule.BarberId);
+        workSchedule.SoftDelete(currentUserService.CurrentUser.UserId);
         await workScheduleRepository.SaveChangesAsync(cancellationToken);
-        return ToDto(barber);
+        return ToDto(workSchedule);
     }
+
     private static WorkScheduleDto ToDto(WorkSchedule workSchedule)
         => new(
             workSchedule.Id,
