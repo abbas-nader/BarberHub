@@ -4,6 +4,6 @@ namespace BarberHub.Application.Repositories;
 
 public interface IWorkScheduleRepository : IRepository<WorkSchedule>
 {
-    Task<IReadOnlyList<WorkSchedule>> GetAllByBarberIdsAsync(long barberId,
+    Task<IReadOnlyList<WorkSchedule>> GetAllByBarberIdAsync(long barberId,
         CancellationToken cancellationToken = default);
 }
