@@ -17,7 +17,7 @@ public class BarberRepository(BarberHubDbContext context) : BaseRepository<Barbe
             x => x.UserName == userName && !x.IsDeleted && x.IsActive,
             cancellationToken);
 
-    public async Task<IReadOnlyCollection<Barber>> GetAllBySalonIdAsync(long salonId,
+    public async Task<IReadOnlyList<Barber>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
     {
         return await BarberHubDbContext.Barbers
