@@ -1,4 +1,5 @@
-﻿using BarberHub.Application.Repositories;
+﻿using BarberHub.Application.DTOs.Shared;
+using BarberHub.Application.Repositories;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ public abstract class BaseRepository<TEntity>(BarberHubDbContext barberHubDbCont
             .Where(x => x.IsDeleted == false)
             .ToListAsync(cancellationToken);
 
-    public async Task<PaginatedResult<TEntity>> GetPagedAsync(int pageNumber, int pageSize,
+    public async Task<PagedResult<TEntity>> GetPagedAsync(int pageNumber, int pageSize,
         CancellationToken cancellationToken = default)
     {
         var query = _dbSet.Where(x => x.IsDeleted == false);
@@ -30,7 +31,7 @@ public abstract class BaseRepository<TEntity>(BarberHubDbContext barberHubDbCont
             .OrderBy(x=>x.Id)
             .ToListAsync(cancellationToken);
 
-        return new  PaginatedResult<TEntity>(items, pageNumber, pageSize, totalCount);
+        return new  PagedResult<TEntity>(items, pageNumber, pageSize, totalCount);
     }
 
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
