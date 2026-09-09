@@ -1,4 +1,5 @@
 ﻿using BarberHub.Application.DTOs.Salon;
+using BarberHub.Application.DTOs.Shared;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Jwt;
 using BarberHub.Domain.Entities;
@@ -35,12 +36,12 @@ public class SalonService(ISalonRepository salonRepository, ICurrentUserService 
         return ToDto(salon);
     }
 
-    public async Task<PaginatedResult<SalonDto>> PaginatedGetAllAsync(int pageNumber, int pageSize,
+    public async Task<PagedResult<SalonDto>> PaginatedGetAllAsync(int pageNumber, int pageSize,
         CancellationToken cancellationToken = default)
     {
         var salons = await salonRepository.GetPagedAsync(pageNumber, pageSize, cancellationToken);
         var salonDto = salons.Items.Select(ToDto).ToList();
-        return new PaginatedResult<SalonDto>(salonDto, pageNumber, pageSize, salons.TotalCount);
+        return new PagedResult<SalonDto>(salonDto, pageNumber, pageSize, salons.TotalCount);
     }
 
     public async Task<SalonDto> UpdateAsync(UpdateSalonDto updateSalonDto,
