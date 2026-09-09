@@ -1,6 +1,5 @@
-﻿using BarberHub.Domain.Entities;
-using BarberHub.Domain.ValueObjects;
-
+﻿using BarberHub.Application.DTOs.Shared;
+using BarberHub.Domain.Entities;
 namespace BarberHub.Application.Repositories;
 
 public interface IRepository<TEntity> where TEntity : BaseEntity
@@ -8,7 +7,7 @@ public interface IRepository<TEntity> where TEntity : BaseEntity
     Task<TEntity?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 
-    Task<PaginatedResult<TEntity>> GetPagedAsync(int pageNumber, int pageSize,
+    Task<PagedResult<TEntity>> GetPagedAsync(int pageNumber, int pageSize,
         CancellationToken cancellationToken = default);
 
     Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
