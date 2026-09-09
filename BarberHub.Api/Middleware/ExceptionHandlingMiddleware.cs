@@ -54,9 +54,6 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or InvalidAppointmentDateException
             or InvalidAppointmentTimeRangeException
             or InvalidServiceDescriptionException
-            or InvalidPageNumberException
-            or InvalidPageSizeException
-            or InvalidTotalCountException
             or CurrencyMismatchException => HttpStatusCode.BadRequest,
 
         _ => HttpStatusCode.InternalServerError
