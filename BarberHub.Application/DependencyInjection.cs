@@ -15,5 +15,6 @@ public static class DependencyInjection
         services.AddScoped<ServiceCatalogService>();
         services.AddScoped<BarberServiceCatalogService>();
         services.AddScoped<WorkScheduleService>();
+        services.AddScoped<FileService>();
     }
 }
