@@ -54,6 +54,8 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or InvalidAppointmentDateException
             or InvalidAppointmentTimeRangeException
             or InvalidServiceDescriptionException
+            or FileSizeLimitExceededException
+            or UnsupportedFileTypeException
             or CurrencyMismatchException => HttpStatusCode.BadRequest,
 
         _ => HttpStatusCode.InternalServerError
