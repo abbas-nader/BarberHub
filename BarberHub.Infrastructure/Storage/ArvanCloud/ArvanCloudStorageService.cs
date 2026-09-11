@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace BarberHub.Infrastructure.Storage.ArvanCloud;
 
-public class ArvanCloudStorageService(IAmazonS3 s3Client, IOptions<ArvanCloudSetting> options) : IFileStorageService
+public class ArvanCloudStorageService(IAmazonS3 s3Client, IOptions<ArvanCloudSetting> options) : IProviderFileStorage
 {
     private readonly ArvanCloudSetting _setting = options.Value;
     public StorageProvider Provider => StorageProvider.ArvanCloud;
@@ -30,8 +30,7 @@ public class ArvanCloudStorageService(IAmazonS3 s3Client, IOptions<ArvanCloudSet
         return new FileUploadResult(url, key, StorageProvider.ArvanCloud);
     }
 
-    public async Task<Stream> DownloadAsync(string key, StorageProvider storageProvider,
-        CancellationToken cancellationToken = default)
+    public async Task<Stream> DownloadAsync(string key, CancellationToken cancellationToken = default)
     {
         var response = await s3Client.GetObjectAsync(_setting.BucketName, key, cancellationToken);
         var memoryStream = new MemoryStream();
@@ -43,7 +42,7 @@ public class ArvanCloudStorageService(IAmazonS3 s3Client, IOptions<ArvanCloudSet
     public Task DeleteAsync(string key, CancellationToken cancellationToken = default)
     {
         ValidateKey(key);
-        return s3Client.DeleteObjectAsync(_setting.BucketName,key, cancellationToken);
+        return s3Client.DeleteObjectAsync(_setting.BucketName, key, cancellationToken);
     }
 
     private string BuilderUrl(string key)

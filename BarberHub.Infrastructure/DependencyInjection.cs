@@ -82,7 +82,7 @@ public static class DependencyInjection
             };
             return new AmazonS3Client(arvanOption.AccessKey, arvanOption.SecretKey, config);
         });
-        services.AddScoped<IFileStorageService, ArvanCloudStorageService>();
+        services.AddScoped<IProviderFileStorage, ArvanCloudStorageService>();
         services.AddScoped<IProviderFileStorage, LocalFileStorageService>();
         services.AddScoped<IArvanAvailabilityChecker, ArvanAvailabilityChecker>();
         services.AddScoped<IFileStorageService, ResilientFileStorageService>();
