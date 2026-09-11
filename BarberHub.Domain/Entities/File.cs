@@ -40,6 +40,16 @@ public class File : BaseEntity
         Creation(creationBy);
     }
 
+    public void ChangeStorageProvider(string url, string storageKey, StorageProvider storageProvider, long modifiedBy)
+    {
+        ValidateUrl(url);
+        ValidateStorageKey(storageKey);
+        Url = url;
+        StorageKey = storageKey;
+        StorageProvider = storageProvider;
+        Modified(modifiedBy);
+    }
+
     private static void ValidateFileName(string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName))
