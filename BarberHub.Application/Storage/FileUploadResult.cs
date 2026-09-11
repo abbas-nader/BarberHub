@@ -1,3 +1,5 @@
-﻿namespace BarberHub.Application.Storage;
+﻿using BarberHub.Domain.Enums;
 
-public record FileUploadResult(string Url, string Key);
+namespace BarberHub.Application.Storage;
+
+public record FileUploadResult(string Url, string Key, StorageProvider StorageProvider);
