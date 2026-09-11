@@ -2,11 +2,9 @@
 
 namespace BarberHub.Application.DTOs.File;
 
-public record CreateFileDto(
-    string FileName,
+public record UploadFileDto(
+   Stream FileStream,
     string OriginFileName,
-    string Url,
     string ContentType,
-    long Size,
-    StorageProvider StorageProvider
+    long Size
 );
