@@ -32,7 +32,7 @@ public class FileService(
             uploadResult.Key,
             uploadFileDto.ContentType,
             uploadFileDto.Size,
-            StorageProvider.ArvanCloud,
+            uploadResult.StorageProvider,
             currentUserService.CurrentUser.UserId);
 
         await fileRepository.AddAsync(file, cancellationToken);
@@ -40,6 +40,7 @@ public class FileService(
 
         return ToDto(file);
     }
+
 
     public async Task<FileDto> GetByIdAsync(long fileId, CancellationToken cancellationToken = default)
     {
@@ -52,8 +53,8 @@ public class FileService(
     {
         var file = await fileRepository.GetByIdAsync(fileId, cancellationToken) ??
                    throw new EntityNotFoundException(nameof(File), fileId);
-        
-        await fileStorageService.DeleteAsync(file.StorageKey, cancellationToken);
+
+        await fileStorageService.DeleteAsync(file.StorageKey, file.StorageProvider, cancellationToken);
 
         file.SoftDelete(currentUserService.CurrentUser.UserId);
         await fileRepository.SaveChangesAsync(cancellationToken);

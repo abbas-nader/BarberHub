@@ -9,6 +9,7 @@ public interface IFileStorageService
 
     Task<Stream> DownloadAsync(string key, StorageProvider storageProvider,
         CancellationToken cancellationToken = default);
-    
-    Task DeleteAsync(string key, CancellationToken cancellationToken = default);
+
+    Task DeleteAsync(string key, StorageProvider storageProvider,
+        CancellationToken cancellationToken = default);
 }

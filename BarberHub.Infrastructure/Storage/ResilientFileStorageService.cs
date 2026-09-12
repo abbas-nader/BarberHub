@@ -52,6 +52,7 @@ public class ResilientFileStorageService : IFileStorageService
         CancellationToken cancellationToken = default)
         => _providers[storageProvider].DownloadAsync(key, cancellationToken);
 
-    public Task DeleteAsync(string key, CancellationToken cancellationToken = default)
-        => _providers[StorageProvider.ArvanCloud].DeleteAsync(key, cancellationToken);
+    public Task DeleteAsync(string key, StorageProvider storageProvider,
+        CancellationToken cancellationToken = default)
+        => _providers[storageProvider].DeleteAsync(key, cancellationToken);
 }
