@@ -1,5 +1,4 @@
 ﻿using BarberHub.Api.Contracts.Barber;
-using BarberHub.Application.DTOs;
 using BarberHub.Application.DTOs.Barber;
 
 namespace BarberHub.Api.Mappers;
