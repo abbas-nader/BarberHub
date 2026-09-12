@@ -26,9 +26,9 @@ public abstract class BaseRepository<TEntity>(BarberHubDbContext barberHubDbCont
         var query = _dbSet.Where(x => x.IsDeleted == false);
         var totalCount =await query.CountAsync(cancellationToken);
         var items = await query.AsNoTracking()
+            .OrderBy(x=>x.Id)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
-            .OrderBy(x=>x.Id)
             .ToListAsync(cancellationToken);
 
         return new  PagedResult<TEntity>(items, pageNumber, pageSize, totalCount);
