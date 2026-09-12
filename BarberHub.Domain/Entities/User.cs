@@ -42,7 +42,7 @@ public class User : BaseUser
         Modified(modifiedBy);
     }
 
-    public void ConfirmMobileNumberChange(long modifiedBy)
+    private void ConfirmMobileNumberChange(long modifiedBy)
     {
         IsMobileVerified = true;
         Modified(modifiedBy);
