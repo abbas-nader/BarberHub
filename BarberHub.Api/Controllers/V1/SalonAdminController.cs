@@ -56,6 +56,7 @@ public class SalonAdminController(SalonAdminService salonAdminService) : BaseCon
     }
 
     [HttpPatch(SalonAdminUriConstants.Delete)]
+    [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
     public async Task<ApiResult<SalonAdminResponse>> DeleteAsync([FromRoute] long salonAdminId, CancellationToken cancellationToken = default)
     {
         var salonAdmin = await salonAdminService.DeleteAsync(salonAdminId, cancellationToken);
