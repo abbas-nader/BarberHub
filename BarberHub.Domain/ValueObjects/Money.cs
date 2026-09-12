@@ -27,7 +27,7 @@ public sealed record Money
         return Value < other.Value ? throw new InsufficientMoneyException() : new Money(Value - other.Value, Currency);
     }
 
-    public void EnsureSameCurrency(Money other)
+    private void EnsureSameCurrency(Money other)
     {
         if (Currency != other.Currency)
             throw new CurrencyMismatchException();
