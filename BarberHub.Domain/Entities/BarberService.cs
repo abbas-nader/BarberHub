@@ -40,7 +40,7 @@ public class BarberService : BaseEntity
     }
     private static void ValidateDuration(TimeSpan duration)
     {
-        if (duration.Ticks < BarberServiceConstants.DurationMinValue)
+        if (duration.Ticks <= BarberServiceConstants.DurationMinValue)
             throw new InvalidServiceDurationException();
     }
 }
