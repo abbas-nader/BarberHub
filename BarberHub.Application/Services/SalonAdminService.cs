@@ -50,6 +50,12 @@ public class SalonAdminService(
         var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken);
         if (salonAdmin == null)
             throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
+
+        var salonId = currentUserService.CurrentUser.SalonId
+                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        if (salonAdmin.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
+
         if (!string.Equals(salonAdmin.UserName, updateSalonAdminDto.Username, StringComparison.Ordinal))
         {
             var checkUserName =
@@ -70,10 +76,17 @@ public class SalonAdminService(
         var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken);
         if (salonAdmin == null)
             throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
+
+        var salonId = currentUserService.CurrentUser.SalonId
+                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        if (salonAdmin.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
+
         salonAdmin.SoftDelete(currentUserService.CurrentUser.UserId);
         await salonAdminRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salonAdmin);
     }
+
     public async Task<SalonAdminDto> ChangePasswordAsync(ChangePasswordDto changePasswordDto,
         CancellationToken cancellationToken = default)
     {
@@ -89,6 +102,7 @@ public class SalonAdminService(
         await salonAdminRepository.SaveChangesAsync(cancellationToken);
         return ToDto(salonAdmin);
     }
+
     private static SalonAdminDto ToDto(SalonAdmin salonAdmin)
         => new(
             salonAdmin.Id,
