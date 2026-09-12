@@ -11,7 +11,7 @@ public class Review : BaseEntity
     public bool IsApproved { get; private set; }
     public string? Reply { get; private set; }
 
-    public long CustomerId { get; private set; }
+    public long UserId { get; private set; }
     public long BarberId { get; private set; }
     public long AppointmentId { get; private set; }
     public long SalonId { get; private set; }
@@ -29,7 +29,7 @@ public class Review : BaseEntity
         Rating = rating;
         Comment = comment;
         IsApproved = false;
-        CustomerId = customerId;
+        UserId = customerId;
         BarberId = barberId;
         AppointmentId = appointmentId;
         SalonId = salonId;

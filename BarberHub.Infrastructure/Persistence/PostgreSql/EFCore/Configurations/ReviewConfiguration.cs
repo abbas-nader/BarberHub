@@ -23,7 +23,7 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
         
         builder.HasOne<User>()
             .WithMany()
-            .HasForeignKey(x => x.CustomerId)
+            .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<Barber>()
             .WithMany(x=> x.Reviews)
