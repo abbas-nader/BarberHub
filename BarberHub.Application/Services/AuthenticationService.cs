@@ -26,7 +26,7 @@ public class AuthenticationService(
         {
             UserRole.SalonAdmin => await LoginSalonAdminAsync(loginDto, cancellationToken),
             UserRole.Barber => await LoginBarberAsync(loginDto, cancellationToken),
-            UserRole.Customer => await LoginCustomerAsync(loginDto, cancellationToken),
+            UserRole.User => await LoginUserAsync(loginDto, cancellationToken),
             UserRole.PlatformAdmin => await LoginPlatformAdminAsync(loginDto, cancellationToken),
             _ => throw new InvalidCredentialsException()
         };
@@ -47,21 +47,21 @@ public class AuthenticationService(
 
     private async Task<TokenClaims> LoginBarberAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
-        var user = await barberRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
-                   ?? throw new InvalidCredentialsException();
-        VerifyPassword(loginDto.Password, user.PasswordHash);
-        var salon = await salonRepository.GetByIdAsync(user.SalonId, cancellationToken);
-        if (salon is null || !salon.IsActive)
+        var barber = await barberRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
+                     ?? throw new InvalidCredentialsException();
+        VerifyPassword(loginDto.Password, barber.PasswordHash);
+        var salon = await salonRepository.GetByIdAsync(barber.SalonId, cancellationToken);
+        if (salon is null || !salon.IsActive || !barber.IsActive)
             throw new InvalidCredentialsException();
-        return new TokenClaims(user.Id, UserRole.Barber, user.SalonId);
+        return new TokenClaims(barber.Id, UserRole.Barber, barber.SalonId);
     }
 
-    private async Task<TokenClaims> LoginCustomerAsync(LoginDto loginDto, CancellationToken cancellationToken)
+    private async Task<TokenClaims> LoginUserAsync(LoginDto loginDto, CancellationToken cancellationToken)
     {
         var user = await userRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
                    ?? throw new InvalidCredentialsException();
         VerifyPassword(loginDto.Password, user.PasswordHash);
-        return new TokenClaims(user.Id, UserRole.Customer, null);
+        return new TokenClaims(user.Id, UserRole.User, null);
     }
 
     private async Task<TokenClaims> LoginPlatformAdminAsync(LoginDto loginDto, CancellationToken cancellationToken)
@@ -84,7 +84,7 @@ public class AuthenticationService(
 
         var tokenHash = tokenHasher.Hash(tokenResult.RefreshToken);
         var refreshToken = new RefreshToken(tokenHash, claims.UserId, claims.UserRole,
-            tokenResult.RefreshTokenExpiresAt);
+            tokenResult.RefreshTokenExpireAt);
 
         await refreshTokenRepository.AddAsync(refreshToken, cancellationToken);
         await refreshTokenRepository.SaveChangesAsync(cancellationToken);
@@ -110,7 +110,7 @@ public class AuthenticationService(
         var tokenResult = jwtGenerator.Generate(claims);
         var newTokenHash = tokenHasher.Hash(tokenResult.RefreshToken);
         var newRefreshToken = new RefreshToken(newTokenHash, claims.UserId, existingToken.Role,
-            tokenResult.RefreshTokenExpiresAt);
+            tokenResult.RefreshTokenExpireAt);
 
         await unitOfWork.BeginTransaction(cancellationToken);
         try
@@ -184,11 +184,11 @@ public class AuthenticationService(
                     throw new InvalidCredentialsException();
                 return new TokenClaims(barber.Id, UserRole.Barber, barber.SalonId);
             }
-            case UserRole.Customer:
+            case UserRole.User:
             {
                 var customer = await userRepository.GetByIdAsync(userId, cancellationToken)
                                ?? throw new EntityNotFoundException(nameof(User), userId);
-                return new TokenClaims(customer.Id, UserRole.Customer, null);
+                return new TokenClaims(customer.Id, UserRole.User, null);
             }
             case UserRole.PlatformAdmin:
             {
