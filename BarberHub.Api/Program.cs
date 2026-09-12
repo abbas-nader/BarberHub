@@ -1,5 +1,6 @@
 using System.Text;
 using Asp.Versioning;
+using BarberHub.Api.Contracts;
 using BarberHub.Api.Filters;
 using BarberHub.Api.Middleware;
 using BarberHub.Api.Security;
@@ -76,6 +77,24 @@ builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationSc
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.SecretKey)),
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero,
+        };
+        bearerOptions.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+                var result = ApiResult.Failed(null, StatusCodes.Status401Unauthorized);
+                return context.Response.WriteAsJsonAsync(result);
+            },
+            OnForbidden = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                context.Response.ContentType = "application/json";
+                var result = ApiResult.Failed(null, StatusCodes.Status403Forbidden);
+                return context.Response.WriteAsJsonAsync(result);
+            }
         };
     });
 
