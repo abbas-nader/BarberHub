@@ -110,19 +110,22 @@ public class Appointment : BaseEntity
             throw new InvalidAppointmentStatusTransitionException();
     }
 
+    private static readonly TimeSpan IranOffset = TimeSpan.FromHours(3.5);
+
     private double GetHoursUntilAppointment()
     {
         var appointmentStartUtc = new DateTimeOffset(
             AppointmentDate.Year, AppointmentDate.Month, AppointmentDate.Day,
             StartTime.Hour, StartTime.Minute, StartTime.Second,
-            TimeSpan.Zero);
+            IranOffset);
 
         return (appointmentStartUtc - DateTimeOffset.UtcNow).TotalHours;
     }
 
     private static void ValidateDate(DateOnly appointmentDate)
     {
-        if (appointmentDate < DateOnly.FromDateTime(DateTime.UtcNow))
+        var todayInIran = DateOnly.FromDateTime(DateTimeOffset.UtcNow.ToOffset(IranOffset).DateTime);
+        if (appointmentDate < todayInIran)
             throw new InvalidAppointmentDateException();
     }
 
