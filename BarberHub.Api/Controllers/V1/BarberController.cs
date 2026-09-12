@@ -15,6 +15,7 @@ namespace BarberHub.Api.Controllers.V1;
 public class BarberController(BarberService barberService) : BaseController
 {
     [HttpGet(BarberUriConstants.GetAllBySalonId)]
+    [AllowAnonymous]
     public async Task<ApiResult<IReadOnlyList<BarberResponse>>> GetAllBySalonIdAsync([FromRoute] long salonId,
         CancellationToken cancellationToken)
     {
@@ -23,6 +24,7 @@ public class BarberController(BarberService barberService) : BaseController
     }
 
     [HttpGet(BarberUriConstants.GetById)]
+    [AllowAnonymous]
     public async Task<ApiResult<BarberResponse>> GetByIdAsync([FromRoute] long barberId,
         CancellationToken cancellationToken)
     {

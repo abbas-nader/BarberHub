@@ -17,6 +17,7 @@ namespace BarberHub.Api.Controllers.V1;
 public class SalonController(SalonService salonService) : BaseController
 {
     [HttpGet(SalonUriConstants.GetAll)]
+    [AllowAnonymous]
     public async Task<ApiResult<IReadOnlyList<SalonResponse>>> GetAllAsync(
         CancellationToken cancellationToken = default)
     {

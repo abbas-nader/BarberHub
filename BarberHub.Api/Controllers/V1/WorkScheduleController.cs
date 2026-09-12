@@ -14,6 +14,7 @@ namespace BarberHub.Api.Controllers.V1;
 public class WorkScheduleController(WorkScheduleService workScheduleService) : BaseController
 {
     [HttpGet(WorkScheduleUriConstants.GetAllByBarberId)]
+    [AllowAnonymous]
     public async Task<ApiResult<IReadOnlyList<WorkScheduleResponse>>> GetAllByBarberId([FromRoute] long barberId,
         CancellationToken cancellationToken = default)
     {
