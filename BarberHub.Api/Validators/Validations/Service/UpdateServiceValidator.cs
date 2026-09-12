@@ -1,6 +1,4 @@
-﻿using BarberHub.Api.Contracts.Barber;
-using BarberHub.Api.Contracts.Service;
-using BarberHub.Api.Validators.Messages.Barber;
+﻿using BarberHub.Api.Contracts.Service;
 using BarberHub.Api.Validators.Messages.Service;
 using BarberHub.Api.Validators.Messages.Shared;
 using BarberHub.Domain.Constants;

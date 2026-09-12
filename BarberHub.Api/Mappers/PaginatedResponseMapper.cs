@@ -1,6 +1,5 @@
 ﻿using BarberHub.Api.Contracts.Shared;
 using BarberHub.Application.DTOs.Shared;
-using BarberHub.Domain.ValueObjects;
 
 namespace BarberHub.Api.Mappers;
 

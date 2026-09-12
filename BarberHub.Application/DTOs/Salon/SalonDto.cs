@@ -1,5 +1,4 @@
 ﻿using BarberHub.Domain.Enums;
-using BarberHub.Domain.ValueObjects;
 
 namespace BarberHub.Application.DTOs.Salon;
 
