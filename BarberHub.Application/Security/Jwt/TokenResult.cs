@@ -2,7 +2,7 @@
 
 public record TokenResult(
     string AccessToken,
-    DateTimeOffset AccessTokenExpiresAt,
+    DateTimeOffset AccessTokenExpireAt,
     string RefreshToken,
-    DateTimeOffset RefreshTokenExpiresAt
+    DateTimeOffset RefreshTokenExpireAt
     );
