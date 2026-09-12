@@ -56,11 +56,11 @@ public class FileStorageReconciliationJob(
         foreach (var file in localFiles)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            await MigrateFilAsync(file, localStorage, arvanStorage, fileRepository, cancellationToken);
+            await MigrateFileAsync(file, localStorage, arvanStorage, fileRepository, cancellationToken);
         }
     }
 
-    private async Task MigrateFilAsync(File file, IProviderFileStorage localStorage, IProviderFileStorage arvanStorage,
+    private async Task MigrateFileAsync(File file, IProviderFileStorage localStorage, IProviderFileStorage arvanStorage,
         IFileRepository fileRepository, CancellationToken cancellationToken)
     {
         try
