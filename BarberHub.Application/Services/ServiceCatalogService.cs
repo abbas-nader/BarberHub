@@ -40,7 +40,7 @@ public class ServiceCatalogService(IServiceRepository serviceRepository, ICurren
         var salonId = currentUserService.CurrentUser.SalonId ??
                       throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
         if (serviceToUpdate.SalonId != salonId)
-            throw new EntityNotFoundException(nameof(Service), serviceToUpdate.SalonId);
+            throw new EntityNotFoundException(nameof(Service), serviceId);
         serviceToUpdate.UpdateService(service.Name, service.Description, currentUserService.CurrentUser.UserId);
         serviceRepository.Update(serviceToUpdate);
         await serviceRepository.SaveChangesAsync(cancellationToken);
@@ -54,7 +54,7 @@ public class ServiceCatalogService(IServiceRepository serviceRepository, ICurren
         var salonId = currentUserService.CurrentUser.SalonId ??
                       throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
         if (serviceToDelete.SalonId != salonId)
-            throw new EntityNotFoundException(nameof(Service), serviceToDelete.SalonId);
+            throw new EntityNotFoundException(nameof(Service), serviceId);
         serviceToDelete.SoftDelete(currentUserService.CurrentUser.UserId);
         await serviceRepository.SaveChangesAsync(cancellationToken);
         return ToDto(serviceToDelete);
