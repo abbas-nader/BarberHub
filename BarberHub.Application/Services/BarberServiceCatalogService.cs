@@ -20,10 +20,19 @@ public class BarberServiceCatalogService(
         return barberServices.Select(ToDto).ToList();
     }
 
-    public async Task<BarberServiceDto> GetByIdAsync(long barberId, CancellationToken cancellationToken = default)
+    public async Task<BarberServiceDto> GetByIdAsync(long barberServiceId,
+        CancellationToken cancellationToken = default)
     {
-        var barberService = await barberServiceRepository.GetByIdAsync(barberId, cancellationToken) ??
-                            throw new EntityNotFoundException(nameof(BarberService), barberId);
+        var salonId = currentUserService.CurrentUser.SalonId ??
+                      throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+
+        var barberService = await barberServiceRepository.GetByIdAsync(barberServiceId, cancellationToken) ??
+                            throw new EntityNotFoundException(nameof(BarberService), barberServiceId);
+
+        var barber = await barberRepository.GetByIdAsync(barberService.BarberId, cancellationToken);
+        if (barber is null || barber.SalonId != salonId)
+            throw new EntityNotFoundException(nameof(BarberService), barberServiceId);
+
         return ToDto(barberService);
     }
 
