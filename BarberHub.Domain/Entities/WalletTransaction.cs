@@ -11,7 +11,7 @@ public class WalletTransaction : BaseEntity
     public WalletTransactionReason WalletTransactionReason { get; private set; }
     public Money BalanceAfterTransaction { get; private set; } = null!;
 
-    public long CustomerId { get; private set; }
+    public long UserId { get; private set; }
     public long AppointmentId { get; private set; }
 
     private WalletTransaction()
@@ -27,7 +27,7 @@ public class WalletTransaction : BaseEntity
         TransactionType = transactionType;
         WalletTransactionReason = walletTransactionReason;
         BalanceAfterTransaction = balanceAfterTransaction;
-        CustomerId = customerId;
+        UserId = customerId;
         AppointmentId = appointmentId;
         Creation(creationBy);
     }

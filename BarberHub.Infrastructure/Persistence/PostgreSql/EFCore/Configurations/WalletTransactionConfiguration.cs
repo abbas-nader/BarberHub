@@ -33,7 +33,7 @@ public class WalletTransactionConfiguration : IEntityTypeConfiguration<WalletTra
         });
         builder.HasOne<User>()
             .WithMany(x => x.WalletTransactions)
-            .HasForeignKey(x => x.CustomerId)
+            .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne<Appointment>()
