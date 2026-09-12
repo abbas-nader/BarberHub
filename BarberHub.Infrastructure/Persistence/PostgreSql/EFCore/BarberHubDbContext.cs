@@ -9,7 +9,7 @@ public class BarberHubDbContext(DbContextOptions<BarberHubDbContext> options) : 
 {
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<Barber> Barbers { get; set; }
-    public DbSet<User> Customers { get; set; }
+    public DbSet<User> Users { get; set; }
     public DbSet<File> Files { get; set; }
     public DbSet<Gallery> Galleries { get; set; }
     public DbSet<Review> Reviews { get; set; }
