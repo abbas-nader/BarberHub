@@ -13,13 +13,13 @@ public sealed record ServiceSnapshot
     {
     }
 
-    public ServiceSnapshot(string serviceName, TimeSpan serviceDuration, Money servicePrice)
-    {
-        if (serviceDuration.Ticks <= 0) throw new InvalidServiceDurationSnapshotException();
-        if (string.IsNullOrWhiteSpace(serviceName))
-            throw new RequiredFieldException(serviceName);
-        ServiceName = serviceName;
-        ServiceDuration = serviceDuration;
-        ServicePrice = servicePrice ?? throw new RequiredFieldException(nameof(servicePrice));
-    }
+   public ServiceSnapshot(string serviceName, TimeSpan serviceDuration, Money servicePrice)
+{
+    if (serviceDuration.Ticks <= 0) throw new InvalidServiceDurationSnapshotException();
+    if (string.IsNullOrWhiteSpace(serviceName))
+        throw new RequiredFieldException(nameof(serviceName));
+    ServiceName = serviceName;
+    ServiceDuration = serviceDuration;
+    ServicePrice = servicePrice ?? throw new RequiredFieldException(nameof(servicePrice));
+}
 }
