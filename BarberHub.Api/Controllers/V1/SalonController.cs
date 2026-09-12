@@ -88,7 +88,7 @@ public class SalonController(SalonService salonService) : BaseController
     [HttpPatch(SalonUriConstants.UpdateDepositAmount)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<SalonResponse>> UpdateDepositAmountAsync(
-        UpdateSalonDepositAmountRequest updateSalonDepositAmountRequest, CancellationToken cancellationToken)
+        [FromBody] UpdateSalonDepositAmountRequest updateSalonDepositAmountRequest, CancellationToken cancellationToken)
     {
         var salon = await salonService.UpdateDepositAmount(updateSalonDepositAmountRequest.ToDto(), cancellationToken);
         return salon.ToResponse();
