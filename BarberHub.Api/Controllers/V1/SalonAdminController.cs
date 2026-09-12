@@ -16,7 +16,7 @@ public class SalonAdminController(SalonAdminService salonAdminService) : BaseCon
 {
     [HttpGet(SalonAdminUriConstants.GetAllBySalonId)]
     [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
-    public async Task<ApiResult<IReadOnlyList<SalonAdminResponse>>> GetAllAsync([FromRoute]long salonId,
+    public async Task<ApiResult<IReadOnlyList<SalonAdminResponse>>> GetAllAsync([FromRoute] long salonId,
         CancellationToken cancellationToken = default)
     {
         var salonAdmins = await salonAdminService.GetAllBySalonIdAsync(salonId, cancellationToken);
@@ -44,7 +44,7 @@ public class SalonAdminController(SalonAdminService salonAdminService) : BaseCon
     }
 
     [HttpPut(SalonAdminUriConstants.Update)]
-    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin) + "," + nameof(UserRole.PlatformAdmin))]
     public async Task<ApiResult<SalonAdminResponse>> UpdateAsync(
         [FromRoute] long salonAdminId,
         [FromBody] UpdateSalonAdminRequest updateSalonAdminRequest,
@@ -56,14 +56,16 @@ public class SalonAdminController(SalonAdminService salonAdminService) : BaseCon
     }
 
     [HttpPatch(SalonAdminUriConstants.Delete)]
-    [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
-    public async Task<ApiResult<SalonAdminResponse>> DeleteAsync([FromRoute] long salonAdminId, CancellationToken cancellationToken = default)
+    [Authorize(Roles = nameof(UserRole.PlatformAdmin) + "," + nameof(UserRole.SalonAdmin))]
+    public async Task<ApiResult<SalonAdminResponse>> DeleteAsync([FromRoute] long salonAdminId,
+        CancellationToken cancellationToken = default)
     {
         var salonAdmin = await salonAdminService.DeleteAsync(salonAdminId, cancellationToken);
         return salonAdmin.ToResponse();
     }
+
     [HttpPatch(SalonAdminUriConstants.ChangePassword)]
-    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
+    [Authorize(Roles = nameof(UserRole.SalonAdmin) + "," + nameof(UserRole.PlatformAdmin))]
     public async Task<ApiResult<SalonAdminResponse>> ChangePasswordAsync([FromBody] ChangePasswordRequest request,
         CancellationToken cancellationToken)
     {
