@@ -16,8 +16,8 @@ public static class AuthContractMapper
     public static TokenResponse ToResponse(this TokenResult tokenResult)
         => new(
             tokenResult.AccessToken,
-            tokenResult.AccessTokenExpiresAt,
+            tokenResult.AccessTokenExpireAt,
             tokenResult.RefreshToken,
-            tokenResult.RefreshTokenExpiresAt
+            tokenResult.RefreshTokenExpireAt
         );
 }
