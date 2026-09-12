@@ -1,9 +1,11 @@
-﻿using BarberHub.Api.Validators.Messages.BarberService;
+﻿using BarberHub.Api.Contracts.Barber;
+using BarberHub.Api.Contracts.BarberService;
+using BarberHub.Api.Validators.Messages.BarberService;
 using FluentValidation;
 
 namespace BarberHub.Api.Validators.Validations.BarberService;
 
-public class CreateBarberServiceValidator : AbstractValidator<Domain.Entities.BarberService>
+public class CreateBarberServiceValidator : AbstractValidator<CreateBarberServiceRequest>
 {
     public CreateBarberServiceValidator()
     {
@@ -15,11 +17,11 @@ public class CreateBarberServiceValidator : AbstractValidator<Domain.Entities.Ba
             .GreaterThan(0)
             .WithMessage(CreateBarberServiceValidationMessages.ServiceIdInvalid);
 
-        RuleFor(x => x.Price.Value)
+        RuleFor(x => x.PriceValue)
             .GreaterThan(0)
             .WithMessage(CreateBarberServiceValidationMessages.PriceValueInvalid);
 
-        RuleFor(x => x.Price.Currency)
+        RuleFor(x => x.PriceCurrency)
             .IsInEnum()
             .WithMessage(CreateBarberServiceValidationMessages.CurrencyInvalid);
 
