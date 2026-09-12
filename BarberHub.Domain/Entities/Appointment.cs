@@ -21,7 +21,7 @@ public class Appointment : BaseEntity
     public NoShowDetectionType? NoShowDetectionType { get; private set; }
 
     public long BarberId { get; private set; }
-    public long CustomerId { get; private set; }
+    public long UserId { get; private set; }
     public long SalonId { get; private set; }
     public long BarberServiceId { get; private set; }
 
@@ -50,7 +50,7 @@ public class Appointment : BaseEntity
         CancelledAt = null;
         NoShowDetectionType = null;
         BarberId = barberId;
-        CustomerId = customerId;
+        UserId = customerId;
         SalonId = salonId;
         BarberServiceId = barberServiceId;
         Creation(creationBy);
@@ -63,7 +63,7 @@ public class Appointment : BaseEntity
         Modified(modifiedBy);
     }
 
-    public void CancelByCustomer(long modifiedBy)
+    public void CancelByUser(long modifiedBy)
     {
         EnsureIsConfirmed();
 
@@ -76,7 +76,7 @@ public class Appointment : BaseEntity
             ? DepositStatus.Refunded
             : DepositStatus.Forfeited;
 
-        AppointmentStatus = AppointmentStatus.CancelledByCustomer;
+        AppointmentStatus = AppointmentStatus.CancelledByUser;
         CancelledAt = DateTimeOffset.UtcNow;
         Modified(modifiedBy);
     }
