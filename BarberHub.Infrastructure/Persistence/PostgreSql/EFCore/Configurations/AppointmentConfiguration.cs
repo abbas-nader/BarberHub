@@ -51,7 +51,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<User>()
             .WithMany(a => a.Appointments)
-            .HasForeignKey(b => b.CustomerId)
+            .HasForeignKey(b => b.UserId)
             .OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<Salon>()
             .WithMany(a => a.Appointments)
