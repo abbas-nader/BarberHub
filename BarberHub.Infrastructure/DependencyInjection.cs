@@ -45,6 +45,7 @@ public static class DependencyInjection
         services.AddScoped<IJwtGenerator, JwtGenerator>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IGalleryRepository, GalleryRepository>();
 
         services.AddMongo(configuration);
         services.AddJwt(configuration);
