@@ -15,7 +15,7 @@ public class FileService(
     IFileStorageService fileStorageService,
     ICurrentUserService currentUserService)
 {
-    public async Task<FileDto> UploadFile(UploadFileDto uploadFileDto, CancellationToken cancellationToken = default)
+    public async Task<FileDto> UploadAsync(UploadFileDto uploadFileDto, CancellationToken cancellationToken = default)
     {
         ValidateSize(uploadFileDto.Size);
         ValidateContentType(uploadFileDto.ContentType);
