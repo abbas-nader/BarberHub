@@ -8,7 +8,7 @@ public class Gallery : BaseEntity
     public Salon Salon { get; private set; } = null!;
 
     public long? BarberId { get; private set; }
-    public Barber? Barber { get; private set; } = null!;
+    public Barber? Barber { get; private set; } 
 
     public long FileId { get; private set; }
     public File File { get; private set; } = null!;
@@ -26,7 +26,7 @@ public class Gallery : BaseEntity
         Creation(creationBy);
     }
 
-    public void Update(string? caption, long modifiedBy)
+    public void UpdateCaption(string? caption, long modifiedBy)
     {
         Caption = caption;
         Modified(modifiedBy);
