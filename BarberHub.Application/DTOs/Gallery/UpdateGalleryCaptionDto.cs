@@ -1,5 +1,5 @@
 namespace BarberHub.Application.DTOs.Gallery;
 
-public record UpdateCaptionDto(
+public record UpdateGalleryCaptionDto(
     string? Caption
 );
