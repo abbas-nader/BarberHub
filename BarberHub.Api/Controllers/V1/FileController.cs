@@ -23,7 +23,7 @@ public class FileController(FileService fileService) : BaseController
     }
 
     [HttpDelete(FileUriConstants.Delete)]
-    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
+    [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
     public async Task<ApiResult<FileResponse>> Delete([FromRoute] long fileId,
         CancellationToken cancellationToken = default)
     {
