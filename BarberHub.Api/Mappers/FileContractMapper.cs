@@ -19,9 +19,9 @@ public static class FileContractMapper
 
     public static UploadFileDto ToDto(this UploadFileRequest request)
         => new(
-            request.FileStream,
+            request.File.OpenReadStream(),
             request.OriginFileName,
-            request.ContentType,
-            request.Size
+            request.File.ContentType,
+            request.File.Length
         );
 }

@@ -15,7 +15,7 @@ public class FileController(FileService fileService) : BaseController
 {
     [HttpPost(FileUriConstants.Upload)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<FileResponse>> Upload(UploadFileRequest uploadFileRequest,
+    public async Task<ApiResult<FileResponse>> Upload([FromForm]UploadFileRequest uploadFileRequest,
         CancellationToken cancellationToken = default)
     {
         var file = await fileService.UploadAsync(uploadFileRequest.ToDto(), cancellationToken);
@@ -33,7 +33,7 @@ public class FileController(FileService fileService) : BaseController
 
     [HttpGet(FileUriConstants.GetById)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<FileResponse>> GetById([FromQuery] long fileId,
+    public async Task<ApiResult<FileResponse>> GetById([FromRoute] long fileId,
         CancellationToken cancellationToken = default)
     {
         var file = await fileService.GetByIdAsync(fileId, cancellationToken);

@@ -11,9 +11,10 @@ public class UploadFileValidator : AbstractValidator<UploadFileRequest>
 {
     public UploadFileValidator()
     {
-        RuleFor(x => x.FileStream)
+
+        RuleFor(x => x.File)
             .NotNull()
-            .WithMessage(SharedValidationMessages.PropertyRequired(UploadFileValidationMessages.FileStreamProperty));
+            .WithMessage(SharedValidationMessages.PropertyRequired(UploadFileValidationMessages.FileProperty));
 
         RuleFor(x => x.OriginFileName)
             .NotEmpty()
@@ -21,16 +22,17 @@ public class UploadFileValidator : AbstractValidator<UploadFileRequest>
             .MaximumLength(FileConstants.OriginFileNameMaxLength)
             .WithMessage(SharedValidationMessages.PropertyMaxLength(UploadFileValidationMessages.OriginFileNameProperty));
 
-        RuleFor(x => x.ContentType)
-            .NotEmpty()
-            .WithMessage(SharedValidationMessages.PropertyRequired(UploadFileValidationMessages.ContentTypeProperty))
-            .Must(contentType => FileUploadConstants.AllowedContentTypes.Contains(contentType))
-            .WithMessage(UploadFileValidationMessages.ContentTypeUnsupported);
+        When(_ => true, () =>
+        {
+            RuleFor(x => x.File.ContentType)
+                .Must(contentType => FileUploadConstants.AllowedContentTypes.Contains(contentType))
+                .WithMessage(UploadFileValidationMessages.ContentTypeUnsupported);
 
-        RuleFor(x => x.Size)
-            .GreaterThan(FileConstants.SizeMinLength)
-            .WithMessage(UploadFileValidationMessages.SizeInvalid)
-            .LessThanOrEqualTo(FileUploadConstants.MaxSizeBytes)
-            .WithMessage(UploadFileValidationMessages.SizeExceeded);
+            RuleFor(x => x.File.Length)
+                .GreaterThan(FileConstants.SizeMinLength)
+                .WithMessage(UploadFileValidationMessages.SizeInvalid)
+                .LessThanOrEqualTo(FileUploadConstants.MaxSizeBytes)
+                .WithMessage(UploadFileValidationMessages.SizeExceeded);
+        });
     }
 }
