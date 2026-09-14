@@ -11,5 +11,5 @@ public static class SalonUriConstants
     public const string Delete = $"{ControllerName}/delete/{{salonId}}";
     public const string Activate = $"{ControllerName}/activate/{{salonId}}";
     public const string Deactivate = $"{ControllerName}/deactivate/{{salonId}}";
-    public const string UpdateDepositAmount = $"{ControllerName}/updateDepositAmount";
+    public const string UpdateDepositAmount = $"{ControllerName}/update-depositAmount";
 }
