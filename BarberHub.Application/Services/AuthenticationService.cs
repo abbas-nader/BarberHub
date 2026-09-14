@@ -22,54 +22,14 @@ public class AuthenticationService(
 {
     public async Task<TokenResult> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken = default)
     {
-        var claims = loginDto.Role switch
-        {
-            UserRole.SalonAdmin => await LoginSalonAdminAsync(loginDto, cancellationToken),
-            UserRole.Barber => await LoginBarberAsync(loginDto, cancellationToken),
-            UserRole.User => await LoginUserAsync(loginDto, cancellationToken),
-            UserRole.PlatformAdmin => await LoginPlatformAdminAsync(loginDto, cancellationToken),
-            _ => throw new InvalidCredentialsException()
-        };
-
-        return await IssueTokenAsync(claims, cancellationToken);
-    }
-
-    private async Task<TokenClaims> LoginSalonAdminAsync(LoginDto loginDto, CancellationToken cancellationToken)
-    {
-        var user = await salonAdminRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
-                   ?? throw new InvalidCredentialsException();
-        VerifyPassword(loginDto.Password, user.PasswordHash);
-        var salon = await salonRepository.GetByIdAsync(user.SalonId, cancellationToken);
-        if (salon is null || !salon.IsActive)
-            throw new InvalidCredentialsException();
-        return new TokenClaims(user.Id, UserRole.SalonAdmin, user.SalonId);
-    }
-
-    private async Task<TokenClaims> LoginBarberAsync(LoginDto loginDto, CancellationToken cancellationToken)
-    {
-        var barber = await barberRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
-                     ?? throw new InvalidCredentialsException();
-        VerifyPassword(loginDto.Password, barber.PasswordHash);
-        var salon = await salonRepository.GetByIdAsync(barber.SalonId, cancellationToken);
-        if (salon is null || !salon.IsActive || !barber.IsActive)
-            throw new InvalidCredentialsException();
-        return new TokenClaims(barber.Id, UserRole.Barber, barber.SalonId);
-    }
-
-    private async Task<TokenClaims> LoginUserAsync(LoginDto loginDto, CancellationToken cancellationToken)
-    {
         var user = await userRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
                    ?? throw new InvalidCredentialsException();
         VerifyPassword(loginDto.Password, user.PasswordHash);
-        return new TokenClaims(user.Id, UserRole.User, null);
-    }
+        if (user.Role != loginDto.Role)
+            throw new InvalidCredentialsException();
 
-    private async Task<TokenClaims> LoginPlatformAdminAsync(LoginDto loginDto, CancellationToken cancellationToken)
-    {
-        var user = await platformAdminRepository.GetByUserNameAsync(loginDto.Username, cancellationToken)
-                   ?? throw new InvalidCredentialsException();
-        VerifyPassword(loginDto.Password, user.PasswordHash);
-        return new TokenClaims(user.Id, UserRole.PlatformAdmin, null);
+        var claims = await BuildClaimsAsync(user, cancellationToken);
+        return await IssueTokenAsync(claims, cancellationToken);
     }
 
     private void VerifyPassword(string plainPassword, string passwordHash)
@@ -81,19 +41,15 @@ public class AuthenticationService(
     private async Task<TokenResult> IssueTokenAsync(TokenClaims claims, CancellationToken cancellationToken)
     {
         var tokenResult = jwtGenerator.Generate(claims);
-
         var tokenHash = tokenHasher.Hash(tokenResult.RefreshToken);
         var refreshToken = new RefreshToken(tokenHash, claims.UserId, claims.UserRole,
             tokenResult.RefreshTokenExpireAt);
-
         await refreshTokenRepository.AddAsync(refreshToken, cancellationToken);
         await refreshTokenRepository.SaveChangesAsync(cancellationToken);
-
         return tokenResult;
     }
 
-    public async Task<TokenResult> RefreshTokenAsync(string refreshToken,
-        CancellationToken cancellationToken = default)
+    public async Task<TokenResult> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
     {
         var tokenHash = tokenHasher.Hash(refreshToken);
         var existingToken = await refreshTokenRepository.GetByTokenHashAsync(tokenHash, cancellationToken) ??
@@ -103,10 +59,12 @@ public class AuthenticationService(
             await RevokeChainAsync(existingToken, cancellationToken);
             throw new RefreshTokenReuseDetectedException();
         }
-
         if (existingToken.ExpiresAt < DateTimeOffset.UtcNow)
             throw new InvalidRefreshTokenException();
-        var claims = await BuildClaimsAsync(existingToken.UserId, existingToken.Role, cancellationToken);
+
+        var user = await userRepository.GetByIdAsync(existingToken.UserId, cancellationToken)
+                   ?? throw new InvalidRefreshTokenException();
+        var claims = await BuildClaimsAsync(user, cancellationToken);
         var tokenResult = jwtGenerator.Generate(claims);
         var newTokenHash = tokenHasher.Hash(tokenResult.RefreshToken);
         var newRefreshToken = new RefreshToken(newTokenHash, claims.UserId, existingToken.Role,
@@ -120,7 +78,6 @@ public class AuthenticationService(
             existingToken.MarkReplacedBy(newRefreshToken.Id);
             refreshTokenRepository.Update(existingToken);
             await refreshTokenRepository.SaveChangesAsync(cancellationToken);
-
             await unitOfWork.CommitTransaction(cancellationToken);
         }
         catch
@@ -128,7 +85,6 @@ public class AuthenticationService(
             await unitOfWork.RollbackTransaction(cancellationToken);
             throw;
         }
-
         return tokenResult;
     }
 
@@ -137,7 +93,6 @@ public class AuthenticationService(
         var tokenHash = tokenHasher.Hash(rawRefreshToken);
         var existingToken = await refreshTokenRepository.GetByTokenHashAsync(tokenHash, cancellationToken);
         if (existingToken is null) return;
-
         existingToken.Revoke();
         refreshTokenRepository.Update(existingToken);
         await refreshTokenRepository.SaveChangesAsync(cancellationToken);
@@ -150,54 +105,40 @@ public class AuthenticationService(
         {
             var next = await refreshTokenRepository.GetByIdAsync(current.ReplacedByTokenId.Value, cancellationToken);
             if (next is null) break;
-
             next.Revoke();
             refreshTokenRepository.Update(next);
             current = next;
         }
-
         await refreshTokenRepository.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task<TokenClaims> BuildClaimsAsync(long userId, UserRole role,
-        CancellationToken cancellationToken)
+    private async Task<TokenClaims> BuildClaimsAsync(User user, CancellationToken cancellationToken)
     {
-        switch (role)
+        switch (user.Role)
         {
             case UserRole.SalonAdmin:
             {
-                var salonAdmin = await salonAdminRepository.GetByIdAsync(userId, cancellationToken)
-                                 ?? throw new EntityNotFoundException(nameof(SalonAdmin), userId);
+                var salonAdmin = await salonAdminRepository.GetByUserIdAsync(user.Id, cancellationToken)
+                                 ?? throw new InvalidCredentialsException();
                 var salon = await salonRepository.GetByIdAsync(salonAdmin.SalonId, cancellationToken);
-                if (salon is null || !salon.IsActive)
-                    throw new InvalidCredentialsException();
-                return new TokenClaims(salonAdmin.Id, UserRole.SalonAdmin, salonAdmin.SalonId);
+                if (salon is null || !salon.IsActive) throw new InvalidCredentialsException();
+                return new TokenClaims(user.Id, UserRole.SalonAdmin, salonAdmin.SalonId);
             }
             case UserRole.Barber:
             {
-                var barber = await barberRepository.GetByIdAsync(userId, cancellationToken)
-                             ?? throw new EntityNotFoundException(nameof(Barber), userId);
-                if (!barber.IsActive)
-                    throw new InvalidCredentialsException();
+                var barber = await barberRepository.GetByUserIdAsync(user.Id, cancellationToken)
+                             ?? throw new InvalidCredentialsException();
+                if (!barber.IsActive) throw new InvalidCredentialsException();
                 var salon = await salonRepository.GetByIdAsync(barber.SalonId, cancellationToken);
-                if (salon is null || !salon.IsActive)
-                    throw new InvalidCredentialsException();
-                return new TokenClaims(barber.Id, UserRole.Barber, barber.SalonId);
+                if (salon is null || !salon.IsActive) throw new InvalidCredentialsException();
+                return new TokenClaims(user.Id, UserRole.Barber, barber.SalonId);
             }
-            case UserRole.User:
-            {
-                var customer = await userRepository.GetByIdAsync(userId, cancellationToken)
-                               ?? throw new EntityNotFoundException(nameof(User), userId);
-                return new TokenClaims(customer.Id, UserRole.User, null);
-            }
+            case UserRole.EndUser:
+                return new TokenClaims(user.Id, UserRole.EndUser, null);
             case UserRole.PlatformAdmin:
-            {
-                var platformAdmin = await platformAdminRepository.GetByIdAsync(userId, cancellationToken)
-                                    ?? throw new EntityNotFoundException(nameof(PlatformAdmin), userId);
-                return new TokenClaims(platformAdmin.Id, UserRole.PlatformAdmin, null);
-            }
+                return new TokenClaims(user.Id, UserRole.PlatformAdmin, null);
             default:
-                throw new InvalidRefreshTokenException();
+                throw new InvalidCredentialsException();
         }
     }
 }
