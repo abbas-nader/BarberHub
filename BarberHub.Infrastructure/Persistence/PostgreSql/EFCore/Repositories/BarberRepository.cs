@@ -6,23 +6,14 @@ namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
 
 public class BarberRepository(BarberHubDbContext context) : BaseRepository<Barber>(context), IBarberRepository
 {
-    public async Task<bool> ExistsByUserNameAsync(string userName, CancellationToken cancellationToken = default)
-    {
-        return await BarberHubDbContext.Barbers.AnyAsync(x => x.UserName == userName && x.IsDeleted == false,
-            cancellationToken);
-    }
-
-    public async Task<Barber?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
+    public async Task<Barber?> GetByUserIdAsync(long userId, CancellationToken cancellationToken = default)
         => await BarberHubDbContext.Barbers.FirstOrDefaultAsync(
-            x => x.UserName == userName && !x.IsDeleted && x.IsActive,
-            cancellationToken);
+            x => x.UserId == userId && !x.IsDeleted && x.IsActive, cancellationToken);
 
     public async Task<IReadOnlyList<Barber>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
-    {
-        return await BarberHubDbContext.Barbers
+        => await BarberHubDbContext.Barbers
             .Where(x => x.SalonId == salonId && !x.IsDeleted)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
-    }
 }
