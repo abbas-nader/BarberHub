@@ -10,26 +10,16 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
     public void Configure(EntityTypeBuilder<Barber> builder)
     {
         builder.HasKey(m => m.Id);
-        builder.Property(x => x.FirstName)
-            .IsRequired()
-            .HasMaxLength(BarberConstants.FirstNameMaxLength);
-        builder.Property(x => x.LastName)
-            .IsRequired()
-            .HasMaxLength(BarberConstants.LastNameMaxLength);
-        builder.Property(x => x.MobileNumber)
-            .IsRequired()
-            .HasMaxLength(BarberConstants.MobileMaxLength);
-        builder.Property(x => x.UserName)
-            .IsRequired()
-            .HasMaxLength(BarberConstants.UserNameMaxLength);
-        builder.Property(x => x.PasswordHash)
-            .IsRequired()
-            .HasMaxLength(BarberConstants.PasswordHashMaxLength);
-        builder.Property(x => x.Description)
-            .HasMaxLength(BarberConstants.DescriptionMaxLength);
-        builder.Property(x => x.IsActive)
-            .IsRequired();
-        
+
+        builder.Property(x => x.Description).HasMaxLength(BarberConstants.DescriptionMaxLength);
+        builder.Property(x => x.IsActive).IsRequired();
+
+        builder.HasOne(x => x.User)
+            .WithOne()
+            .HasForeignKey<Barber>(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasIndex(x => x.UserId).IsUnique();
+
         builder.HasOne<Salon>()
             .WithMany(b => b.Barbers)
             .HasForeignKey(m => m.SalonId)
@@ -38,7 +28,5 @@ public class BarberConfiguration : IEntityTypeConfiguration<Barber>
             .WithOne()
             .HasForeignKey(w => w.BarberId)
             .OnDelete(DeleteBehavior.Restrict);
-        
-        builder.HasIndex(x => x.UserName).IsUnique();
     }
 }
