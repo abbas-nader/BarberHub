@@ -13,24 +13,6 @@ namespace BarberHub.Api.Controllers.V1;
 [ApiVersion("1.0")]
 public class FileController(FileService fileService) : BaseController
 {
-    [HttpPost(FileUriConstants.Upload)]
-    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
-    public async Task<ApiResult<FileResponse>> Upload([FromForm]UploadFileRequest uploadFileRequest,
-        CancellationToken cancellationToken = default)
-    {
-        var file = await fileService.UploadAsync(uploadFileRequest.ToDto(), cancellationToken);
-        return file.ToResponse();
-    }
-
-    [HttpDelete(FileUriConstants.Delete)]
-    [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
-    public async Task<ApiResult<FileResponse>> Delete([FromRoute] long fileId,
-        CancellationToken cancellationToken = default)
-    {
-        var  file = await fileService.DeleteAsync(fileId, cancellationToken);
-        return file.ToResponse();
-    }
-
     [HttpGet(FileUriConstants.GetById)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<FileResponse>> GetById([FromRoute] long fileId,
@@ -39,5 +21,4 @@ public class FileController(FileService fileService) : BaseController
         var file = await fileService.GetByIdAsync(fileId, cancellationToken);
         return file.ToResponse();
     }
-    
 }
