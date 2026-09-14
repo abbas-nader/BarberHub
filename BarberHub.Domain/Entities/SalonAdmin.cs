@@ -1,10 +1,9 @@
-﻿using BarberHub.Domain.Exceptions.SharedExceptions;
+﻿namespace BarberHub.Domain.Entities;
 
-namespace BarberHub.Domain.Entities;
-
-public class SalonAdmin : BaseUser
+public class SalonAdmin : BaseEntity
 {
-    public string MobileNumber { get; private set; } = null!;
+    public long UserId { get; private set; }
+    public User User { get; private set; } = null!;
 
     public long SalonId { get; private set; }
     public Salon Salon { get; private set; } = null!;
@@ -13,32 +12,10 @@ public class SalonAdmin : BaseUser
     {
     }
 
-    public SalonAdmin(string firstName, string lastName, string userName, string passwordHash, string mobileNumber,
-        long salonId, long creationBy)
-        : base(firstName, lastName, userName, passwordHash)
+    public SalonAdmin(long userId, long salonId, long creationBy)
     {
-        ValidateMobileNumber(mobileNumber);
-        MobileNumber = mobileNumber;
+        UserId = userId;
         SalonId = salonId;
         Creation(creationBy);
-    }
-
-    public void Update(string firstName, string lastName, string userName, string mobileNumber,
-        long modifiedBy)
-    {
-        Update(firstName, lastName, userName, modifiedBy);
-        ValidateMobileNumber(mobileNumber);
-        MobileNumber = mobileNumber;
-    }
-
-    public new void ChangePassword(string passwordHash, long modifiedBy)
-    {
-        base.ChangePassword(passwordHash, modifiedBy);
-    }
-
-    private static void ValidateMobileNumber(string mobileNumber)
-    {
-        if (string.IsNullOrWhiteSpace(mobileNumber))
-            throw new RequiredFieldException(nameof(mobileNumber));
     }
 }

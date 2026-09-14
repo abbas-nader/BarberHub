@@ -1,26 +1,17 @@
-using BarberHub.Domain.Exceptions.SharedExceptions;
-
 namespace BarberHub.Domain.Entities;
 
-public class PlatformAdmin : BaseUser
+public class PlatformAdmin : BaseEntity
 {
+    public long UserId { get; private set; }
+    public User User { get; private set; } = null!;
+
     private PlatformAdmin()
     {
     }
 
-    public PlatformAdmin(string firstName, string lastName, string userName, string passwordHash, long creationBy) :
-        base(firstName, lastName, userName, passwordHash)
+    public PlatformAdmin(long userId, long creationBy)
     {
+        UserId = userId;
         Creation(creationBy);
-    }
-
-    public new void Update(string firstName, string lastName, string userName, long modifiedBy)
-    {
-        base.Update(firstName, lastName, userName, modifiedBy);
-    }
-
-    public new void ChangePassword(string passwordHash, long modifiedBy)
-    {
-        base.ChangePassword(passwordHash, modifiedBy);
     }
 }
