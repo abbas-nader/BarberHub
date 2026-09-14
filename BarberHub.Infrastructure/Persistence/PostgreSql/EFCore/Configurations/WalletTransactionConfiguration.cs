@@ -31,7 +31,7 @@ public class WalletTransactionConfiguration : IEntityTypeConfiguration<WalletTra
                 .HasColumnName(WalletTransactionConstants.BalanceAfterTransactionCurrencyColumnName)
                 .IsRequired();
         });
-        builder.HasOne<User>()
+        builder.HasOne<EndUser>()
             .WithMany(x => x.WalletTransactions)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);

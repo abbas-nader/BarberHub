@@ -49,7 +49,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .WithMany(a => a.Appointments)
             .HasForeignKey(b => b.BarberId)
             .OnDelete(DeleteBehavior.Restrict);
-        builder.HasOne<User>()
+        builder.HasOne<EndUser>()
             .WithMany(a => a.Appointments)
             .HasForeignKey(b => b.UserId)
             .OnDelete(DeleteBehavior.Restrict);
