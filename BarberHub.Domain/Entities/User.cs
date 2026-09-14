@@ -1,36 +1,59 @@
-﻿using BarberHub.Domain.Exceptions.SharedExceptions;
-using BarberHub.Domain.Enums;
+﻿using BarberHub.Domain.Enums;
+using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Domain.Entities;
 
-public class User : BaseUser
+public class User : BaseEntity
 {
-    private readonly List<Appointment> _appointments = [];
-    private readonly List<WalletTransaction> _walletTransactions = [];
-
-    public string MobileNumber { get; private set; } = null!;
-    public bool IsMobileVerified { get; private set; }
-
-    public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
-    public IReadOnlyCollection<WalletTransaction> WalletTransactions => _walletTransactions.AsReadOnly();
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
+    public string UserName { get; private set; } = null!;
+    public string PasswordHash { get; private set; } = null!;
+    public UserRole Role { get; private set; }
+    public string? MobileNumber { get; private set; }
+    public bool? IsMobileVerified { get; private set; }
 
     private User()
     {
     }
 
-    public User(string firstName, string lastName, string mobileNumber, string userName,
-        string passwordHash, long creationBy)
-        : base(firstName, lastName, userName, passwordHash)
+    public User(string firstName, string lastName, string userName, string passwordHash, UserRole role,
+        string? mobileNumber, long creationBy)
     {
-        ValidateMobileNumber(mobileNumber);
-        MobileNumber = mobileNumber;
-        IsMobileVerified = true;
+        ValidateName(firstName, lastName);
+        ValidateUserName(userName);
+        ValidatePasswordHash(passwordHash);
+        FirstName = firstName;
+        LastName = lastName;
+        UserName = userName;
+        PasswordHash = passwordHash;
+        Role = role;
+        if (mobileNumber is not null)
+        {
+            MobileNumber = mobileNumber;
+            IsMobileVerified = true;
+        }
+
         Creation(creationBy);
     }
 
-    public new void Update(string firstName, string lastName, string userName, long modifiedBy)
+    public void Update(string firstName, string lastName, string userName, string? mobileNumber, long modifiedBy)
     {
-        base.Update(firstName, lastName, userName, modifiedBy);
+        ValidateName(firstName, lastName);
+        ValidateUserName(userName);
+        FirstName = firstName;
+        LastName = lastName;
+        UserName = userName;
+        if (mobileNumber is not null)
+            MobileNumber = mobileNumber;
+        Modified(modifiedBy);
+    }
+
+    public void ChangePassword(string passwordHash, long modifiedBy)
+    {
+        ValidatePasswordHash(passwordHash);
+        PasswordHash = passwordHash;
+        Modified(modifiedBy);
     }
 
     public void RequestMobileNumberChange(string newMobileNumber, long modifiedBy)
@@ -38,22 +61,28 @@ public class User : BaseUser
         ValidateMobileNumber(newMobileNumber);
         if (newMobileNumber == MobileNumber) return;
         MobileNumber = newMobileNumber;
-       ConfirmMobileNumberChange(modifiedBy);
-        Modified(modifiedBy);
-    }
-
-    private void ConfirmMobileNumberChange(long modifiedBy)
-    {
         IsMobileVerified = true;
         Modified(modifiedBy);
     }
-    public new void ChangePassword(string passwordHash, long modifiedBy)
+
+    private static void ValidateName(string firstName, string lastName)
     {
-        base.ChangePassword(passwordHash, modifiedBy);
+        if (string.IsNullOrWhiteSpace(firstName)) throw new RequiredFieldException(nameof(firstName));
+        if (string.IsNullOrWhiteSpace(lastName)) throw new RequiredFieldException(nameof(lastName));
     }
+
+    private static void ValidateUserName(string userName)
+    {
+        if (string.IsNullOrWhiteSpace(userName)) throw new RequiredFieldException(nameof(userName));
+    }
+
+    private static void ValidatePasswordHash(string passwordHash)
+    {
+        if (string.IsNullOrWhiteSpace(passwordHash)) throw new RequiredFieldException(nameof(passwordHash));
+    }
+
     private static void ValidateMobileNumber(string mobileNumber)
     {
-        if (string.IsNullOrWhiteSpace(mobileNumber))
-            throw new RequiredFieldException(nameof(mobileNumber));
+        if (string.IsNullOrWhiteSpace(mobileNumber)) throw new RequiredFieldException(nameof(mobileNumber));
     }
 }

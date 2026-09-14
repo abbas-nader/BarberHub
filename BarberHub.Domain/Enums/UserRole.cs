@@ -5,5 +5,5 @@ public enum UserRole : byte
     PlatformAdmin = 1,
     SalonAdmin = 2,
     Barber = 3,
-    User = 4
+    EndUser = 4
 }
