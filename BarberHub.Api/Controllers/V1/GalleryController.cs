@@ -40,7 +40,7 @@ public class GalleryController(GalleryService galleryService) : BaseController
         return gallery.ToResponse();
     }
 
-    [HttpPut(GalleryUriConstants.Update)]
+    [HttpPatch(GalleryUriConstants.UpdateCaption)]
     [Authorize(Roles = nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<GalleryResponse>> Update([FromRoute] long galleryId,
         [FromBody] UpdateGalleyCaptionRequest request,
