@@ -4,144 +4,161 @@ using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Security.Jwt;
 using BarberHub.Domain.Entities;
+using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 
 namespace BarberHub.Application.Services;
 
 public class BarberService(
     IBarberRepository barberRepository,
+    IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    ICurrentUserService currentUserService)
+    ICurrentUserService currentUserService,
+    IUnitOfWork unitOfWork)
 {
     public async Task<IReadOnlyList<BarberDto>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
     {
         var barbers = await barberRepository.GetAllBySalonIdAsync(salonId, cancellationToken);
-        return barbers.Select(ToDto).ToList();
+        var users = await userRepository.GetByIdsAsync(barbers.Select(x => x.UserId), cancellationToken);
+        return barbers.Select(b => ToDto(b, users[b.UserId])).ToList();
     }
 
     public async Task<BarberDto> GetByIdAsync(long barberId, CancellationToken cancellationToken = default)
     {
         var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken) ??
                      throw new EntityNotFoundException(nameof(Barber), barberId);
-        return ToDto(barber);
+        var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken) ??
+                   throw new EntityNotFoundException(nameof(User), barber.UserId);
+        return ToDto(barber, user);
     }
 
-    public async Task<BarberDto> CreateAsync(CreateBarberDto createBarberDto,
-        CancellationToken cancellationToken = default)
+    public async Task<BarberDto> CreateAsync(CreateBarberDto dto, CancellationToken cancellationToken = default)
     {
-        var checkUserName =
-            await barberRepository.ExistsByUserNameAsync(createBarberDto.Username, cancellationToken);
-        if (checkUserName)
+        if (await userRepository.ExistsByUserNameAsync(dto.Username, cancellationToken))
             throw new DuplicateUserNameException();
 
         var salonId = currentUserService.CurrentUser.SalonId
                       ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        var passwordHash = passwordHasher.Hash(dto.Password);
 
-        var passwordHash = passwordHasher.Hash(createBarberDto.Password);
-        var barber = new Barber(createBarberDto.FirstName, createBarberDto.LastName, createBarberDto.MobileNumber,
-            createBarberDto.Username, passwordHash, createBarberDto.Description, salonId,
-            currentUserService.CurrentUser.UserId);
+        await unitOfWork.BeginTransaction(cancellationToken);
+        try
+        {
+            var user = new User(dto.FirstName, dto.LastName, dto.Username, passwordHash, UserRole.Barber,
+                dto.MobileNumber, currentUserService.CurrentUser.UserId);
+            await userRepository.AddAsync(user, cancellationToken);
+            await userRepository.SaveChangesAsync(cancellationToken);
 
-        await barberRepository.AddAsync(barber, cancellationToken);
-        await barberRepository.SaveChangesAsync(cancellationToken);
-        return ToDto(barber);
+            var barber = new Barber(dto.Description, user.Id, salonId, currentUserService.CurrentUser.UserId);
+            await barberRepository.AddAsync(barber, cancellationToken);
+            await barberRepository.SaveChangesAsync(cancellationToken);
+
+            await unitOfWork.CommitTransaction(cancellationToken);
+            return ToDto(barber, user);
+        }
+        catch
+        {
+            await unitOfWork.RollbackTransaction(cancellationToken);
+            throw;
+        }
     }
 
-    public async Task<BarberDto> UpdateAsync(long barberId, UpdateBarberDto updateBarberDto,
+    public async Task<BarberDto> UpdateAsync(long barberId, UpdateBarberDto dto,
         CancellationToken cancellationToken = default)
     {
-        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
-        if (barber == null)
-            throw new EntityNotFoundException(nameof(Barber), barberId);
-        var salonId = currentUserService.CurrentUser.SalonId
-                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
-        if (barber.SalonId != salonId)
-            throw new EntityNotFoundException(nameof(Barber), barber.Id);
+        var barber = await EnsureOwnedAsync(barberId, cancellationToken);
+        var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken) ??
+                   throw new EntityNotFoundException(nameof(User), barber.UserId);
 
-        if (!string.Equals(barber.UserName, updateBarberDto.Username, StringComparison.Ordinal))
+        if (!string.Equals(user.UserName, dto.Username, StringComparison.Ordinal))
         {
-            var checkUserName =
-                await barberRepository.ExistsByUserNameAsync(updateBarberDto.Username, cancellationToken);
-            if (checkUserName)
+            if (await userRepository.ExistsByUserNameAsync(dto.Username, cancellationToken))
                 throw new DuplicateUserNameException();
         }
 
-        barber.Update(updateBarberDto.FirstName, updateBarberDto.LastName, updateBarberDto.MobileNumber,
-            updateBarberDto.Username, updateBarberDto.Description,
-            currentUserService.CurrentUser.UserId);
-        barberRepository.Update(barber);
-        await barberRepository.SaveChangesAsync(cancellationToken);
-        return ToDto(barber);
-    }
+        await unitOfWork.BeginTransaction(cancellationToken);
+        try
+        {
+            user.Update(dto.FirstName, dto.LastName, dto.Username, dto.MobileNumber,
+                currentUserService.CurrentUser.UserId);
+            userRepository.Update(user);
+            await userRepository.SaveChangesAsync(cancellationToken);
 
+            barber.Update(dto.Description, currentUserService.CurrentUser.UserId);
+            barberRepository.Update(barber);
+            await barberRepository.SaveChangesAsync(cancellationToken);
+
+            await unitOfWork.CommitTransaction(cancellationToken);
+            return ToDto(barber, user);
+        }
+        catch
+        {
+            await unitOfWork.RollbackTransaction(cancellationToken);
+            throw;
+        }
+    }
     public async Task<BarberDto> DeleteAsync(long barberId, CancellationToken cancellationToken = default)
     {
-        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
-        if (barber == null)
-            throw new EntityNotFoundException(nameof(Barber), barberId);
-        var salonId = currentUserService.CurrentUser.SalonId
-                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
-        if (barber.SalonId != salonId)
-            throw new EntityNotFoundException(nameof(Barber), barber.Id);
-
+        var barber = await EnsureOwnedAsync(barberId, cancellationToken);
         barber.SoftDelete(currentUserService.CurrentUser.UserId);
         await barberRepository.SaveChangesAsync(cancellationToken);
-        return ToDto(barber);
+        var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken)??
+                   throw new EntityNotFoundException(nameof(User), barber.UserId);
+        return ToDto(barber, user);
     }
 
     public async Task<BarberDto> ActivateAsync(long barberId, CancellationToken cancellationToken = default)
     {
-        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
-        if (barber == null)
-            throw new EntityNotFoundException(nameof(Barber), barberId);
-        var salonId = currentUserService.CurrentUser.SalonId
-                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
-        if (barber.SalonId != salonId)
-            throw new EntityNotFoundException(nameof(Barber), barber.Id);
-
+        var barber = await EnsureOwnedAsync(barberId, cancellationToken);
         barber.Activate(currentUserService.CurrentUser.UserId);
         await barberRepository.SaveChangesAsync(cancellationToken);
-        return ToDto(barber);
+        var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken);
+        return ToDto(barber, user!);
     }
 
     public async Task<BarberDto> DeactivateAsync(long barberId, CancellationToken cancellationToken = default)
     {
-        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken);
-        if (barber == null)
-            throw new EntityNotFoundException(nameof(Barber), barberId);
-        var salonId = currentUserService.CurrentUser.SalonId
-                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
-        if (barber.SalonId != salonId)
-            throw new EntityNotFoundException(nameof(Barber), barber.Id);
-
+        var barber = await EnsureOwnedAsync(barberId, cancellationToken);
         barber.Deactivate(currentUserService.CurrentUser.UserId);
         await barberRepository.SaveChangesAsync(cancellationToken);
-        return ToDto(barber);
+        var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken);
+        return ToDto(barber, user!);
     }
 
-    public async Task<BarberDto> ChangePasswordAsync(ChangePasswordDto changePasswordDto,
+    public async Task<BarberDto> ChangePasswordAsync(ChangePasswordDto dto,
         CancellationToken cancellationToken = default)
     {
-        var barberId = currentUserService.CurrentUser.UserId;
-        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken) ??
-                     throw new EntityNotFoundException(nameof(Barber), barberId);
+        var userId = currentUserService.CurrentUser.UserId;
+        var user = await userRepository.GetByIdAsync(userId, cancellationToken) ??
+                   throw new EntityNotFoundException(nameof(User), userId);
 
-        if (!passwordHasher.Verify(changePasswordDto.OldPassword, barber.PasswordHash))
+        if (!passwordHasher.Verify(dto.OldPassword, user.PasswordHash))
             throw new InvalidCurrentPasswordException();
 
-        var newPasswordHash = passwordHasher.Hash(changePasswordDto.NewPassword);
-        barber.ChangePassword(newPasswordHash, currentUserService.CurrentUser.UserId);
-        await barberRepository.SaveChangesAsync(cancellationToken);
-        return ToDto(barber);
+        user.ChangePassword(passwordHasher.Hash(dto.NewPassword), userId);
+        await userRepository.SaveChangesAsync(cancellationToken);
+
+        var barber = await barberRepository.GetByUserIdAsync(userId, cancellationToken) ??
+                     throw new EntityNotFoundException(nameof(Barber), userId);
+        return ToDto(barber, user);
     }
 
-    private static BarberDto ToDto(Barber barber)
+    private async Task<Barber> EnsureOwnedAsync(long barberId, CancellationToken cancellationToken)
+    {
+        var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken) ??
+                     throw new EntityNotFoundException(nameof(Barber), barberId);
+        var salonId = currentUserService.CurrentUser.SalonId
+                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        return barber.SalonId != salonId ? throw new EntityNotFoundException(nameof(Barber), barber.Id) : barber;
+    }
+
+    private static BarberDto ToDto(Barber barber, User user)
         => new(
             barber.Id,
-            barber.FirstName,
-            barber.LastName,
-            barber.MobileNumber,
+            user.FirstName,
+            user.LastName,
+            user.MobileNumber!,
             barber.Description,
             barber.IsActive
         );
