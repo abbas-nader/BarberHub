@@ -21,6 +21,7 @@ public class BarberHubDbContext(DbContextOptions<BarberHubDbContext> options) : 
     public DbSet<WorkSchedule> WorkSchedules { get; set; }
     public DbSet<PlatformAdmin> PlatformAdmins { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<EndUser> EndUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
