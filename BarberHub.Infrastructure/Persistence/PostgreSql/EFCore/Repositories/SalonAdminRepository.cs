@@ -7,15 +7,9 @@ namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
 public class SalonAdminRepository(BarberHubDbContext context)
     : BaseRepository<SalonAdmin>(context), ISalonAdminRepository
 {
-    public async Task<bool> ExistsByUserNameAsync(string userName, CancellationToken cancellationToken = default)
-    {
-        return await BarberHubDbContext.SalonAdmins.AnyAsync(x => x.UserName == userName && x.IsDeleted == false,
-            cancellationToken);
-    }
-
-    public async Task<SalonAdmin?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default)
-        => await BarberHubDbContext.SalonAdmins.FirstOrDefaultAsync(x => x.UserName == userName && x.IsDeleted == false,
-            cancellationToken);
+    public async Task<SalonAdmin?> GetByUserIdAsync(long userId, CancellationToken cancellationToken = default)
+        => await BarberHubDbContext.SalonAdmins.FirstOrDefaultAsync(
+            x => x.UserId == userId && !x.IsDeleted, cancellationToken);
 
     public async Task<IReadOnlyCollection<SalonAdmin>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
