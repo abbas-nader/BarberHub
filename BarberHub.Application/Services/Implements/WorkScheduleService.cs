@@ -1,15 +1,16 @@
 ﻿using BarberHub.Application.DTOs.WorkSchedule;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 
-namespace BarberHub.Application.Services;
+namespace BarberHub.Application.Services.Implements;
 
 public class WorkScheduleService(
     IWorkScheduleRepository workScheduleRepository,
     ICurrentUserService currentUserService,
-    IBarberRepository barberRepository)
+    IBarberRepository barberRepository) : IWorkScheduleService
 {
     public async Task<IReadOnlyList<WorkScheduleDto>> GetAllByBarberIdAsync(long barberId,
         CancellationToken cancellationToken = default)
