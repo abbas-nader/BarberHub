@@ -1,17 +1,18 @@
 ﻿using BarberHub.Application.DTOs.BarberService;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.ValueObjects;
 
-namespace BarberHub.Application.Services;
+namespace BarberHub.Application.Services.Implements;
 
 public class BarberServiceCatalogService(
     IBarberServiceRepository barberServiceRepository,
     IBarberRepository barberRepository,
     IServiceRepository serviceRepository,
-    ICurrentUserService currentUserService)
+    ICurrentUserService currentUserService) : IBarberServiceCatalogService
 {
     public async Task<IReadOnlyList<BarberServiceDto>> GetAllByBarberIdAsync(long barberId,
         CancellationToken cancellationToken = default)
