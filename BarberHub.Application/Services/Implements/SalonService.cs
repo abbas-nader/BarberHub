@@ -2,13 +2,14 @@
 using BarberHub.Application.DTOs.Shared;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.ValueObjects;
 
-namespace BarberHub.Application.Services;
+namespace BarberHub.Application.Services.Implements;
 
-public class SalonService(ISalonRepository salonRepository, ICurrentUserService currentUserService)
+public class SalonService(ISalonRepository salonRepository, ICurrentUserService currentUserService) : ISalonService
 {
     public async Task<IReadOnlyList<SalonDto>> GetAll(CancellationToken cancellationToken = default)
     {
