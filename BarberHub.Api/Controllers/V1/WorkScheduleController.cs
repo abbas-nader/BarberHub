@@ -3,8 +3,7 @@ using BarberHub.Api.Constants.WorkSchedule;
 using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.WorkSchedule;
 using BarberHub.Api.Mappers;
-using BarberHub.Application.Services;
-using BarberHub.Application.Services.Implements;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BarberHub.Api.Controllers.V1;
 
 [ApiVersion("1.0")]
-public class WorkScheduleController(WorkScheduleService workScheduleService) : BaseController
+public class WorkScheduleController(IWorkScheduleService workScheduleService) : BaseController
 {
     [HttpGet(WorkScheduleUriConstants.GetAllByBarberId)]
     [AllowAnonymous]

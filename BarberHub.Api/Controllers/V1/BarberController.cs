@@ -4,8 +4,7 @@ using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.Barber;
 using BarberHub.Api.Contracts.Shared;
 using BarberHub.Api.Mappers;
-using BarberHub.Application.Services;
-using BarberHub.Application.Services.Implements;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BarberHub.Api.Controllers.V1;
 
 [ApiVersion("1.0")]
-public class BarberController(BarberService barberService) : BaseController
+public class BarberController(IBarberService barberService) : BaseController
 {
     [HttpGet(BarberUriConstants.GetAllBySalonId)]
     [AllowAnonymous]

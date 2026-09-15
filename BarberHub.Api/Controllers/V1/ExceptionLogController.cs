@@ -3,8 +3,7 @@ using BarberHub.Api.Constants.ExceptionLog;
 using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.ExceptionLog;
 using BarberHub.Api.Mappers;
-using BarberHub.Application.Services;
-using BarberHub.Application.Services.Implements;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +12,7 @@ namespace BarberHub.Api.Controllers.V1;
 
 [ApiVersion("1.0")]
 [Authorize(Roles = nameof(UserRole.PlatformAdmin))]
-public class ExceptionLogController(ExceptionLogService exceptionLogService) : BaseController
+public class ExceptionLogController(IExceptionLogService exceptionLogService) : BaseController
 {
     [HttpGet(ExceptionLogUriConstants.GetAll)]
     public async Task<ApiResult<IReadOnlyList<ExceptionLogResponse>>> GetAllAsync(CancellationToken cancellationToken)

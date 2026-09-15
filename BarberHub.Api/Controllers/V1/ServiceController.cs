@@ -3,8 +3,7 @@ using BarberHub.Api.Constants.Service;
 using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.Service;
 using BarberHub.Api.Mappers;
-using BarberHub.Application.Services;
-using BarberHub.Application.Services.Implements;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BarberHub.Api.Controllers.V1;
 
 [ApiVersion("1.0")]
-public class ServiceController(ServiceCatalogService catalogService) : BaseController
+public class ServiceController(IServiceCatalogService catalogService) : BaseController
 {
     [HttpGet(ServiceUriConstants.GetAll)]
     [AllowAnonymous]
