@@ -1,4 +1,5 @@
 ﻿using BarberHub.Application.Services;
+using BarberHub.Application.Services.Implements;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BarberHub.Application;
