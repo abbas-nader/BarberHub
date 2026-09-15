@@ -3,11 +3,12 @@ using BarberHub.Application.DTOs.Shared;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 
-namespace BarberHub.Application.Services;
+namespace BarberHub.Application.Services.Implements;
 
 public class SalonAdminService(
     ISalonAdminRepository salonAdminRepository,
@@ -15,7 +16,7 @@ public class SalonAdminService(
     ISalonRepository salonRepository,
     IPasswordHasher passwordHasher,
     ICurrentUserService currentUserService,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : ISalonAdminService
 {
     public async Task<IReadOnlyList<SalonAdminDto>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
@@ -28,12 +29,12 @@ public class SalonAdminService(
     public async Task<SalonAdminDto> GetByIdAsync(long salonAdminId, CancellationToken cancellationToken = default)
     {
         var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken) ??
-                     throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
+                         throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
         var user = await userRepository.GetByIdAsync(salonAdmin.UserId, cancellationToken) ??
                    throw new EntityNotFoundException(nameof(User), salonAdmin.UserId);
         return ToDto(salonAdmin, user);
     }
-        
+
     public async Task<SalonAdminDto> CreateAsync(CreateSalonAdminDto dto, CancellationToken cancellationToken = default)
     {
         if (await userRepository.ExistsByUserNameAsync(dto.Username, cancellationToken))
@@ -100,12 +101,13 @@ public class SalonAdminService(
             throw;
         }
     }
+
     public async Task<SalonAdminDto> DeleteAsync(long salonAdminId, CancellationToken cancellationToken = default)
     {
         var salonAdmin = await EnsureOwnedAsync(salonAdminId, cancellationToken);
         salonAdmin.SoftDelete(currentUserService.CurrentUser.UserId);
         await salonAdminRepository.SaveChangesAsync(cancellationToken);
-        var user = await userRepository.GetByIdAsync(salonAdmin.UserId, cancellationToken)??
+        var user = await userRepository.GetByIdAsync(salonAdmin.UserId, cancellationToken) ??
                    throw new EntityNotFoundException(nameof(User), salonAdmin.UserId);
         return ToDto(salonAdmin, user);
     }
@@ -124,21 +126,23 @@ public class SalonAdminService(
         await userRepository.SaveChangesAsync(cancellationToken);
 
         var salonAdmin = await salonAdminRepository.GetByUserIdAsync(userId, cancellationToken) ??
-                     throw new EntityNotFoundException(nameof(SalonAdmin), userId);
+                         throw new EntityNotFoundException(nameof(SalonAdmin), userId);
         return ToDto(salonAdmin, user);
     }
 
     private async Task<SalonAdmin> EnsureOwnedAsync(long salonAdminId, CancellationToken cancellationToken)
     {
         var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken) ??
-                     throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
-        
+                         throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
+
         if (currentUserService.CurrentUser.UserRole == UserRole.PlatformAdmin)
             return salonAdmin;
-        
+
         var salonId = currentUserService.CurrentUser.SalonId
                       ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
-        return salonAdmin.SalonId != salonId ? throw new EntityNotFoundException(nameof(SalonAdmin), salonAdmin.Id) : salonAdmin;
+        return salonAdmin.SalonId != salonId
+            ? throw new EntityNotFoundException(nameof(SalonAdmin), salonAdmin.Id)
+            : salonAdmin;
     }
 
     private static SalonAdminDto ToDto(SalonAdmin salonAdmin, User user)
