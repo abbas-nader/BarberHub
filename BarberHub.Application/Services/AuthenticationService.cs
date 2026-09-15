@@ -12,7 +12,6 @@ public class AuthenticationService(
     ISalonAdminRepository salonAdminRepository,
     IBarberRepository barberRepository,
     IUserRepository userRepository,
-    IPlatformRepository platformAdminRepository,
     ISalonRepository salonRepository,
     IPasswordHasher passwordHasher,
     IJwtGenerator jwtGenerator,

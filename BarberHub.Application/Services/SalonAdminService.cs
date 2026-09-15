@@ -12,6 +12,7 @@ namespace BarberHub.Application.Services;
 public class SalonAdminService(
     ISalonAdminRepository salonAdminRepository,
     IUserRepository userRepository,
+    ISalonRepository salonRepository,
     IPasswordHasher passwordHasher,
     ICurrentUserService currentUserService,
     IUnitOfWork unitOfWork)
@@ -38,8 +39,8 @@ public class SalonAdminService(
         if (await userRepository.ExistsByUserNameAsync(dto.Username, cancellationToken))
             throw new DuplicateUserNameException();
 
-        var salonId = currentUserService.CurrentUser.SalonId
-                      ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
+        var salon = await salonRepository.GetByIdAsync(dto.SalonId, cancellationToken) ??
+                    throw new EntityNotFoundException(nameof(Salon), dto.SalonId);
         var passwordHash = passwordHasher.Hash(dto.Password);
 
         await unitOfWork.BeginTransaction(cancellationToken);
@@ -50,7 +51,7 @@ public class SalonAdminService(
             await userRepository.AddAsync(user, cancellationToken);
             await userRepository.SaveChangesAsync(cancellationToken);
 
-            var salonAdmin = new SalonAdmin(user.Id, salonId, currentUserService.CurrentUser.UserId);
+            var salonAdmin = new SalonAdmin(user.Id, salon.Id, currentUserService.CurrentUser.UserId);
             await salonAdminRepository.AddAsync(salonAdmin, cancellationToken);
             await salonAdminRepository.SaveChangesAsync(cancellationToken);
 
@@ -131,11 +132,13 @@ public class SalonAdminService(
     {
         var salonAdmin = await salonAdminRepository.GetByIdAsync(salonAdminId, cancellationToken) ??
                      throw new EntityNotFoundException(nameof(SalonAdmin), salonAdminId);
+        
+        if (currentUserService.CurrentUser.UserRole == UserRole.PlatformAdmin)
+            return salonAdmin;
+        
         var salonId = currentUserService.CurrentUser.SalonId
                       ?? throw new RequiredClaimMissingException(nameof(TokenClaims.SalonId));
-        if (salonAdmin.SalonId != salonId)
-            throw new EntityNotFoundException(nameof(SalonAdmin), salonAdmin.Id);
-        return salonAdmin;
+        return salonAdmin.SalonId != salonId ? throw new EntityNotFoundException(nameof(SalonAdmin), salonAdmin.Id) : salonAdmin;
     }
 
     private static SalonAdminDto ToDto(SalonAdmin salonAdmin, User user)
