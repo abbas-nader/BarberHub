@@ -3,18 +3,19 @@ using BarberHub.Application.DTOs.Shared;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 
-namespace BarberHub.Application.Services;
+namespace BarberHub.Application.Services.Implements;
 
 public class BarberService(
     IBarberRepository barberRepository,
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     ICurrentUserService currentUserService,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : IBarberService
 {
     public async Task<IReadOnlyList<BarberDto>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
@@ -98,12 +99,13 @@ public class BarberService(
             throw;
         }
     }
+
     public async Task<BarberDto> DeleteAsync(long barberId, CancellationToken cancellationToken = default)
     {
         var barber = await EnsureOwnedAsync(barberId, cancellationToken);
         barber.SoftDelete(currentUserService.CurrentUser.UserId);
         await barberRepository.SaveChangesAsync(cancellationToken);
-        var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken)??
+        var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken) ??
                    throw new EntityNotFoundException(nameof(User), barber.UserId);
         return ToDto(barber, user);
     }

@@ -5,6 +5,7 @@ using BarberHub.Api.Contracts.Barber;
 using BarberHub.Api.Contracts.Shared;
 using BarberHub.Api.Mappers;
 using BarberHub.Application.Services;
+using BarberHub.Application.Services.Implements;
 using BarberHub.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
