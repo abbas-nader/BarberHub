@@ -7,6 +7,7 @@ using BarberHub.Api.Security;
 using BarberHub.Application;
 using BarberHub.Application.Security.Jwt;
 using BarberHub.Infrastructure;
+using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Seed;
 using BarberHub.Infrastructure.Security.Jwt;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -109,6 +110,11 @@ builder.Services.AddCors(options =>
 builder.Services.AddAuthorization();
 var app = builder.Build();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+using (var scope = app.Services.CreateScope())
+{
+    var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
+    await seeder.SeedAsync();
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -8,6 +8,7 @@ using BarberHub.Infrastructure.Persistence.Mongo;
 using BarberHub.Infrastructure.Persistence.Mongo.Repositories;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
+using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Seed;
 using BarberHub.Infrastructure.Security.Hash;
 using BarberHub.Infrastructure.Security.Jwt;
 using BarberHub.Infrastructure.Storage;
@@ -48,6 +49,7 @@ public static class DependencyInjection
         services.AddScoped<IGalleryRepository, GalleryRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEndUserRepository, EndUserRepository>();
+        services.AddScoped<IDataSeeder, DataSeeder>();
 
         services.AddMongo(configuration);
         services.AddJwt(configuration);
