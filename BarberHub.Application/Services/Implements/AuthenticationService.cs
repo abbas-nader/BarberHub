@@ -2,11 +2,12 @@
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 
-namespace BarberHub.Application.Services;
+namespace BarberHub.Application.Services.Implements;
 
 public class AuthenticationService(
     ISalonAdminRepository salonAdminRepository,
@@ -17,7 +18,7 @@ public class AuthenticationService(
     IJwtGenerator jwtGenerator,
     ITokenHasher tokenHasher,
     IRefreshTokenRepository refreshTokenRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork) : IAuthenticationService
 {
     public async Task<TokenResult> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken = default)
     {
@@ -58,6 +59,7 @@ public class AuthenticationService(
             await RevokeChainAsync(existingToken, cancellationToken);
             throw new RefreshTokenReuseDetectedException();
         }
+
         if (existingToken.ExpiresAt < DateTimeOffset.UtcNow)
             throw new InvalidRefreshTokenException();
 
@@ -84,6 +86,7 @@ public class AuthenticationService(
             await unitOfWork.RollbackTransaction(cancellationToken);
             throw;
         }
+
         return tokenResult;
     }
 
@@ -108,6 +111,7 @@ public class AuthenticationService(
             refreshTokenRepository.Update(next);
             current = next;
         }
+
         await refreshTokenRepository.SaveChangesAsync(cancellationToken);
     }
 
