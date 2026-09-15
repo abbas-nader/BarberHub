@@ -2,18 +2,18 @@
 using BarberHub.Application.DTOs.File;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Application.Storage;
 using BarberHub.Domain.Constants;
-using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 using File = BarberHub.Domain.Entities.File;
 
-namespace BarberHub.Application.Services;
+namespace BarberHub.Application.Services.Implements;
 
 public class FileService(
     IFileRepository fileRepository,
     IFileStorageService fileStorageService,
-    ICurrentUserService currentUserService)
+    ICurrentUserService currentUserService) : IFileService
 {
     public async Task<FileDto> UploadAsync(UploadFileDto uploadFileDto, CancellationToken cancellationToken = default)
     {
