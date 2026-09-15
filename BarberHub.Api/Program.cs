@@ -1,120 +1,27 @@
-using System.Text;
-using Asp.Versioning;
-using BarberHub.Api.Contracts;
-using BarberHub.Api.Filters;
+using BarberHub.Api;
 using BarberHub.Api.Middleware;
-using BarberHub.Api.Security;
 using BarberHub.Application;
-using BarberHub.Application.Security.Jwt;
 using BarberHub.Infrastructure;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Seed;
-using BarberHub.Infrastructure.Security.Jwt;
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter your JWT access token using the Bearer scheme."
-    });
-    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
-    });
-});
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplications();
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+builder.Services.AddApi(builder.Configuration);
 
-builder.Services.AddApiVersioning(options =>
-    {
-        options.DefaultApiVersion = new ApiVersion(1, 0);
-        options.AssumeDefaultVersionWhenUnspecified = true;
-        options.ReportApiVersions = true;
-        options.ApiVersionReader = new UrlSegmentApiVersionReader();
-    }
-).AddApiExplorer(options =>
-    {
-        options.GroupNameFormat = "'v'VVV";
-        options.SubstituteApiVersionInUrl = true;
-    }
-);
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<ApiResultFilter>();
-    options.Filters.Add<ValidationFilter>();
-});
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer();
-builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
-    .Configure<IOptions<JwtSetting>>((bearerOptions, jwtSettingOptions) =>
-    {
-        var jwtSetting = jwtSettingOptions.Value;
-        bearerOptions.MapInboundClaims = false;
-        bearerOptions.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = jwtSetting.Issuer,
-            ValidateAudience = true,
-            ValidAudience = jwtSetting.Audience,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting.SecretKey)),
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero,
-        };
-        bearerOptions.Events = new JwtBearerEvents
-        {
-            OnChallenge = context =>
-            {
-                context.HandleResponse();
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                context.Response.ContentType = "application/json";
-                var result = ApiResult.Failed(null, StatusCodes.Status401Unauthorized);
-                return context.Response.WriteAsJsonAsync(result);
-            },
-            OnForbidden = context =>
-            {
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                context.Response.ContentType = "application/json";
-                var result = ApiResult.Failed(null, StatusCodes.Status403Forbidden);
-                return context.Response.WriteAsJsonAsync(result);
-            }
-        };
-    });
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowClient", policy =>
-    {
-        policy.WithOrigins("https://localhost:7107")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
-builder.Services.AddAuthorization();
 var app = builder.Build();
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 using (var scope = app.Services.CreateScope())
 {
     var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
     await seeder.SeedAsync();
 }
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
