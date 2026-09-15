@@ -1,11 +1,12 @@
 ﻿using BarberHub.Application.DTOs.ExceptionLog;
 using BarberHub.Application.Repositories;
+using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 
-namespace BarberHub.Application.Services;
+namespace BarberHub.Application.Services.Implements;
 
-public class ExceptionLogService(IExceptionLogRepository exceptionLogRepository)
+public class ExceptionLogService(IExceptionLogRepository exceptionLogRepository) : IExceptionLogService
 {
     public async Task<IReadOnlyList<ExceptionLogDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
@@ -21,7 +22,8 @@ public class ExceptionLogService(IExceptionLogRepository exceptionLogRepository)
         return ToDto(log);
     }
 
-    public async Task<IReadOnlyList<ExceptionLogDto>> GetRecentAsync(int count, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<ExceptionLogDto>> GetRecentAsync(int count,
+        CancellationToken cancellationToken = default)
     {
         var logs = await exceptionLogRepository.GetRecentAsync(count, cancellationToken);
         return logs.Select(ToDto).ToList();

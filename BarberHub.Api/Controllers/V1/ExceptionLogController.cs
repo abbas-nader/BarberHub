@@ -4,6 +4,7 @@ using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.ExceptionLog;
 using BarberHub.Api.Mappers;
 using BarberHub.Application.Services;
+using BarberHub.Application.Services.Implements;
 using BarberHub.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
