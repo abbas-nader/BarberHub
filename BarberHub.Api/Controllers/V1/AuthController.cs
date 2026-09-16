@@ -6,6 +6,8 @@ using BarberHub.Api.Mappers;
 using BarberHub.Application.Services.InterFaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using LoginRequest = BarberHub.Api.Contracts.Auth.LoginRequest;
+using RefreshRequest = BarberHub.Api.Contracts.Auth.RefreshRequest;
 
 namespace BarberHub.Api.Controllers.V1;
 
@@ -20,6 +22,15 @@ public class AuthController(IAuthenticationService authenticationService) : Base
         var result = await authenticationService.LoginAsync(request.ToDto(), cancellationToken);
         return result.ToResponse();
     }
+
+    [HttpPost(AuthUriConstants.Register)]
+    public async Task<ApiResult<TokenResponse>> Register([FromBody] RegisterRequset request,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await authenticationService.RegisterAsync(request.ToDto(), cancellationToken);
+        return result.ToResponse();
+    }
+
     [HttpPost(AuthUriConstants.Refresh)]
     public async Task<ApiResult<TokenResponse>> Refresh([FromBody] RefreshRequest request,
         CancellationToken cancellationToken = default)
