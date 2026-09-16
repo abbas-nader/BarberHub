@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using BarberHub.Application.Security.Jwt;
+using BarberHub.Domain.Constants;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -14,12 +15,12 @@ public class JwtGenerator(IOptions<JwtSetting> options) : IJwtGenerator
 
     public TokenResult Generate(TokenClaims tokenClaims)
     {
-        var accessTokenExpirest = DateTimeOffset.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes);
-        var accessToken = GenerateAccessToken(tokenClaims, accessTokenExpirest);
-
         var refreshTokenExpirest = DateTimeOffset.UtcNow.AddDays(_jwtSettings.RefreshTokenExpirationDays);
         var refreshToken = GenerateRefreshToken();
-
+        
+        var accessTokenExpirest = DateTimeOffset.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes);
+        var accessToken = GenerateAccessToken(tokenClaims, accessTokenExpirest);
+        
         return new TokenResult(accessToken, accessTokenExpirest, refreshToken, refreshTokenExpirest);
     }
 

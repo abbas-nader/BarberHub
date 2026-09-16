@@ -1,4 +1,4 @@
-﻿namespace BarberHub.Application.Security.Jwt;
+﻿namespace BarberHub.Domain.Constants;
 
 public static class JwtCustomClaimNames
 {
