@@ -1,8 +1,10 @@
 ﻿using BarberHub.Application.DTOs.Auth;
+using BarberHub.Application.DTOs.User;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Security.Jwt;
 using BarberHub.Application.Services.InterFaces;
+using BarberHub.Domain.Constants;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
@@ -11,14 +13,16 @@ namespace BarberHub.Application.Services.Implements;
 
 public class AuthenticationService(
     ISalonAdminRepository salonAdminRepository,
-    IBarberRepository barberRepository,
-    IUserRepository userRepository,
-    ISalonRepository salonRepository,
-    IPasswordHasher passwordHasher,
-    IJwtGenerator jwtGenerator,
-    ITokenHasher tokenHasher,
-    IRefreshTokenRepository refreshTokenRepository,
-    IUnitOfWork unitOfWork) : IAuthenticationService
+      IBarberRepository barberRepository,
+      IUserRepository userRepository,
+      ISalonRepository salonRepository,
+      IEndUserRepository endUserRepository,
+      IUserService userService,
+      IPasswordHasher passwordHasher,
+      IJwtGenerator jwtGenerator,
+      ITokenHasher tokenHasher,
+      IRefreshTokenRepository refreshTokenRepository,
+      IUnitOfWork unitOfWork) : IAuthenticationService
 {
     public async Task<TokenResult> LoginAsync(LoginDto loginDto, CancellationToken cancellationToken = default)
     {
@@ -29,6 +33,35 @@ public class AuthenticationService(
             throw new InvalidCredentialsException();
 
         var claims = await BuildClaimsAsync(user, cancellationToken);
+        return await IssueTokenAsync(claims, cancellationToken);
+    }
+
+    public async Task<TokenResult> RegisterAsync(RegisterDto registerDto, CancellationToken cancellationToken = default)
+    {
+        UserDto userDto;
+
+        await unitOfWork.BeginTransaction(cancellationToken);
+        try
+        {
+            userDto = await userService.CreateAsync(
+                new CreateUserDto(registerDto.FirstName, registerDto.LastName, registerDto.Username,
+                    registerDto.Password, registerDto.MobileNumber, UserRole.EndUser),
+                SystemConstants.SystemUserId,
+                cancellationToken);
+
+            var endUser = new EndUser(userDto.Id, SystemConstants.SystemUserId);
+            await endUserRepository.AddAsync(endUser, cancellationToken);
+            await endUserRepository.SaveChangesAsync(cancellationToken);
+
+            await unitOfWork.CommitTransaction(cancellationToken);
+        }
+        catch
+        {
+            await unitOfWork.RollbackTransaction(cancellationToken);
+            throw;
+        }
+
+        var claims = new TokenClaims(userDto.Id, UserRole.EndUser, null);
         return await IssueTokenAsync(claims, cancellationToken);
     }
 
