@@ -13,6 +13,15 @@ public static class AuthContractMapper
             request.Role
         );
 
+    public static RegisterDto ToDto(this RegisterRequset request)
+        => new(
+            request.FirstName,
+            request.LastName,
+            request.Username,
+            request.Password,
+            request.MobileNumber
+        );
+
     public static TokenResponse ToResponse(this TokenResult tokenResult)
         => new(
             tokenResult.AccessToken,
