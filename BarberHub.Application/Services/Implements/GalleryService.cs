@@ -10,7 +10,7 @@ namespace BarberHub.Application.Services.Implements;
 
 public class GalleryService(
     IGalleryRepository galleryRepository,
-    FileService fileService,
+    IFileService fileService,
     IBarberRepository barberRepository,
     ICurrentUserService currentUserService,
     IUnitOfWork unitOfWork) : IGalleryService
