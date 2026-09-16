@@ -1,5 +1,6 @@
 ﻿using BarberHub.Application.Services;
 using BarberHub.Application.Services.Implements;
+using BarberHub.Application.Services.InterFaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BarberHub.Application;
@@ -8,15 +9,16 @@ public static class DependencyInjection
 {
     public static void AddApplications(this IServiceCollection services)
     {
-        services.AddScoped<BarberService>();
-        services.AddScoped<ExceptionLogService>();
-        services.AddScoped<SalonService>();
-        services.AddScoped<SalonAdminService>();
-        services.AddScoped<AuthenticationService>();
-        services.AddScoped<ServiceCatalogService>();
-        services.AddScoped<BarberServiceCatalogService>();
-        services.AddScoped<WorkScheduleService>();
-        services.AddScoped<FileService>();
-        services.AddScoped<GalleryService>();
+        services.AddScoped<IBarberService, BarberService>();
+        services.AddScoped<IExceptionLogService, ExceptionLogService>();
+        services.AddScoped<ISalonService, SalonService>();
+        services.AddScoped<ISalonAdminService, SalonAdminService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IServiceCatalogService, ServiceCatalogService>();
+        services.AddScoped<IBarberServiceCatalogService, BarberServiceCatalogService>();
+        services.AddScoped<IWorkScheduleService, WorkScheduleService>();
+        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IGalleryService, GalleryService>();
+        services.AddScoped<IUserService, UserService>();
     }
 }
