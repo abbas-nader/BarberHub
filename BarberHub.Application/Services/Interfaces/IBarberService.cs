@@ -15,7 +15,4 @@ public interface IBarberService
     Task<BarberDto> DeleteAsync(long barberId, CancellationToken cancellationToken = default);
     Task<BarberDto> ActivateAsync(long barberId, CancellationToken cancellationToken = default);
     Task<BarberDto> DeactivateAsync(long barberId, CancellationToken cancellationToken = default);
-
-    Task<BarberDto> ChangePasswordAsync(ChangePasswordDto changePasswordDto,
-        CancellationToken cancellationToken = default);
 }

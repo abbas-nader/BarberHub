@@ -77,12 +77,4 @@ public class BarberController(IBarberService barberService) : BaseController
         var barber = await barberService.DeactivateAsync(barberId, cancellationToken);
         return barber.ToResponse();
     }
-    [HttpPatch(BarberUriConstants.ChangePassword)]
-    [Authorize(Roles = nameof(UserRole.Barber))]
-    public async Task<ApiResult<BarberResponse>> ChangePasswordAsync([FromBody] ChangePasswordRequest request,
-        CancellationToken cancellationToken)
-    {
-        var barber = await barberService.ChangePasswordAsync(request.ToDto(), cancellationToken);
-        return barber.ToResponse();
-    }
 }

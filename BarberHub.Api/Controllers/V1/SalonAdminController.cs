@@ -63,13 +63,4 @@ public class SalonAdminController(ISalonAdminService salonAdminService) : BaseCo
         var salonAdmin = await salonAdminService.DeleteAsync(salonAdminId, cancellationToken);
         return salonAdmin.ToResponse();
     }
-
-    [HttpPatch(SalonAdminUriConstants.ChangePassword)]
-    [Authorize(Roles = nameof(UserRole.SalonAdmin) + "," + nameof(UserRole.PlatformAdmin))]
-    public async Task<ApiResult<SalonAdminResponse>> ChangePasswordAsync([FromBody] ChangePasswordRequest request,
-        CancellationToken cancellationToken)
-    {
-        var salonAdmin = await salonAdminService.ChangePasswordAsync(request.ToDto(), cancellationToken);
-        return salonAdmin.ToResponse();
-    }
 }

@@ -17,6 +17,4 @@ public interface ISalonAdminService
         CancellationToken cancellationToken = default);
 
     Task<SalonAdminDto> DeleteAsync(long salonAdminId, CancellationToken cancellationToken = default);
-
-    Task<SalonAdminDto> ChangePasswordAsync(ChangePasswordDto dto, CancellationToken cancellationToken = default);
 }
