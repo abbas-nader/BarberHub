@@ -31,9 +31,7 @@ public static class DependencyInjection
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
         services.AddScoped<IBarberRepository, BarberRepository>();
         services.AddScoped<IBarberServiceRepository, BarberServiceRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IFileRepository, FileRepository>();
-        services.AddScoped<IGalleryRepository, GalleryRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<ISalonRepository, SalonRepository>();
         services.AddScoped<ISalonAdminRepository, SalonAdminRepository>();
