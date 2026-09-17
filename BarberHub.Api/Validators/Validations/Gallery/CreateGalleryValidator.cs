@@ -30,9 +30,7 @@ public class CreateGalleryValidator : AbstractValidator<CreateGalleryRequest>
             .When(x => x.BarberId is not null)
             .WithMessage(CreateGalleryValidationMessages.BarberIdInvalid);
 
-        When(_ => true, () =>
-        {
-            RuleFor(x => x.File.ContentType)
+       RuleFor(x => x.File.ContentType)
                 .Must(contentType => FileUploadConstants.AllowedContentTypes.Contains(contentType))
                 .WithMessage(CreateGalleryValidationMessages.ContentTypeUnsupported);
 
@@ -41,6 +39,5 @@ public class CreateGalleryValidator : AbstractValidator<CreateGalleryRequest>
                 .WithMessage(CreateGalleryValidationMessages.SizeInvalid)
                 .LessThanOrEqualTo(FileUploadConstants.MaxSizeBytes)
                 .WithMessage(CreateGalleryValidationMessages.SizeExceeded);
-        });
     }
 }
