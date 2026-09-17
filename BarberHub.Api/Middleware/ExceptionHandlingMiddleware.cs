@@ -26,11 +26,10 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
     private static HttpStatusCode ResolveStatusCode(Exception exception) => exception switch
     {
         EntityNotFoundException => HttpStatusCode.NotFound,
-
+        RequiredClaimMissingException => HttpStatusCode.Forbidden,
         InvalidCredentialsException
             or InvalidRefreshTokenException
             or RefreshTokenReuseDetectedException
-            or RequiredClaimMissingException
             or InvalidCurrentPasswordException
             or UserNotAuthenticatedException => HttpStatusCode.Unauthorized,
 
@@ -56,6 +55,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or InvalidServiceDescriptionException
             or FileSizeLimitExceededException
             or UnsupportedFileTypeException
+            or InvalidBarberDescriptionException
             or CurrencyMismatchException => HttpStatusCode.BadRequest,
 
         _ => HttpStatusCode.InternalServerError
