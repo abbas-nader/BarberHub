@@ -14,7 +14,7 @@ public class UpdateSalonAdminValidator : AbstractValidator<UpdateSalonAdminReque
             .NotEmpty()
             .WithMessage(
                 SharedValidationMessages.PropertyRequired(UpdateSalonAdminValidationMessages.FirstNameProperty))
-            .MaximumLength(SalonAdminConstants.FirstNameMaxLength)
+            .MaximumLength(UserConstants.FirstNameMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(UpdateSalonAdminValidationMessages.FirstNameProperty));
 
@@ -22,7 +22,7 @@ public class UpdateSalonAdminValidator : AbstractValidator<UpdateSalonAdminReque
             .NotEmpty()
             .WithMessage(
                 SharedValidationMessages.PropertyRequired(UpdateSalonAdminValidationMessages.LastNameProperty))
-            .MaximumLength(SalonAdminConstants.LastNameMaxLength)
+            .MaximumLength(UserConstants.LastNameMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(UpdateSalonAdminValidationMessages.LastNameProperty));
 
@@ -30,7 +30,7 @@ public class UpdateSalonAdminValidator : AbstractValidator<UpdateSalonAdminReque
             .NotEmpty()
             .WithMessage(
                 SharedValidationMessages.PropertyRequired(UpdateSalonAdminValidationMessages.UsernameProperty))
-            .MaximumLength(SalonAdminConstants.UsernameMaxLength)
+            .MaximumLength(UserConstants.UsernameMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(UpdateSalonAdminValidationMessages.UsernameProperty))
             .Matches(UpdateSalonAdminValidationMessages.UserNameRegex)
