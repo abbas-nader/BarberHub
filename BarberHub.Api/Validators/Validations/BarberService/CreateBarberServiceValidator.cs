@@ -1,5 +1,4 @@
-﻿using BarberHub.Api.Contracts.Barber;
-using BarberHub.Api.Contracts.BarberService;
+﻿using BarberHub.Api.Contracts.BarberService;
 using BarberHub.Api.Validators.Messages.BarberService;
 using FluentValidation;
 
