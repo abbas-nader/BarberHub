@@ -24,7 +24,7 @@ public class AuthController(IAuthenticationService authenticationService) : Base
     }
 
     [HttpPost(AuthUriConstants.Register)]
-    public async Task<ApiResult<TokenResponse>> Register([FromBody] RegisterRequset request,
+    public async Task<ApiResult<TokenResponse>> Register([FromBody] RegisterRequest request,
         CancellationToken cancellationToken = default)
     {
         var result = await authenticationService.RegisterAsync(request.ToDto(), cancellationToken);

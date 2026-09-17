@@ -1,6 +1,6 @@
 namespace BarberHub.Api.Contracts.Auth;
 
-public record RegisterRequset(
+public record RegisterRequest(
     string FirstName,
     string LastName,
     string Username,

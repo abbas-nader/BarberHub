@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace BarberHub.Api.Validators.Validations.Auth;
 
-public class RegisterValidator : AbstractValidator<RegisterRequset>
+public class RegisterValidator : AbstractValidator<RegisterRequest>
 {
     public RegisterValidator()
     {
@@ -40,7 +40,6 @@ public class RegisterValidator : AbstractValidator<RegisterRequset>
 
         RuleFor(x => x.MobileNumber)
             .Matches(RegisterValidationMessages.MobileNumberRegex)
-            .When(_ => true)
             .WithMessage(RegisterValidationMessages.MobileNumberInvalidFormat);
     }
 }

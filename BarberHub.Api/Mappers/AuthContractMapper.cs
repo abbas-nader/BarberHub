@@ -13,7 +13,7 @@ public static class AuthContractMapper
             request.Role
         );
 
-    public static RegisterDto ToDto(this RegisterRequset request)
+    public static RegisterDto ToDto(this RegisterRequest request)
         => new(
             request.FirstName,
             request.LastName,
