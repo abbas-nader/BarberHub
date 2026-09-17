@@ -14,12 +14,12 @@ public class UpdateBarberValidator : AbstractValidator<UpdateBarberRequest>
             .NotEmpty()
             .WithMessage(
                 SharedValidationMessages.PropertyRequired(UpdateBarberValidationMessages.FirstNameProperty))
-            .MaximumLength(BarberConstants.FirstNameMaxLength)
+            .MaximumLength(UserConstants.FirstNameMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.FirstNameProperty));
         RuleFor(x => x.LastName)
             .NotEmpty()
-            .MaximumLength(BarberConstants.LastNameMaxLength)
+            .MaximumLength(UserConstants.LastNameMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.LastNameProperty));
         RuleFor(x => x.MobileNumber)
@@ -32,7 +32,7 @@ public class UpdateBarberValidator : AbstractValidator<UpdateBarberRequest>
             .NotEmpty()
             .WithMessage(
                 SharedValidationMessages.PropertyRequired(UpdateBarberValidationMessages.UsernameProperty))
-            .MaximumLength(BarberConstants.UserNameMaxLength)
+            .MaximumLength(UserConstants.UsernameMaxLength)
             .WithMessage(
                 SharedValidationMessages.PropertyMaxLength(UpdateBarberValidationMessages.UsernameProperty))
             .Matches(UpdateBarberValidationMessages.UserNameRegex)
