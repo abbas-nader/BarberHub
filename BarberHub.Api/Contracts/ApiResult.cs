@@ -39,7 +39,7 @@ public class ApiResult<T>(T? data,bool success, int status, object? error= null,
     public static ApiResult<T> Succeeded(T? data, int status = StatusCodes.Status200OK)
         => new(data, true, status);
 
-    public new static ApiResult<T> Failed(object? error, int status)
+    public static ApiResult<T> FailedWithData(object? error, int status)
         => new(default, false, status, error);
 
     public static ApiResult<T> Created(T? data, string? location)
