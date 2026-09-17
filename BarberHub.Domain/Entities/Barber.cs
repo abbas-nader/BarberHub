@@ -1,4 +1,7 @@
-﻿namespace BarberHub.Domain.Entities;
+﻿using BarberHub.Domain.Constants;
+using BarberHub.Domain.Exceptions;
+
+namespace BarberHub.Domain.Entities;
 
 public class Barber : BaseEntity
 {
@@ -27,6 +30,7 @@ public class Barber : BaseEntity
 
     public Barber(string? description, long userId, long salonId, long creationBy)
     {
+        ValidateDescription(description);
         Description = description;
         IsActive = true;
         UserId = userId;
@@ -36,10 +40,17 @@ public class Barber : BaseEntity
 
     public void Update(string? description, long modifiedBy)
     {
+        ValidateDescription(description);
         Description = description;
         Modified(modifiedBy);
     }
 
     public void Activate(long modifiedBy) { IsActive = true; Modified(modifiedBy); }
     public void Deactivate(long modifiedBy) { IsActive = false; Modified(modifiedBy); }
+    
+    private static void ValidateDescription(string? description)
+    {
+        if (description is { Length: > BarberConstants.DescriptionMaxLength })
+            throw new InvalidBarberDescriptionException();
+    }
 }
