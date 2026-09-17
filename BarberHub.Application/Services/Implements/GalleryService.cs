@@ -5,6 +5,7 @@ using BarberHub.Application.Security.Jwt;
 using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace BarberHub.Application.Services.Implements;
 
@@ -13,7 +14,8 @@ public class GalleryService(
     IFileService fileService,
     IBarberRepository barberRepository,
     ICurrentUserService currentUserService,
-    IUnitOfWork unitOfWork) : IGalleryService
+    IUnitOfWork unitOfWork,
+    ILogger<GalleryService> logger) : IGalleryService
 {
     public async Task<IReadOnlyList<GalleryDto>> GetAllBySalonIdAsync(long salonId,
         CancellationToken cancellationToken = default)
@@ -48,11 +50,10 @@ public class GalleryService(
             createGalleryDto.ContentType,
             createGalleryDto.Size
         );
-        await unitOfWork.BeginTransaction(cancellationToken);
+        var uploadedFile = await fileService.UploadAsync(uploadFileDto, cancellationToken);
         try
         {
-            var uploadedFile = await fileService.UploadAsync(uploadFileDto, cancellationToken);
-
+            await unitOfWork.BeginTransaction(cancellationToken);
             var gallery = new Gallery(createGalleryDto.Caption, salonId, createGalleryDto.BarberId,
                 uploadedFile.Id, currentUserService.CurrentUser.UserId);
 
@@ -65,6 +66,7 @@ public class GalleryService(
         catch
         {
             await unitOfWork.RollbackTransaction(cancellationToken);
+            await fileService.DeleteAsync(uploadedFile.Id, cancellationToken);
             throw;
         }
     }
@@ -93,21 +95,30 @@ public class GalleryService(
         if (gallery.SalonId != salonId)
             throw new EntityNotFoundException(nameof(Gallery), galleryId);
         await unitOfWork.BeginTransaction(cancellationToken);
+        await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
             gallery.SoftDelete(currentUserService.CurrentUser.UserId);
             await galleryRepository.SaveChangesAsync(cancellationToken);
-
-            await fileService.DeleteAsync(gallery.FileId, cancellationToken);
-
             await unitOfWork.CommitTransaction(cancellationToken);
-            return ToDto(gallery);
         }
         catch
         {
             await unitOfWork.RollbackTransaction(cancellationToken);
             throw;
         }
+
+        try
+        {
+            await fileService.DeleteAsync(gallery.FileId, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to delete physical file for gallery {GalleryId}. Needs manual cleanup.",
+                galleryId);
+        }
+
+        return ToDto(gallery);
     }
 
     private static GalleryDto ToDto(Gallery gallery)
