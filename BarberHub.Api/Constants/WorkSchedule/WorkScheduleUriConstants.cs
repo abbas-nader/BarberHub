@@ -3,7 +3,7 @@
 public static class WorkScheduleUriConstants
 {
     private const string ControllerName = "workschedule";
-    public const string GetAllByBarberId = $"{ControllerName}/{{barberId}}";
+    public const string GetAllByBarberId = $"{ControllerName}/barber/{{barberId}}";
     public const string GetById = $"{ControllerName}/{{workscheduleId}}";
     public const string Create = $"{ControllerName}/create";
     public const string Update = $"{ControllerName}/update/{{workScheduleId}}";
