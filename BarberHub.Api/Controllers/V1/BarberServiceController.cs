@@ -14,7 +14,7 @@ namespace BarberHub.Api.Controllers.V1;
 public class BarberServiceController(IBarberServiceCatalogService barberServiceCatalogService) : BaseController
 {
     [HttpGet(BarberServiceUriConstants.GetAllByBarberId)]
-    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
+    [AllowAnonymous]
     public async Task<ApiResult<IReadOnlyList<BarberServiceResponse>>> GetAllByBarberIdAsync([FromRoute] long barberId,
         CancellationToken cancellationToken = default)
     {
@@ -25,7 +25,7 @@ public class BarberServiceController(IBarberServiceCatalogService barberServiceC
     }
 
     [HttpGet(BarberServiceUriConstants.GetById)]
-    [Authorize(Roles = nameof(UserRole.SalonAdmin))]
+    [AllowAnonymous]
     public async Task<ApiResult<BarberServiceResponse>> GetByIdAsync([FromRoute] long serviceId,
         CancellationToken cancellationToken = default)
     {
