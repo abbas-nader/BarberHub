@@ -2,5 +2,5 @@
 
 public static class SystemConstants
 {
-    public const long SystemUserId = 1;
+    public const long SystemUserId = 0;
 }

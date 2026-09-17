@@ -20,14 +20,14 @@ public abstract class BaseEntity
 
     public void Creation(long createdBy)
     {
-        if (createdBy < 0) throw new InvalidAuditUserIdException(nameof(createdBy));
+        if (createdBy <= 0) throw new InvalidAuditUserIdException(nameof(createdBy));
         CreatedAt = DateTimeOffset.UtcNow;
         CreatedBy = createdBy;
     }
 
     public void Modified(long userId)
     {
-        if (userId < 0) throw new InvalidAuditUserIdException(nameof(userId));
+        if (userId <= 0) throw new InvalidAuditUserIdException(nameof(userId));
         ModifiedAt = DateTimeOffset.UtcNow;
         ModifiedBy = userId;
     }
