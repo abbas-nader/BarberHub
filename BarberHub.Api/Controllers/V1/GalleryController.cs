@@ -24,10 +24,10 @@ public class GalleryController(IGalleryService galleryService) : BaseController
 
     [HttpGet(GalleryUriConstants.GetById)]
     [AllowAnonymous]
-    public async Task<ApiResult<GalleryResponse>> GetById([FromRoute] long salonId,
+    public async Task<ApiResult<GalleryResponse>> GetById([FromRoute] long galleryId,
         CancellationToken cancellationToken = default)
     {
-        var galleries = await galleryService.GetByIdAsync(salonId, cancellationToken);
+        var galleries = await galleryService.GetByIdAsync(galleryId, cancellationToken);
         return galleries.ToResponse();
     }
 
