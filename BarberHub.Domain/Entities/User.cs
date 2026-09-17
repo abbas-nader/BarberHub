@@ -28,7 +28,7 @@ public class User : BaseEntity
         UserName = userName;
         PasswordHash = passwordHash;
         Role = role;
-        if (mobileNumber is not null)
+        if (mobileNumber is not null && Role != UserRole.PlatformAdmin)
         {
             MobileNumber = mobileNumber;
             IsMobileVerified = true;

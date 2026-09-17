@@ -20,6 +20,6 @@ public static class UserContractsMapper
             request.FirstName,
             request.LastName,
             request.UserName,
-            null
+            request.MobileNumber
         );
 }
