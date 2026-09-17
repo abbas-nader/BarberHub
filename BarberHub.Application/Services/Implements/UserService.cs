@@ -12,9 +12,10 @@ namespace BarberHub.Application.Services.Implements;
 public class UserService(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    ICurrentUserService currentUserService) : IUserService
+    IEndUserRepository endUserRepository,
+    IUnitOfWork unitOfWork) : IUserService
 {
-   public async Task<UserDto> GetByIdAsync(long userId, CancellationToken cancellationToken = default)
+    public async Task<UserDto> GetByIdAsync(long userId, CancellationToken cancellationToken = default)
     {
         var user = await userRepository.GetByIdAsync(userId, cancellationToken) ??
                    throw new EntityNotFoundException(nameof(User), userId);
@@ -48,7 +49,7 @@ public class UserService(
                 throw new DuplicateUserNameException();
         }
 
-        user.Update(dto.FirstName, dto.LastName, dto.UserName, null, modifiedBy);
+        user.Update(dto.FirstName, dto.LastName, dto.UserName, dto.MobileNumber, modifiedBy);
         userRepository.Update(user);
         await userRepository.SaveChangesAsync(cancellationToken);
         return ToDto(user);
@@ -74,9 +75,30 @@ public class UserService(
     {
         var user = await userRepository.GetByIdAsync(userId, cancellationToken) ??
                    throw new EntityNotFoundException(nameof(User), userId);
-        user.SoftDelete(deletedBy);
-        await userRepository.SaveChangesAsync(cancellationToken);
-        return ToDto(user);
+
+        await unitOfWork.BeginTransaction(cancellationToken);
+        try
+        {
+            user.SoftDelete(deletedBy);
+            userRepository.Update(user);
+            await userRepository.SaveChangesAsync(cancellationToken);
+
+            var endUser = await endUserRepository.GetByUserIdAsync(userId, cancellationToken);
+            if (endUser is not null)
+            {
+                endUser.SoftDelete(deletedBy);
+                endUserRepository.Update(endUser);
+                await endUserRepository.SaveChangesAsync(cancellationToken);
+            }
+
+            await unitOfWork.CommitTransaction(cancellationToken);
+            return ToDto(user);
+        }
+        catch
+        {
+            await unitOfWork.RollbackTransaction(cancellationToken);
+            throw;
+        }
     }
 
     private static UserDto ToDto(User user)
@@ -86,7 +108,6 @@ public class UserService(
             user.LastName,
             user.UserName,
             user.MobileNumber,
-            user.IsMobileVerified,
-            user.PasswordHash
+            user.IsMobileVerified
         );
 }

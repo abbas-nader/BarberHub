@@ -6,6 +6,5 @@ public record UserDto(
     string LastName,
     string UserName,
     string? MobileNumber,
-    bool? IsMobileVerified,
-    string PasswordHash
+    bool? IsMobileVerified
 );
