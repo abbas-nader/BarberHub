@@ -25,9 +25,9 @@ public class SalonController(ISalonService salonService) : BaseController
 
     [HttpGet(SalonUriConstants.GetAllPaginated)]
     public async Task<ApiResult<PaginatedResponse<SalonResponse>>> GetAllPaginatedAsync(
-        [FromQuery] int pageNumber, [FromQuery] int pageSize, CancellationToken cancellationToken = default)
+        [FromQuery] PaginationRequest request, CancellationToken cancellationToken = default)
     {
-        var salons = await salonService.PaginatedGetAllAsync(pageNumber, pageSize, cancellationToken);
+        var salons = await salonService.PaginatedGetAllAsync(request.PageNumber, request.PageSize, cancellationToken);
         return salons.ToResponse(x => x.ToResponse());
     }
 
