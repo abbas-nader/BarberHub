@@ -23,6 +23,7 @@ public class UserController(IUserService userService, ICurrentUserService curren
     }
 
     [HttpPut(UserUriConstants.UpdateMe)]
+    [Authorize(Roles = nameof(UserRole.EndUser))]
     public async Task<ApiResult<UserResponse>> UpdateMeAsync([FromBody] UpdateUserRequest request,
         CancellationToken cancellationToken = default)
     {
