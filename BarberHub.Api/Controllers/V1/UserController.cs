@@ -22,31 +22,12 @@ public class UserController(IUserService userService, ICurrentUserService curren
         return user.ToResponse();
     }
 
-    [HttpPut(UserUriConstants.UpdateMe)]
-    [Authorize(Roles = nameof(UserRole.EndUser))]
-    public async Task<ApiResult<UserResponse>> UpdateMeAsync([FromBody] UpdateUserRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var userId = currentUserService.CurrentUser.UserId;
-        var user = await userService.UpdateAsync(userId, request.ToDto(), userId, cancellationToken);
-        return user.ToResponse();
-    }
-
     [HttpPatch(UserUriConstants.ChangePassword)]
     public async Task<ApiResult<UserResponse>> ChangePasswordAsync([FromBody] ChangePasswordRequest request,
         CancellationToken cancellationToken = default)
     {
         var userId = currentUserService.CurrentUser.UserId;
         var user = await userService.ChangePasswordAsync(userId, request.ToDto(), cancellationToken);
-        return user.ToResponse();
-    }
-
-    [HttpPatch(UserUriConstants.Delete)]
-    [Authorize(Roles = nameof(UserRole.EndUser))]
-    public async Task<ApiResult<UserResponse>> DeleteAsync(CancellationToken cancellationToken = default)
-    {
-        var userId = currentUserService.CurrentUser.UserId;
-        var user = await userService.DeleteAsync(userId, userId, cancellationToken);
         return user.ToResponse();
     }
 }

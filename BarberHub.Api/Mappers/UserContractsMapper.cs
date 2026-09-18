@@ -14,12 +14,4 @@ public static class UserContractsMapper
             dto.MobileNumber,
             dto.IsMobileVerified
         );
-
-    public static UpdateUserDto ToDto(this UpdateUserRequest request)
-        => new(
-            request.FirstName,
-            request.LastName,
-            request.UserName,
-            request.MobileNumber
-        );
 }
