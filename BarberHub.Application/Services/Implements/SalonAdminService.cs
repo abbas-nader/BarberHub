@@ -91,18 +91,15 @@ public class SalonAdminService(
 
     public async Task<SalonAdminDto> DeleteAsync(long salonAdminId, CancellationToken cancellationToken = default)
     {
-        var barber = await EnsureOwnedAsync(salonAdminId, cancellationToken);
+        var salonAdmin = await EnsureOwnedAsync(salonAdminId, cancellationToken);
         var currentUserId = currentUserService.CurrentUser.UserId;
+        if (salonAdmin.UserId == currentUserId)
+            throw new CannotDeleteOwnAccountException();
         await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
-            await userService.DeleteAsync(salonAdminId, currentUserService.CurrentUser.UserId, cancellationToken);
-            var salonAdmin = await EnsureOwnedAsync(salonAdminId, cancellationToken);
-            if (salonAdmin.UserId == currentUserId)
-                throw new CannotDeleteOwnAccountException();
             salonAdmin.SoftDelete(currentUserService.CurrentUser.UserId);
             await salonAdminRepository.SaveChangesAsync(cancellationToken);
-
             var userDto = await userService.DeleteAsync(salonAdmin.UserId, currentUserId, cancellationToken);
 
             await unitOfWork.CommitTransaction(cancellationToken);
