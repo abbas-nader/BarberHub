@@ -5,7 +5,6 @@ using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Jwt;
 using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
-using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 
 namespace BarberHub.Application.Services.Implements;
@@ -27,7 +26,7 @@ public class EndUserService(
     public async Task<EndUserDto> GetByIdAsync(long endUserId, CancellationToken cancellationToken = default)
     {
         var endUser = await endUserRepository.GetByIdAsync(endUserId, cancellationToken) ??
-                      throw new EntityNotFoundException(nameof(Barber), endUserId);
+                      throw new EntityNotFoundException(nameof(EndUser), endUserId);
         var user = await userRepository.GetByIdAsync(endUser.UserId, cancellationToken) ??
                    throw new EntityNotFoundException(nameof(User), endUser.UserId);
         return ToDto(endUser, user);
@@ -72,10 +71,10 @@ public class EndUserService(
         return ToDto(endUser, user);
     }
 
-    private async Task<EndUser> EnsureOwnedAsync(long barberId, CancellationToken cancellationToken)
+    private async Task<EndUser> EnsureOwnedAsync(long endUserId, CancellationToken cancellationToken)
     {
-        var endUser = await endUserRepository.GetByIdAsync(barberId, cancellationToken) ??
-                      throw new EntityNotFoundException(nameof(Barber), barberId);
+        var endUser = await endUserRepository.GetByIdAsync(endUserId, cancellationToken) ??
+                      throw new EntityNotFoundException(nameof(EndUser), endUserId);
         return endUser;
     }
 
