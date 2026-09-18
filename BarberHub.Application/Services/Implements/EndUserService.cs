@@ -33,34 +33,6 @@ public class EndUserService(
         return ToDto(endUser, user);
     }
 
-    public async Task<EndUserDto> CreateAsync(CreateEndUserDto createEndUserDto,
-        CancellationToken cancellationToken = default)
-    {
-        await unitOfWork.BeginTransaction(cancellationToken);
-        try
-        {
-            var userDto = await userService.CreateAsync(
-                new CreateUserDto(createEndUserDto.FirstName, createEndUserDto.LastName, createEndUserDto.UserName,
-                    createEndUserDto.Password, createEndUserDto.MobileNumber,
-                    UserRole.EndUser),
-                currentUserService.CurrentUser.UserId,
-                cancellationToken);
-
-            var endUser = new EndUser(userDto.Id, currentUserService.CurrentUser.UserId);
-            await endUserRepository.AddAsync(endUser, cancellationToken);
-            await endUserRepository.SaveChangesAsync(cancellationToken);
-
-            await unitOfWork.CommitTransaction(cancellationToken);
-            return new EndUserDto(endUser.Id, userDto.FirstName, userDto.LastName, userDto.UserName,
-                userDto.MobileNumber, userDto.IsMobileVerified);
-        }
-        catch
-        {
-            await unitOfWork.RollbackTransaction(cancellationToken);
-            throw;
-        }
-    }
-
     public async Task<EndUserDto> UpdateAsync(long endUserId, UpdateEndUserDto updateEndUserDto,
         CancellationToken cancellationToken = default)
     {
