@@ -34,20 +34,18 @@ public class EndUserController(IEndUserService endUserService) : BaseController
 
     [HttpPut(EndUserUriConstants.Update)]
     [Authorize(Roles = nameof(UserRole.EndUser))]
-    public async Task<ApiResult<EndUserResponse>> UpdateAsync([FromRoute] long endUserId,
-        [FromBody] UpdateEndUserRequest request,
+    public async Task<ApiResult<EndUserResponse>> UpdateAsync([FromBody] UpdateEndUserRequest request,
         CancellationToken cancellationToken = default)
     {
-        var endUser = await endUserService.UpdateAsync(endUserId, request.ToDto(), cancellationToken);
+        var endUser = await endUserService.UpdateAsync(request.ToDto(), cancellationToken);
         return endUser.ToResponse();
     }
 
-    [HttpPut(EndUserUriConstants.Delete)]
+    [HttpPatch(EndUserUriConstants.Delete)]
     [Authorize(Roles = nameof(UserRole.EndUser))]
-    public async Task<ApiResult<EndUserResponse>> DeleteAsync([FromRoute] long endUserId,
-        CancellationToken cancellationToken = default)
+    public async Task<ApiResult<EndUserResponse>> DeleteAsync(CancellationToken cancellationToken = default)
     {
-        var endUser = await endUserService.DeleteAsync(endUserId, cancellationToken);
+        var endUser = await endUserService.DeleteAsync(cancellationToken);
         return endUser.ToResponse();
     }
 }

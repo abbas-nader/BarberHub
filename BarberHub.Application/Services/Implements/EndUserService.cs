@@ -32,21 +32,22 @@ public class EndUserService(
         return ToDto(endUser, user);
     }
 
-    public async Task<EndUserDto> UpdateAsync(long endUserId, UpdateEndUserDto updateEndUserDto,
+    public async Task<EndUserDto> UpdateAsync(UpdateEndUserDto updateEndUserDto,
         CancellationToken cancellationToken = default)
     {
-        var endUser = await EnsureOwnedAsync(endUserId, cancellationToken);
+        var endUser = await GetCurrentEndUserAsync(cancellationToken);
+        var currentUserId = currentUserService.CurrentUser.UserId;
 
         await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
             var userDto = await userService.UpdateAsync(endUser.UserId,
-                new UpdateUserDto(updateEndUserDto.FirstName, updateEndUserDto.LastName, updateEndUserDto.UserName,
-                    updateEndUserDto.MobileNumber),
-                currentUserService.CurrentUser.UserId,
+                new UpdateUserDto(updateEndUserDto.FirstName, updateEndUserDto.LastName,
+                    updateEndUserDto.UserName, updateEndUserDto.MobileNumber),
+                currentUserId,
                 cancellationToken);
 
-            endUser.Modified(currentUserService.CurrentUser.UserId);
+            endUser.Modified(currentUserId);
             endUserRepository.Update(endUser);
             await endUserRepository.SaveChangesAsync(cancellationToken);
 
@@ -61,9 +62,9 @@ public class EndUserService(
         }
     }
 
-    public async Task<EndUserDto> DeleteAsync(long endUserId, CancellationToken cancellationToken = default)
+    public async Task<EndUserDto> DeleteAsync(CancellationToken cancellationToken = default)
     {
-        var endUser = await EnsureOwnedAsync(endUserId, cancellationToken);
+        var endUser = await GetCurrentEndUserAsync(cancellationToken);
         var currentUserId = currentUserService.CurrentUser.UserId;
 
         await unitOfWork.BeginTransaction(cancellationToken);
@@ -85,17 +86,12 @@ public class EndUserService(
             throw;
         }
     }
-
-    private async Task<EndUser> EnsureOwnedAsync(long endUserId, CancellationToken cancellationToken)
+    private async Task<EndUser> GetCurrentEndUserAsync(CancellationToken cancellationToken)
     {
-        var endUser = await endUserRepository.GetByIdAsync(endUserId, cancellationToken) ??
-                      throw new EntityNotFoundException(nameof(EndUser), endUserId);
-
-        return endUser.UserId != currentUserService.CurrentUser.UserId
-            ? throw new EntityNotFoundException(nameof(EndUser), endUserId)
-            : endUser;
+        var userId = currentUserService.CurrentUser.UserId;
+        return await endUserRepository.GetByUserIdAsync(userId, cancellationToken)
+               ?? throw new EntityNotFoundException(nameof(EndUser), userId);
     }
-
     private static EndUserDto ToDto(EndUser endUser, User user)
         => new(
             endUser.Id,
