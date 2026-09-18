@@ -75,21 +75,12 @@ public class UserService(
     {
         var user = await userRepository.GetByIdAsync(userId, cancellationToken) ??
                    throw new EntityNotFoundException(nameof(User), userId);
-
-        await unitOfWork.BeginTransaction(cancellationToken);
-        try
-        {
+        
             user.SoftDelete(deletedBy);
             userRepository.Update(user);
             await userRepository.SaveChangesAsync(cancellationToken);
             await unitOfWork.CommitTransaction(cancellationToken);
             return ToDto(user);
-        }
-        catch
-        {
-            await unitOfWork.RollbackTransaction(cancellationToken);
-            throw;
-        }
     }
 
     private static UserDto ToDto(User user)
