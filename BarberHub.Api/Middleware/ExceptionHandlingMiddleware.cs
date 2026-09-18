@@ -39,6 +39,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or ReviewNotApprovedException
             or InvalidAppointmentStatusTransitionException
             or CancellationWindowExpiredException
+            or CannotDeleteOwnAccountException
             or InsufficientMoneyException => HttpStatusCode.Conflict,
 
         RequiredFieldException
