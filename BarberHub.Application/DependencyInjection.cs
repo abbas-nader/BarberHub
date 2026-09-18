@@ -20,5 +20,6 @@ public static class DependencyInjection
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<IGalleryService, GalleryService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IEndUserService, EndUserService>();
     }
 }
