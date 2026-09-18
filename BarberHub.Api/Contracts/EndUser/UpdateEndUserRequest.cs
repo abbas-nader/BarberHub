@@ -1,6 +1,6 @@
-namespace BarberHub.Api.Contracts.User;
+namespace BarberHub.Api.Contracts.EndUser;
 
-public record UpdateUserRequest(
+public record UpdateEndUserRequest(
     string FirstName,
     string LastName,
     string UserName,
