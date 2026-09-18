@@ -91,12 +91,23 @@ public class SalonAdminService(
 
     public async Task<SalonAdminDto> DeleteAsync(long salonAdminId, CancellationToken cancellationToken = default)
     {
-        var salonAdmin = await EnsureOwnedAsync(salonAdminId, cancellationToken);
-        salonAdmin.SoftDelete(currentUserService.CurrentUser.UserId);
-        await salonAdminRepository.SaveChangesAsync(cancellationToken);
-        var user = await userRepository.GetByIdAsync(salonAdmin.UserId, cancellationToken) ??
-                   throw new EntityNotFoundException(nameof(User), salonAdmin.UserId);
-        return ToDto(salonAdmin, user);
+        var barber = await EnsureOwnedAsync(salonAdminId, cancellationToken);
+        await unitOfWork.BeginTransaction(cancellationToken);
+        try
+        {
+            await userService.DeleteAsync(salonAdminId, currentUserService.CurrentUser.UserId, cancellationToken);
+            var salonAdmin = await EnsureOwnedAsync(salonAdminId, cancellationToken);
+            salonAdmin.SoftDelete(currentUserService.CurrentUser.UserId);
+            await salonAdminRepository.SaveChangesAsync(cancellationToken);
+            var user = await userRepository.GetByIdAsync(salonAdmin.UserId, cancellationToken) ??
+                       throw new EntityNotFoundException(nameof(User), salonAdmin.UserId);
+            return ToDto(salonAdmin, user);
+        }
+        catch
+        {
+            await unitOfWork.RollbackTransaction(cancellationToken);
+            throw;
+        }
     }
 
     private async Task<SalonAdmin> EnsureOwnedAsync(long salonAdminId, CancellationToken cancellationToken)

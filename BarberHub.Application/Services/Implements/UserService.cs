@@ -82,15 +82,6 @@ public class UserService(
             user.SoftDelete(deletedBy);
             userRepository.Update(user);
             await userRepository.SaveChangesAsync(cancellationToken);
-
-            var endUser = await endUserRepository.GetByUserIdAsync(userId, cancellationToken);
-            if (endUser is not null)
-            {
-                endUser.SoftDelete(deletedBy);
-                endUserRepository.Update(endUser);
-                await endUserRepository.SaveChangesAsync(cancellationToken);
-            }
-
             await unitOfWork.CommitTransaction(cancellationToken);
             return ToDto(user);
         }

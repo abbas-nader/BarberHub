@@ -93,11 +93,21 @@ public class BarberService(
     public async Task<BarberDto> DeleteAsync(long barberId, CancellationToken cancellationToken = default)
     {
         var barber = await EnsureOwnedAsync(barberId, cancellationToken);
-        barber.SoftDelete(currentUserService.CurrentUser.UserId);
-        await barberRepository.SaveChangesAsync(cancellationToken);
-        var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken) ??
-                   throw new EntityNotFoundException(nameof(User), barber.UserId);
-        return ToDto(barber, user);
+        await unitOfWork.BeginTransaction(cancellationToken);
+        try
+        {
+            await userService.DeleteAsync(barberId, currentUserService.CurrentUser.UserId, cancellationToken);
+            barber.SoftDelete(currentUserService.CurrentUser.UserId);
+            await barberRepository.SaveChangesAsync(cancellationToken);
+            var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken) ??
+                       throw new EntityNotFoundException(nameof(User), barber.UserId);
+            return ToDto(barber, user);
+        }
+        catch
+        {
+            await unitOfWork.RollbackTransaction(cancellationToken);
+            throw;
+        }
     }
 
     public async Task<BarberDto> ActivateAsync(long barberId, CancellationToken cancellationToken = default)
@@ -117,6 +127,7 @@ public class BarberService(
         var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken);
         return ToDto(barber, user!);
     }
+
     private async Task<Barber> EnsureOwnedAsync(long barberId, CancellationToken cancellationToken)
     {
         var barber = await barberRepository.GetByIdAsync(barberId, cancellationToken) ??
