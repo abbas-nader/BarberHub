@@ -93,15 +93,19 @@ public class BarberService(
     public async Task<BarberDto> DeleteAsync(long barberId, CancellationToken cancellationToken = default)
     {
         var barber = await EnsureOwnedAsync(barberId, cancellationToken);
+        var currentUserId = currentUserService.CurrentUser.UserId;
+        
         await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
             await userService.DeleteAsync(barberId, currentUserService.CurrentUser.UserId, cancellationToken);
             barber.SoftDelete(currentUserService.CurrentUser.UserId);
             await barberRepository.SaveChangesAsync(cancellationToken);
-            var user = await userRepository.GetByIdAsync(barber.UserId, cancellationToken) ??
-                       throw new EntityNotFoundException(nameof(User), barber.UserId);
-            return ToDto(barber, user);
+            var userDto = await userService.DeleteAsync(barber.UserId, currentUserId, cancellationToken);
+
+            await unitOfWork.CommitTransaction(cancellationToken);
+            return new BarberDto(barber.Id, userDto.FirstName, userDto.LastName, userDto.MobileNumber!,
+                barber.Description, barber.IsActive);
         }
         catch
         {
