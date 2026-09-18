@@ -1,5 +1,4 @@
-﻿using BarberHub.Application.Services;
-using BarberHub.Application.Services.Implements;
+﻿using BarberHub.Application.Services.Implements;
 using BarberHub.Application.Services.InterFaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,5 +20,6 @@ public static class DependencyInjection
         services.AddScoped<IGalleryService, GalleryService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IEndUserService, EndUserService>();
+        services.AddScoped<IPlatformAdminService, PlatformAdminService>();
     }
 }
