@@ -42,7 +42,7 @@ public class BarberService(
         try
         {
             var userDto = await userService.CreateAsync(
-                new CreateUserDto(dto.FirstName, dto.LastName, dto.Username, dto.Password, dto.MobileNumber,
+                new CreateUserDto(dto.FirstName, dto.LastName, dto.UserName, dto.Password, dto.MobileNumber,
                     UserRole.Barber),
                 currentUserService.CurrentUser.UserId,
                 cancellationToken);

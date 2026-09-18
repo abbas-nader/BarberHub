@@ -4,7 +4,7 @@ public record CreateBarberDto(
     string FirstName,
     string LastName,
     string MobileNumber,
-    string Username,
+    string UserName,
     string Password,
     string? Description
 );
