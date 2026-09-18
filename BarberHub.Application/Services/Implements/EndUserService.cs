@@ -64,18 +64,36 @@ public class EndUserService(
     public async Task<EndUserDto> DeleteAsync(long endUserId, CancellationToken cancellationToken = default)
     {
         var endUser = await EnsureOwnedAsync(endUserId, cancellationToken);
-        endUser.SoftDelete(currentUserService.CurrentUser.UserId);
-        await endUserRepository.SaveChangesAsync(cancellationToken);
-        var user = await userRepository.GetByIdAsync(endUser.UserId, cancellationToken) ??
-                   throw new EntityNotFoundException(nameof(User), endUser.UserId);
-        return ToDto(endUser, user);
+        var currentUserId = currentUserService.CurrentUser.UserId;
+
+        await unitOfWork.BeginTransaction(cancellationToken);
+        try
+        {
+            endUser.SoftDelete(currentUserId);
+            endUserRepository.Update(endUser);
+            await endUserRepository.SaveChangesAsync(cancellationToken);
+
+            var userDto = await userService.DeleteAsync(endUser.UserId, currentUserId, cancellationToken);
+
+            await unitOfWork.CommitTransaction(cancellationToken);
+            return new EndUserDto(endUser.Id, userDto.FirstName, userDto.LastName, userDto.UserName,
+                userDto.MobileNumber, userDto.IsMobileVerified);
+        }
+        catch
+        {
+            await unitOfWork.RollbackTransaction(cancellationToken);
+            throw;
+        }
     }
 
     private async Task<EndUser> EnsureOwnedAsync(long endUserId, CancellationToken cancellationToken)
     {
         var endUser = await endUserRepository.GetByIdAsync(endUserId, cancellationToken) ??
                       throw new EntityNotFoundException(nameof(EndUser), endUserId);
-        return endUser;
+
+        return endUser.UserId != currentUserService.CurrentUser.UserId
+            ? throw new EntityNotFoundException(nameof(EndUser), endUserId)
+            : endUser;
     }
 
     private static EndUserDto ToDto(EndUser endUser, User user)
