@@ -61,30 +61,28 @@ public class PlatformAdminService(
         }
     }
 
-    public async Task<PlatformAdminDto> UpdateAsync(long platformAdminId, UpdatePlatformAdminDto dto,
+    public async Task<PlatformAdminDto> UpdateAsync( UpdatePlatformAdminDto dto,
         CancellationToken cancellationToken = default)
     {
+        var platformAdmin = await GetCurrentEndUserAsync(cancellationToken);
         var currentUserId = currentUserService.CurrentUser.UserId;
-        var admin = await platformAdminRepository.GetByIdAsync(platformAdminId, cancellationToken) ??
-                    throw new EntityNotFoundException(nameof(PlatformAdmin), platformAdminId);
-
-        if (admin.UserId != currentUserId)
-            throw new EntityNotFoundException(nameof(PlatformAdmin), platformAdminId);
+       if (platformAdmin.UserId != currentUserId)
+            throw new EntityNotFoundException(nameof(PlatformAdmin), currentUserId);
 
         await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
-            var userDto = await userService.UpdateAsync(admin.UserId,
+            var userDto = await userService.UpdateAsync(platformAdmin.UserId,
                 new UpdateUserDto(dto.FirstName, dto.LastName, dto.UserName, null),
                 currentUserId,
                 cancellationToken);
 
-            admin.Modified(currentUserId);
-            platformAdminRepository.Update(admin);
+            platformAdmin.Modified(currentUserId);
+            platformAdminRepository.Update(platformAdmin);
             await platformAdminRepository.SaveChangesAsync(cancellationToken);
 
             await unitOfWork.CommitTransaction(cancellationToken);
-            return new PlatformAdminDto(admin.Id, userDto.FirstName, userDto.LastName, userDto.UserName);
+            return new PlatformAdminDto(platformAdmin.Id, userDto.FirstName, userDto.LastName, userDto.UserName);
         }
         catch
         {
@@ -93,33 +91,37 @@ public class PlatformAdminService(
         }
     }
 
-    public async Task<PlatformAdminDto> DeleteAsync(long platformAdminId,
-        CancellationToken cancellationToken = default)
+    public async Task<PlatformAdminDto> DeleteAsync(CancellationToken cancellationToken = default)
     {
+        var platformAdmin = await GetCurrentEndUserAsync(cancellationToken);
         var currentUserId = currentUserService.CurrentUser.UserId;
-        var admin = await platformAdminRepository.GetByIdAsync(platformAdminId, cancellationToken) ??
-                    throw new EntityNotFoundException(nameof(PlatformAdmin), platformAdminId);
-
-        if (admin.UserId == currentUserId)
+       if (platformAdmin.UserId == currentUserId)
             throw new CannotDeleteOwnAccountException();
 
         await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
-            admin.SoftDelete(currentUserId);
-            platformAdminRepository.Update(admin);
+            platformAdmin.SoftDelete(currentUserId);
+            platformAdminRepository.Update(platformAdmin);
             await platformAdminRepository.SaveChangesAsync(cancellationToken);
 
-            var userDto = await userService.DeleteAsync(admin.UserId, currentUserId, cancellationToken);
+            var userDto = await userService.DeleteAsync(platformAdmin.UserId, currentUserId, cancellationToken);
 
             await unitOfWork.CommitTransaction(cancellationToken);
-            return new PlatformAdminDto(admin.Id, userDto.FirstName, userDto.LastName, userDto.UserName);
+            return new PlatformAdminDto(platformAdmin.Id, userDto.FirstName, userDto.LastName, userDto.UserName);
         }
         catch
         {
             await unitOfWork.RollbackTransaction(cancellationToken);
             throw;
         }
+    }
+
+    private async Task<PlatformAdmin> GetCurrentEndUserAsync(CancellationToken cancellationToken)
+    {
+        var userId = currentUserService.CurrentUser.UserId;
+        return await platformAdminRepository.GetByUserIdAsync(userId, cancellationToken)
+               ?? throw new EntityNotFoundException(nameof(EndUser), userId);
     }
 
     private static PlatformAdminDto ToDto(PlatformAdmin admin, User user)

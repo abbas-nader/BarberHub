@@ -10,8 +10,8 @@ public interface IPlatformAdminService
     Task<PlatformAdminDto> CreateAsync(CreatePlatformAdminDto createPlatformAdminDto,
         CancellationToken cancellationToken = default);
 
-    Task<PlatformAdminDto> UpdateAsync(long platformAdminId, UpdatePlatformAdminDto createPlatformAdminDto,
+    Task<PlatformAdminDto> UpdateAsync(UpdatePlatformAdminDto createPlatformAdminDto,
         CancellationToken cancellationToken = default);
 
-    Task<PlatformAdminDto> DeleteAsync(long platformAdminId, CancellationToken cancellationToken = default);
+    Task<PlatformAdminDto> DeleteAsync(CancellationToken cancellationToken = default);
 }
