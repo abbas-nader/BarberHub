@@ -95,7 +95,6 @@ public class GalleryService(
         if (gallery.SalonId != salonId)
             throw new EntityNotFoundException(nameof(Gallery), galleryId);
         await unitOfWork.BeginTransaction(cancellationToken);
-        await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
             gallery.SoftDelete(currentUserService.CurrentUser.UserId);
