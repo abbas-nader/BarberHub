@@ -4,6 +4,7 @@ using BarberHub.Domain.Constants;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Enums;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Seed;
 
@@ -12,29 +13,29 @@ public class DataSeeder(
     IPlatformRepository platformAdminRepository,
     IPasswordHasher passwordHasher,
     IUnitOfWork unitOfWork,
+    IOptions<SeedAdminSetting> options,
     ILogger<DataSeeder> logger) : IDataSeeder
 {
-    private const string DefaultUsername = "abbasnader";
-    private const string DefaultPassword = "1234";
-    private const string DefaultFirstName = "abbas";
-    private const string DefaultLastName = "nader";
+    private readonly SeedAdminSetting _setting = options.Value;
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        if (await userRepository.ExistsByUserNameAsync(DefaultUsername, cancellationToken))
+        if (await userRepository.ExistsByUserNameAsync(_setting.UserName, cancellationToken))
         {
             logger.LogInformation("Platform admin already seeded, skipping.");
             return;
         }
 
+        if (string.IsNullOrWhiteSpace(_setting.UserName) || string.IsNullOrWhiteSpace(_setting.Password))
+            throw new InvalidOperationException(
+                $"{SeedAdminSetting.SectionName}:UserName and {SeedAdminSetting.SectionName}:Password must be configured.");
+
         await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
-            var passwordHash = passwordHasher.Hash(DefaultPassword);
-            var user = new User(
-                DefaultFirstName,
-                DefaultLastName, DefaultUsername, passwordHash, UserRole.PlatformAdmin, null,
-                SystemConstants.SystemUserId);
+            var passwordHash = passwordHasher.Hash(_setting.Password);
+            var user = new User(_setting.FirstName, _setting.LastName, _setting.UserName, passwordHash,
+                UserRole.PlatformAdmin, null, SystemConstants.SystemUserId);
             await userRepository.AddAsync(user, cancellationToken);
             await userRepository.SaveChangesAsync(cancellationToken);
 

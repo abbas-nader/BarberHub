@@ -69,6 +69,10 @@ public static class DependencyInjection
         services.Configure<JwtSetting>(configuration.GetSection(JwtSetting.JwtSettingsSectionName));
     }
 
+    private static void AddDataSeeder(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<SeedAdminSetting>(configuration.GetSection(SeedAdminSetting.SectionName));
+    }
     private static void AddArvanStorage(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<ArvanCloudSetting>(configuration.GetSection(ArvanCloudSetting.SectionName));
