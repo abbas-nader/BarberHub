@@ -66,9 +66,7 @@ public class PlatformAdminService(
     {
         var platformAdmin = await GetCurrentEndUserAsync(cancellationToken);
         var currentUserId = currentUserService.CurrentUser.UserId;
-       if (platformAdmin.UserId != currentUserId)
-            throw new EntityNotFoundException(nameof(PlatformAdmin), currentUserId);
-
+      
         await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
@@ -91,11 +89,12 @@ public class PlatformAdminService(
         }
     }
 
-    public async Task<PlatformAdminDto> DeleteAsync(CancellationToken cancellationToken = default)
+    public async Task<PlatformAdminDto> DeleteAsync(long platformAdminId,CancellationToken cancellationToken = default)
     {
-        var platformAdmin = await GetCurrentEndUserAsync(cancellationToken);
+        var platformAdmin = await platformAdminRepository.GetByIdAsync(platformAdminId, cancellationToken) ??
+                            throw new EntityNotFoundException(nameof(PlatformAdmin), platformAdminId);
         var currentUserId = currentUserService.CurrentUser.UserId;
-       if (platformAdmin.UserId == currentUserId)
+        if (platformAdmin.UserId == currentUserId)
             throw new CannotDeleteOwnAccountException();
 
         await unitOfWork.BeginTransaction(cancellationToken);

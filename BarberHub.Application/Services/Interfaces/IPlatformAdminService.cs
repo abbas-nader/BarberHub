@@ -13,5 +13,5 @@ public interface IPlatformAdminService
     Task<PlatformAdminDto> UpdateAsync(UpdatePlatformAdminDto createPlatformAdminDto,
         CancellationToken cancellationToken = default);
 
-    Task<PlatformAdminDto> DeleteAsync(CancellationToken cancellationToken = default);
+    Task<PlatformAdminDto> DeleteAsync(long platformAdminId,CancellationToken cancellationToken = default);
 }
