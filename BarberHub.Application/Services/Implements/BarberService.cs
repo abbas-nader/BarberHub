@@ -98,7 +98,6 @@ public class BarberService(
         await unitOfWork.BeginTransaction(cancellationToken);
         try
         {
-            await userService.DeleteAsync(barber.UserId, currentUserService.CurrentUser.UserId, cancellationToken);
             barber.SoftDelete(currentUserService.CurrentUser.UserId);
             await barberRepository.SaveChangesAsync(cancellationToken);
             var userDto = await userService.DeleteAsync(barber.UserId, currentUserId, cancellationToken);
