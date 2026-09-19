@@ -79,7 +79,6 @@ public class UserService(
             user.SoftDelete(deletedBy);
             userRepository.Update(user);
             await userRepository.SaveChangesAsync(cancellationToken);
-            await unitOfWork.CommitTransaction(cancellationToken);
             return ToDto(user);
     }
 
