@@ -1,4 +1,5 @@
 ﻿using BarberHub.Domain.Enums;
+using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Domain.Entities;
@@ -31,7 +32,7 @@ public class User : BaseEntity
         if (mobileNumber is not null && Role != UserRole.PlatformAdmin)
         {
             MobileNumber = mobileNumber;
-            IsMobileVerified = true;
+            IsMobileVerified = Role != UserRole.EndUser;
         }
 
         Creation(creationBy);
@@ -55,16 +56,25 @@ public class User : BaseEntity
         PasswordHash = passwordHash;
         Modified(modifiedBy);
     }
+    public void VerifyMobileNumber(long modifiedBy)
+    {
+        if (string.IsNullOrWhiteSpace(MobileNumber))
+            throw new RequiredFieldException(nameof(MobileNumber));
 
-    public void RequestMobileNumberChange(string newMobileNumber, long modifiedBy)
+        if (IsMobileVerified == true)
+            throw new MobileNumberAlreadyInUseException();
+
+        IsMobileVerified = true;
+        Modified(modifiedBy);
+    }
+    public void ChangeMobileNumber(string newMobileNumber, long modifiedBy)
     {
         ValidateMobileNumber(newMobileNumber);
-        if (newMobileNumber == MobileNumber) return;
+
         MobileNumber = newMobileNumber;
         IsMobileVerified = true;
         Modified(modifiedBy);
     }
-
     private static void ValidateName(string firstName, string lastName)
     {
         if (string.IsNullOrWhiteSpace(firstName)) throw new RequiredFieldException(nameof(firstName));
