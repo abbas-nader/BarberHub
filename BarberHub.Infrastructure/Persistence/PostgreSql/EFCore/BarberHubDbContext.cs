@@ -22,6 +22,7 @@ public class BarberHubDbContext(DbContextOptions<BarberHubDbContext> options) : 
     public DbSet<PlatformAdmin> PlatformAdmins { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<EndUser> EndUsers { get; set; }
+    public DbSet<OtpHistory> OtpHistories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

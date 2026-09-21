@@ -48,6 +48,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEndUserRepository, EndUserRepository>();
         services.AddScoped<IDataSeeder, DataSeeder>();
+        services.AddScoped<IOtpHistoryRepository, OtpHistoryRepository>();
 
         services.AddMongo(configuration);
         services.AddJwt(configuration);
