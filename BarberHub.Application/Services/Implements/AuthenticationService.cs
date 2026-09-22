@@ -1,8 +1,8 @@
 ﻿using BarberHub.Application.DTOs.Auth;
 using BarberHub.Application.DTOs.User;
 using BarberHub.Application.Repositories;
+using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Security.Hash;
-using BarberHub.Application.Security.Jwt;
 using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Constants;
 using BarberHub.Domain.Entities;

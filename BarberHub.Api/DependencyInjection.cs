@@ -3,7 +3,7 @@ using Asp.Versioning;
 using BarberHub.Api.Contracts;
 using BarberHub.Api.Filters;
 using BarberHub.Api.Security;
-using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Security.Authentication;
 using BarberHub.Infrastructure.Security.Jwt;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

@@ -1,4 +1,4 @@
-﻿namespace BarberHub.Application.Security.Jwt;
+﻿namespace BarberHub.Application.Security.Authentication;
 
 public interface IJwtGenerator
 {

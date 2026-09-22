@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Security.Authentication;
 using BarberHub.Domain.Exceptions.SharedExceptions;
 
 namespace BarberHub.Infrastructure.Security.Jwt;

@@ -1,6 +1,6 @@
 ﻿using BarberHub.Api.Contracts.Auth;
 using BarberHub.Application.DTOs.Auth;
-using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Security.Authentication;
 
 namespace BarberHub.Api.Mappers;
 

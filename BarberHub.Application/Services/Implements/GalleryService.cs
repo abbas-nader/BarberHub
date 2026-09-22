@@ -1,7 +1,7 @@
 using BarberHub.Application.DTOs.File;
 using BarberHub.Application.DTOs.Gallery;
 using BarberHub.Application.Repositories;
-using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;

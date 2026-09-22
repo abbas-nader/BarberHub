@@ -4,7 +4,7 @@ using BarberHub.Api.Contracts;
 using BarberHub.Api.Contracts.Shared;
 using BarberHub.Api.Contracts.User;
 using BarberHub.Api.Mappers;
-using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;

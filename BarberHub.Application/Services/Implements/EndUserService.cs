@@ -2,7 +2,7 @@ using BarberHub.Application.DTOs.Barber;
 using BarberHub.Application.DTOs.EndUser;
 using BarberHub.Application.DTOs.User;
 using BarberHub.Application.Repositories;
-using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;

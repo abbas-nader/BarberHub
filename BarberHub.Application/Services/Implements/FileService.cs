@@ -1,7 +1,7 @@
 ﻿using BarberHub.Application.Constants;
 using BarberHub.Application.DTOs.File;
 using BarberHub.Application.Repositories;
-using BarberHub.Application.Security.Jwt;
+using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Services.InterFaces;
 using BarberHub.Application.Storage;
 using BarberHub.Domain.Constants;

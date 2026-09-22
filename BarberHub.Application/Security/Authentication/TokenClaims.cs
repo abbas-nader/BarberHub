@@ -1,6 +1,6 @@
 ﻿using BarberHub.Domain.Enums;
 
-namespace BarberHub.Application.Security.Jwt;
+namespace BarberHub.Application.Security.Authentication;
 
 public record TokenClaims(
         long UserId,

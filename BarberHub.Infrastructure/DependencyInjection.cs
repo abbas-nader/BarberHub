@@ -1,7 +1,7 @@
 ﻿using Amazon.S3;
 using BarberHub.Application.Repositories;
+using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Security.Hash;
-using BarberHub.Application.Security.Jwt;
 using BarberHub.Application.Storage;
 using BarberHub.Infrastructure.BackgroundJobs;
 using BarberHub.Infrastructure.Persistence.Mongo;
