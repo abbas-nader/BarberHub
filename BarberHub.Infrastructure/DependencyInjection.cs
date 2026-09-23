@@ -2,6 +2,8 @@
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Security.Hash;
+using BarberHub.Application.Security.Otp;
+using BarberHub.Application.Sms;
 using BarberHub.Application.Storage;
 using BarberHub.Infrastructure.BackgroundJobs;
 using BarberHub.Infrastructure.Persistence.Mongo;
@@ -11,9 +13,12 @@ using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Repositories;
 using BarberHub.Infrastructure.Persistence.PostgreSql.EFCore.Seed;
 using BarberHub.Infrastructure.Security.Hash;
 using BarberHub.Infrastructure.Security.Jwt;
+using BarberHub.Infrastructure.Security.Otp;
+using BarberHub.Infrastructure.Sms.Kavenegar;
 using BarberHub.Infrastructure.Storage;
 using BarberHub.Infrastructure.Storage.ArvanCloud;
 using BarberHub.Infrastructure.Storage.Local;
+using Kavenegar;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -53,6 +58,9 @@ public static class DependencyInjection
         services.AddMongo(configuration);
         services.AddJwt(configuration);
         services.AddArvanStorage(configuration);
+        services.AddDataSeeder(configuration);
+        services.AddOtp(configuration);
+        services.AddKavenegarSmsSender(configuration);
     }
 
     private static void AddMongo(this IServiceCollection services, IConfiguration configuration)
@@ -96,5 +104,23 @@ public static class DependencyInjection
         services.AddScoped<IFileStorageService, ResilientFileStorageService>();
 
         services.AddHostedService<FileStorageReconciliationJob>();
+    }
+
+    private static void AddOtp(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<OtpSetting>(configuration.GetSection(OtpSetting.SectionName));
+    }
+
+    private static void AddKavenegarSmsSender(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<IOtpCodeService, OtpCodeService>();
+        services.AddHttpClient<IKavenegarApi, KavenegarApi>((httpClient, sp) =>
+            {
+                var setting = sp.GetRequiredService<IOptions<KavenegarSetting>>().Value;
+                httpClient.Timeout = TimeSpan.FromSeconds(10);
+                return new KavenegarApi(new KavenegarOptions { ApiKey = setting.ApiKey }, httpClient);
+            })
+            .RemoveAllLoggers();
+        services.AddScoped<ISmsSender, KavenegarSmsSender>();
     }
 }
