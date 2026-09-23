@@ -1,3 +1,4 @@
+using BarberHub.Domain.Constants;
 using BarberHub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -22,7 +23,11 @@ public class OtpHistoryConfiguration : IEntityTypeConfiguration<OtpHistory>
             .IsRequired();
         builder.Property(x => x.ResolvedAt)
             .IsRequired(false);
-
+        builder.Property(x => x.CodeHash)
+            .HasMaxLength(OtpConstants.CodeHashLength)
+            .IsRequired();
+        builder.Property(x => x.FailedAttempts)
+            .IsRequired();
         builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(x => x.UserId)
