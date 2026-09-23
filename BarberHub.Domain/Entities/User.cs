@@ -45,8 +45,12 @@ public class User : BaseEntity
         FirstName = firstName;
         LastName = lastName;
         UserName = userName;
-        if (mobileNumber is not null)
+        if (mobileNumber is not null && !string.Equals(mobileNumber, MobileNumber, StringComparison.Ordinal))
+        {
             MobileNumber = mobileNumber;
+            IsMobileVerified = Role != UserRole.EndUser;
+        }
+
         Modified(modifiedBy);
     }
 
@@ -56,17 +60,19 @@ public class User : BaseEntity
         PasswordHash = passwordHash;
         Modified(modifiedBy);
     }
+
     public void VerifyMobileNumber(long modifiedBy)
     {
         if (string.IsNullOrWhiteSpace(MobileNumber))
             throw new RequiredFieldException(nameof(MobileNumber));
 
         if (IsMobileVerified == true)
-            throw new MobileNumberAlreadyInUseException();
+            throw new MobileNumberAlreadyVerifiedException();
 
         IsMobileVerified = true;
         Modified(modifiedBy);
     }
+
     public void ChangeMobileNumber(string newMobileNumber, long modifiedBy)
     {
         ValidateMobileNumber(newMobileNumber);
@@ -75,6 +81,7 @@ public class User : BaseEntity
         IsMobileVerified = true;
         Modified(modifiedBy);
     }
+
     private static void ValidateName(string firstName, string lastName)
     {
         if (string.IsNullOrWhiteSpace(firstName)) throw new RequiredFieldException(nameof(firstName));
