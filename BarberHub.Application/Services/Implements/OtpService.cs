@@ -56,6 +56,13 @@ public class OtpService(
             await otpHistoryRepository.SaveChangesAsync(CancellationToken.None);
             throw;
         }
+        var previous = await otpHistoryRepository.GetAllIssuedAsync(Purpose, userId, CancellationToken.None);
+        foreach (var old in previous.Where(x => x.Id != otp.Id))
+        {
+            old.Supersede();
+            otpHistoryRepository.Update(old);
+        }
+        await otpHistoryRepository.SaveChangesAsync(CancellationToken.None);
     }
 
     public async Task VerifyMobileAsync(VerifyOtpDto dto, CancellationToken cancellationToken = default)
