@@ -23,7 +23,8 @@ public class ApiResult(bool success, int status, object? error = null, string? l
 
         if (location is not null)
             context.HttpContext.Response.Headers.Location = location;
-
+        if (Status == StatusCodes.Status204NoContent)
+            return new StatusCodeResult(Status).ExecuteResultAsync(context);
         return new ObjectResult(this)
         {
             StatusCode = Status
@@ -31,7 +32,7 @@ public class ApiResult(bool success, int status, object? error = null, string? l
     }
 }
 
-public class ApiResult<T>(T? data,bool success, int status, object? error= null, string? location = null)
+public class ApiResult<T>(T? data, bool success, int status, object? error = null, string? location = null)
     : ApiResult(success, status, error, location)
 {
     public T? Data { get; } = data;

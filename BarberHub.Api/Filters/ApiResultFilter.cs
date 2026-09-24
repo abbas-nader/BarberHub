@@ -36,9 +36,7 @@ public class ApiResultFilter : IAsyncResultFilter
                     { StatusCode = statusCode };
                 break;
             case NoContentResult:
-                statusCode = StatusCodes.Status204NoContent;
-                context.Result = new ObjectResult(ApiResult.NoContent())
-                    { StatusCode = statusCode };
+                context.Result = new StatusCodeResult(StatusCodes.Status204NoContent);
                 break;
             case ObjectResult { StatusCode: not null } objectResult:
                 statusCode = objectResult.StatusCode.Value;
