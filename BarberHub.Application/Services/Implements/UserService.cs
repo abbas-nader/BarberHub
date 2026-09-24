@@ -4,6 +4,7 @@ using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Services.InterFaces;
 using BarberHub.Domain.Entities;
+using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
 
 namespace BarberHub.Application.Services.Implements;
@@ -11,8 +12,7 @@ namespace BarberHub.Application.Services.Implements;
 public class UserService(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    IEndUserRepository endUserRepository,
-    IUnitOfWork unitOfWork) : IUserService
+    IOtpHistoryRepository otpHistoryRepository) : IUserService
 {
     public async Task<UserDto> GetByIdAsync(long userId, CancellationToken cancellationToken = default)
     {
@@ -48,6 +48,22 @@ public class UserService(
                 throw new DuplicateUserNameException();
         }
 
+        var mobileChanged = dto.MobileNumber is not null &&
+                            !string.Equals(user.MobileNumber, dto.MobileNumber, StringComparison.Ordinal);
+
+        user.Update(dto.FirstName, dto.LastName, dto.UserName, dto.MobileNumber, modifiedBy);
+
+        if (mobileChanged)
+        {
+            var activeCodes = await otpHistoryRepository.GetAllIssuedAsync(
+                OtpPurpose.MobileVerification, userId, cancellationToken);
+            foreach (var otp in activeCodes)
+            {
+                otp.Supersede();
+                otpHistoryRepository.Update(otp);
+            }
+        }
+
         user.Update(dto.FirstName, dto.LastName, dto.UserName, dto.MobileNumber, modifiedBy);
         userRepository.Update(user);
         await userRepository.SaveChangesAsync(cancellationToken);
@@ -74,11 +90,11 @@ public class UserService(
     {
         var user = await userRepository.GetByIdAsync(userId, cancellationToken) ??
                    throw new EntityNotFoundException(nameof(User), userId);
-        
-            user.SoftDelete(deletedBy);
-            userRepository.Update(user);
-            await userRepository.SaveChangesAsync(cancellationToken);
-            return ToDto(user);
+
+        user.SoftDelete(deletedBy);
+        userRepository.Update(user);
+        await userRepository.SaveChangesAsync(cancellationToken);
+        return ToDto(user);
     }
 
     private static UserDto ToDto(User user)
