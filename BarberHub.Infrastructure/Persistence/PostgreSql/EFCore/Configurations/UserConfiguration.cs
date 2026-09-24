@@ -29,6 +29,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             builder.Property(x => x.MobileNumber)
                 .HasMaxLength(UserConstants.MobileNumberMaxLength);
 
-            builder.HasIndex(x => x.UserName).IsUnique();
+            builder.HasIndex(x => x.UserName)
+                .IsUnique()
+                .HasFilter("\"IsDeleted\" = false");
         }
 }
