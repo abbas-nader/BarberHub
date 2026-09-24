@@ -28,7 +28,10 @@ public class OtpCodeService(IOptions<OtpSetting> options) : IOtpCodeService
         {
             actual = Convert.FromHexString(codeHash);
         }
-        catch (FormatException) { return false; }
+        catch (FormatException)
+        {
+            return false;
+        }
 
         return CryptographicOperations.FixedTimeEquals(expected, actual);
     }
