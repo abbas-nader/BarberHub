@@ -3,6 +3,7 @@ using BarberHub.Application.Repositories;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Exceptions;
 using BarberHub.Domain.Exceptions.SharedExceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarberHub.Api.Middleware;
 
@@ -40,6 +41,8 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or InvalidAppointmentStatusTransitionException
             or CancellationWindowExpiredException
             or CannotDeleteOwnAccountException
+            or MobileNumberAlreadyVerifiedException
+            or DbUpdateConcurrencyException
             or InsufficientMoneyException => HttpStatusCode.Conflict,
 
         RequiredFieldException
@@ -57,8 +60,13 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or FileSizeLimitExceededException
             or UnsupportedFileTypeException
             or InvalidBarberDescriptionException
+            or InvalidOtpCodeException
+            or OtpExpiredException
             or CurrencyMismatchException => HttpStatusCode.BadRequest,
 
+        OtpRateLimitExceededException => HttpStatusCode.TooManyRequests,
+
+        SmsSendFailedException => HttpStatusCode.BadGateway,
         _ => HttpStatusCode.InternalServerError
     };
 
