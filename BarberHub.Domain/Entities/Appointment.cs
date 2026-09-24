@@ -35,7 +35,7 @@ public class Appointment : BaseEntity
         Money depositAmountSnapshot, DepositPaymentMethod depositPaymentMethod, long barberId, long customerId,
         long salonId, long barberServiceId, long creationBy)
     {
-        ValidateDate(appointmentDate);
+        ValidateDate(appointmentDate, startTime);
         ValidateTimes(startTime, endTime);
         ValidateServiceSnapshot(serviceSnapshot);
         ValidateDepositAmountSnapshot(depositAmountSnapshot);
@@ -122,10 +122,12 @@ public class Appointment : BaseEntity
         return (appointmentStartUtc - DateTimeOffset.UtcNow).TotalHours;
     }
 
-    private static void ValidateDate(DateOnly appointmentDate)
+    private static void ValidateDate(DateOnly appointmentDate, TimeOnly startTime)
     {
-        var todayInIran = DateOnly.FromDateTime(DateTimeOffset.UtcNow.ToOffset(IranOffset).DateTime);
-        if (appointmentDate < todayInIran)
+        var nowInIran = DateTimeOffset.UtcNow.ToOffset(IranOffset).DateTime;
+        var today = DateOnly.FromDateTime(nowInIran);
+        if (appointmentDate < today ||
+            (appointmentDate == today && startTime <= TimeOnly.FromDateTime(nowInIran)))
             throw new InvalidAppointmentDateException();
     }
 
