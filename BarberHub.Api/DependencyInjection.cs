@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using Asp.Versioning;
 using BarberHub.Api.Contracts;
 using BarberHub.Api.Filters;
@@ -35,6 +36,7 @@ public static class DependencyInjection
         services.AddJwtAuthentication();
         services.AddCorsConfiguration();
         services.AddAuthorization();
+        services.AddRateLimiting();
     }
 
     private static void AddSwaggerDocumentation(this IServiceCollection services)
@@ -125,6 +127,51 @@ public static class DependencyInjection
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
+        });
+    }
+    private static void AddRateLimiting(this IServiceCollection services)
+    {
+        services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            options.OnRejected = async (context, cancellationToken) =>
+            {
+                context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                context.HttpContext.Response.ContentType = "application/json";
+
+                var result = ApiResult.Failed(
+                    null,
+                    StatusCodes.Status429TooManyRequests);
+
+                await context.HttpContext.Response.WriteAsJsonAsync(
+                    result,
+                    cancellationToken);
+            };
+
+            options.AddPolicy("otp-send", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    context.User.FindFirst("sub")?.Value
+                    ?? context.Connection.RemoteIpAddress?.ToString()
+                    ?? "anonymous",
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 3,
+                        Window = TimeSpan.FromMinutes(10),
+                        QueueLimit = 0
+                    }));
+
+            options.AddPolicy("otp-verify", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    context.User.FindFirst("sub")?.Value
+                    ?? context.Connection.RemoteIpAddress?.ToString()
+                    ?? "anonymous",
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 10,
+                        Window = TimeSpan.FromMinutes(10),
+                        QueueLimit = 0
+                    }));
         });
     }
 }
