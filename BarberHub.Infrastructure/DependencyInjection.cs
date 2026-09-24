@@ -1,9 +1,9 @@
-﻿using Amazon.S3;
+﻿using System.Text;
+using Amazon.S3;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Security.Otp;
-using BarberHub.Application.Sms;
 using BarberHub.Application.Storage;
 using BarberHub.Infrastructure.BackgroundJobs;
 using BarberHub.Infrastructure.Persistence.Mongo;
@@ -75,13 +75,18 @@ public static class DependencyInjection
 
     private static void AddJwt(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<JwtSetting>(configuration.GetSection(JwtSetting.JwtSettingsSectionName));
+        services.AddOptions<JwtSetting>()
+            .Bind(configuration.GetSection(JwtSetting.JwtSettingsSectionName))
+            .Validate(s => Encoding.UTF8.GetByteCount(s.SecretKey) >= 32,
+                "Jwt:SecretKey must be at least 32 bytes.")
+            .ValidateOnStart();
     }
 
     private static void AddDataSeeder(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<SeedAdminSetting>(configuration.GetSection(SeedAdminSetting.SectionName));
     }
+
     private static void AddArvanStorage(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<ArvanCloudSetting>(configuration.GetSection(ArvanCloudSetting.SectionName));
@@ -113,7 +118,14 @@ public static class DependencyInjection
 
     private static void AddKavenegarSmsSender(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IOtpCodeService, OtpCodeService>();
+        services.AddOptions<OtpSetting>()
+            .Bind(configuration.GetSection(OtpSetting.SectionName))
+            .Validate(s => !string.IsNullOrWhiteSpace(s.SecretKey), "Otp:SecretKey must be configured.")
+            .ValidateOnStart();
+        services.AddOptions<KavenegarSetting>()
+            .Bind(configuration.GetSection(KavenegarSetting.SectionName))
+            .Validate(s => !string.IsNullOrWhiteSpace(s.ApiKey), "Kavenegar:ApiKey must be configured.")
+            .ValidateOnStart();
         services.AddHttpClient<IKavenegarApi, KavenegarApi>((httpClient, sp) =>
             {
                 var setting = sp.GetRequiredService<IOptions<KavenegarSetting>>().Value;
@@ -121,6 +133,6 @@ public static class DependencyInjection
                 return new KavenegarApi(new KavenegarOptions { ApiKey = setting.ApiKey }, httpClient);
             })
             .RemoveAllLoggers();
-        services.AddScoped<ISmsSender, KavenegarSmsSender>();
+        services.AddScoped<IOtpCodeService, OtpCodeService>();
     }
 }
