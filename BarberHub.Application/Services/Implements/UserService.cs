@@ -64,7 +64,6 @@ public class UserService(
             }
         }
 
-        user.Update(dto.FirstName, dto.LastName, dto.UserName, dto.MobileNumber, modifiedBy);
         userRepository.Update(user);
         await userRepository.SaveChangesAsync(cancellationToken);
         return ToDto(user);
