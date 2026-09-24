@@ -65,8 +65,16 @@ public class GalleryService(
         }
         catch
         {
-            await unitOfWork.RollbackTransaction(cancellationToken);
-            await fileService.DeleteAsync(uploadedFile.Id, cancellationToken);
+            await unitOfWork.RollbackTransaction(CancellationToken.None);
+            try
+            {
+                await fileService.DeleteAsync(uploadedFile.Id, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Cleanup of file {FileId} failed after gallery creation error.", uploadedFile.Id);
+            }
+
             throw;
         }
     }
