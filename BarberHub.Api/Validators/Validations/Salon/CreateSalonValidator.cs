@@ -35,7 +35,7 @@ public class CreateSalonValidator : AbstractValidator<CreateSalonRequest>
                 SharedValidationMessages.PropertyRequired(CreateSalonValidationMessages.PhoneNumberProperty))
             .Length(SalonConstants.PhoneNumberMaxLength)
             .WithMessage(CreateSalonValidationMessages.PhoneNumberInvalidFormat)
-            .Matches($@"^\d{{{SalonConstants.PhoneNumberMaxLength}}}$")
+            .Matches(CreateSalonValidationMessages.PhonNumberRegex)
             .WithMessage(CreateSalonValidationMessages.PhoneNumberInvalidFormat);
 
         RuleFor(x => x.DepositAmountValue)

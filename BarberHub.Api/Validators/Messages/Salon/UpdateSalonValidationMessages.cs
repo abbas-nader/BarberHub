@@ -1,4 +1,6 @@
-﻿namespace BarberHub.Api.Validators.Messages.Salon;
+﻿using BarberHub.Domain.Constants;
+
+namespace BarberHub.Api.Validators.Messages.Salon;
 
 public static class UpdateSalonValidationMessages
 {
@@ -8,6 +10,8 @@ public static class UpdateSalonValidationMessages
 
     public const string PhoneNumberProperty = "PhoneNumber";
     public const string PhoneNumberInvalidFormat = "Phone number format is invalid.";
+    public static readonly string PhonNumberRegex = $@"^[0-9]{{{SalonConstants.PhoneNumberMaxLength}}}$";
+
     
     public const string DescriptionProperty = "Description";
 }

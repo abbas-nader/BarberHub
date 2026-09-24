@@ -13,5 +13,5 @@ public static class RegisterValidationMessages
 
     public const string MobileNumberProperty = "MobileNumber";
     public const string MobileNumberInvalidFormat = "Mobile number format is invalid.";
-    public const string MobileNumberRegex = @"^09\d{9}$";
+    public const string MobileNumberRegex = @"^09[0-9]{9}$";
 }

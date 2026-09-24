@@ -8,7 +8,7 @@ public static class CreateBarberValidationMessages
     
     public const string MobileNumberProperty = "MobileNumber";
     public const string MobileNumberInvalidFormat = "Mobile number format is invalid.";
-    public const string MobileNumberRegex = @"^09\d{9}$";
+    public const string MobileNumberRegex = @"^09[0-9]{9}$";
     
     public const string UsernameProperty = "Username";
     public const string UsernameInvalidFormat = "Username format is invalid.";

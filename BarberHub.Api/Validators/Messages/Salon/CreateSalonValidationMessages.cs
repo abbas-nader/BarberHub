@@ -1,4 +1,6 @@
-﻿namespace BarberHub.Api.Validators.Messages.Salon;
+﻿using BarberHub.Domain.Constants;
+
+namespace BarberHub.Api.Validators.Messages.Salon;
 
 public static class CreateSalonValidationMessages
 {
@@ -8,7 +10,8 @@ public static class CreateSalonValidationMessages
 
     public const string PhoneNumberProperty = "PhoneNumber";
     public const string PhoneNumberInvalidFormat = "Phone number format is invalid.";
-
+    public static readonly string PhonNumberRegex = $@"^[0-9]{{{SalonConstants.PhoneNumberMaxLength}}}$";
+    
     public const string DepositAmountValueInvalid = "Deposit amount must be greater than zero.";
 
     public const string DepositAmountCurrencyInvalid = "Deposit amount currency is invalid.";

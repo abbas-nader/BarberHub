@@ -6,5 +6,5 @@ public static class VerifyOtpValidationMessages
 {
     public const string CodeProperty = "Code";
     public const string CodeInvalidFormat = "OTP code format is invalid.";
-    public static readonly string CodeValidRegex = $@"^\d{{{OtpConstants.CodeLength}}}$";
+    public static readonly string CodeValidRegex = $@"^[0-9]{{{OtpConstants.CodeLength}}}$";
 }

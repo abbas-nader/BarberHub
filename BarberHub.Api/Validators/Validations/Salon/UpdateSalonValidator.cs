@@ -33,7 +33,7 @@ public class UpdateSalonValidator : AbstractValidator<UpdateSalonRequest>
             .NotEmpty()
             .WithMessage(
                SharedValidationMessages.PropertyRequired(UpdateSalonValidationMessages.PhoneNumberProperty))
-            .Matches($@"^\d{{{SalonConstants.PhoneNumberMaxLength}}}$")
+            .Matches(UpdateSalonValidationMessages.PhonNumberRegex)
             .WithMessage(UpdateSalonValidationMessages.PhoneNumberInvalidFormat);
 
         RuleFor(x => x.Description)
