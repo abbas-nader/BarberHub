@@ -7,6 +7,6 @@ public record BarberServiceResponse(
     long BarberId,
     long ServiceId,
     decimal PriceValue,
-    Currency Currency,
+    Currency PriceCurrency,
     TimeSpan Duration
 );
