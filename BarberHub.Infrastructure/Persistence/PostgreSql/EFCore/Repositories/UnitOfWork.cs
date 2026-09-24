@@ -38,6 +38,7 @@ public class UnitOfWork(BarberHubDbContext context) : IUnitOfWork
         {
             await _transaction.DisposeAsync();
             _transaction = null;
+            context.ChangeTracker.Clear();
         }
     }
 }
