@@ -14,15 +14,22 @@ namespace BarberHub.Api.Controllers.V1;
 [ApiVersion("1.0")]
 public class BarberController(IBarberService barberService) : BaseController
 {
-    [HttpGet(BarberUriConstants.GetAllBySalonId)]
+    [HttpGet(BarberUriConstants.GetAllPublicBySalonId)]
     [AllowAnonymous]
+    public async Task<ApiResult<IReadOnlyList<BarberPublicResponse>>> GetAllPublicBySalonIdAsync([FromRoute] long salonId,
+        CancellationToken cancellationToken)
+    {
+        var barbers = await barberService.GetAllBySalonIdAsync(salonId, cancellationToken);
+        return barbers.Select(x => x.ToPublicResponse()).ToList();
+    }
+    [HttpGet(BarberUriConstants.GetAllBySalonId)]
+    [Authorize(Roles =  nameof(UserRole.SalonAdmin))]
     public async Task<ApiResult<IReadOnlyList<BarberResponse>>> GetAllBySalonIdAsync([FromRoute] long salonId,
         CancellationToken cancellationToken)
     {
         var barbers = await barberService.GetAllBySalonIdAsync(salonId, cancellationToken);
         return barbers.Select(x => x.ToResponse()).ToList();
     }
-
     [HttpGet(BarberUriConstants.GetById)]
     [AllowAnonymous]
     public async Task<ApiResult<BarberResponse>> GetByIdAsync([FromRoute] long barberId,

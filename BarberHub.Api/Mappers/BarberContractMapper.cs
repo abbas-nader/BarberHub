@@ -15,6 +15,15 @@ public static class BarberContractMapper
             dto.IsActive
         );
 
+    public static BarberPublicResponse ToPublicResponse(this BarberDto dto)
+        => new(
+            dto.Id,
+            dto.FirstName,
+            dto.LastName,
+            dto.Description,
+            dto.IsActive
+        );
+
     public static CreateBarberDto ToDto(this CreateBarberRequest request) =>
         new(
             request.FirstName,

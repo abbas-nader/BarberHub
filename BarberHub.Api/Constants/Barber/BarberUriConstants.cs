@@ -4,6 +4,7 @@ public static class BarberUriConstants
 {
     private const string ControllerName = "barber";
     public const string GetAllBySalonId = $"{ControllerName}/salon/{{salonId}}";
+    public const string GetAllPublicBySalonId = $"{ControllerName}/public/salon/{{salonId}}";
     public const string GetById = $"{ControllerName}/{{barberId}}";
     public const string Create = $"{ControllerName}/create";
     public const string Update = $"{ControllerName}/update/{{barberId}}";
