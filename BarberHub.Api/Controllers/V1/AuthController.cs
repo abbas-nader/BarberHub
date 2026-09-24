@@ -6,6 +6,7 @@ using BarberHub.Api.Mappers;
 using BarberHub.Application.Services.InterFaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using LoginRequest = BarberHub.Api.Contracts.Auth.LoginRequest;
 using RefreshRequest = BarberHub.Api.Contracts.Auth.RefreshRequest;
 
@@ -13,6 +14,7 @@ namespace BarberHub.Api.Controllers.V1;
 
 [ApiVersion("1.0")]
 [AllowAnonymous]
+[EnableRateLimiting("auth")]
 public class AuthController(IAuthenticationService authenticationService) : BaseController
 {
     [HttpPost(AuthUriConstants.Login)]

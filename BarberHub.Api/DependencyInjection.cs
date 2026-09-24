@@ -172,6 +172,15 @@ public static class DependencyInjection
                         Window = TimeSpan.FromMinutes(10),
                         QueueLimit = 0
                     }));
+            options.AddPolicy("auth", context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 10,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueLimit = 0
+                    }));
         });
     }
 }
