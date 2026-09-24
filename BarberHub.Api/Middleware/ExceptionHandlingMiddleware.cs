@@ -15,6 +15,9 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         {
             await next(context);
         }
+        catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
+        {
+        }
         catch (Exception ex)
         {
             var statusCode = ResolveStatusCode(ex);
@@ -43,6 +46,8 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
             or CannotDeleteOwnAccountException
             or MobileNumberAlreadyVerifiedException
             or DbUpdateConcurrencyException
+            or InvalidOtpStatusTransitionException
+            or DbUpdateException { InnerException: Npgsql.PostgresException { SqlState: Npgsql.PostgresErrorCodes.UniqueViolation } }
             or InsufficientMoneyException => HttpStatusCode.Conflict,
 
         RequiredFieldException
