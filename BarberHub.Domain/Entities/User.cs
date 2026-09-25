@@ -9,6 +9,7 @@ public class User : BaseEntity
     public string FirstName { get; private set; } = null!;
     public string LastName { get; private set; } = null!;
     public string UserName { get; private set; } = null!;
+    public string NormalizedUserName { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public UserRole Role { get; private set; }
     public string? MobileNumber { get; private set; }
@@ -27,6 +28,7 @@ public class User : BaseEntity
         FirstName = firstName;
         LastName = lastName;
         UserName = userName;
+        NormalizedUserName = userName.ToUpperInvariant();
         PasswordHash = passwordHash;
         Role = role;
         if (mobileNumber is not null && Role != UserRole.PlatformAdmin)
@@ -45,6 +47,7 @@ public class User : BaseEntity
         FirstName = firstName;
         LastName = lastName;
         UserName = userName;
+        NormalizedUserName = userName.ToUpperInvariant();
         if (mobileNumber is not null && !string.Equals(mobileNumber, MobileNumber, StringComparison.Ordinal))
         {
             MobileNumber = mobileNumber;

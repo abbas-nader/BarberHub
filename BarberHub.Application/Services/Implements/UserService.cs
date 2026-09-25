@@ -12,7 +12,8 @@ namespace BarberHub.Application.Services.Implements;
 public class UserService(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    IOtpHistoryRepository otpHistoryRepository) : IUserService
+    IOtpHistoryRepository otpHistoryRepository, 
+    IRefreshTokenRepository refreshTokenRepository) : IUserService
 {
     public async Task<UserDto> GetByIdAsync(long userId, CancellationToken cancellationToken = default)
     {
@@ -80,6 +81,12 @@ public class UserService(
 
         user.ChangePassword(passwordHasher.Hash(dto.NewPassword), userId);
         userRepository.Update(user);
+        var activeTokens = await refreshTokenRepository.GetAllActiveByUserIdAsync(userId, cancellationToken);
+        foreach (var token in activeTokens)
+        {
+            token.Revoke();
+            refreshTokenRepository.Update(token);
+        }
         await userRepository.SaveChangesAsync(cancellationToken);
         return ToDto(user);
     }

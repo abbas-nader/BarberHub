@@ -21,6 +21,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             builder.Property(x => x.UserName)
                 .HasMaxLength(UserConstants.UsernameMaxLength)
                 .IsRequired();
+            builder.Property(x => x.NormalizedUserName)
+                .HasMaxLength(UserConstants.UsernameMaxLength)
+                .IsRequired();
             builder.Property(x => x.PasswordHash)
                 .HasMaxLength(UserConstants.PasswordMaxLength)
                 .IsRequired();
@@ -29,7 +32,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             builder.Property(x => x.MobileNumber)
                 .HasMaxLength(UserConstants.MobileNumberMaxLength);
 
-            builder.HasIndex(x => x.UserName)
+            builder.HasIndex(x => x.NormalizedUserName)
                 .IsUnique()
                 .HasFilter("\"IsDeleted\" = false");
         }
