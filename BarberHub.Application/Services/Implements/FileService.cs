@@ -20,7 +20,7 @@ public class FileService(
         ValidateSize(uploadFileDto.Size);
         ValidateContentType(uploadFileDto.ContentType);
 
-        var storageKey = GenerateKey(uploadFileDto.OriginFileName);
+        var storageKey = GenerateKey(uploadFileDto.ContentType);
 
         var uploadResult =
             await fileStorageService.UploadAsync(uploadFileDto.FileStream, storageKey, uploadFileDto.ContentType,
@@ -78,9 +78,15 @@ public class FileService(
             throw new UnsupportedFileTypeException();
     }
 
-    private static string GenerateKey(string originFileName)
+    private static string GenerateKey(string contentType)
     {
-        var extension = Path.GetExtension(originFileName);
+        var extension = contentType switch
+        {
+            "image/jpeg" => ".jpg",
+            "image/png" => ".png",
+            "image/webp" => ".webp",
+            _ => throw new UnsupportedFileTypeException()
+        };
         return $"{Guid.NewGuid()}{extension}";
     }
 
