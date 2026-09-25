@@ -94,7 +94,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
                 context.Request.Path,
                 context.Request.Method);
 
-            await repository.AddAsync(log, context.RequestAborted);
+            await repository.AddAsync(log, CancellationToken.None);
         }
         catch (Exception loggingException)
         {
