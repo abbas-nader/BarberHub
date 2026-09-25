@@ -135,6 +135,5 @@ public static class DependencyInjection
             })
             .RemoveAllLoggers();
         services.AddScoped<IOtpCodeService, OtpCodeService>();
-        services.AddHttpClient<ISmsSender, KavenegarSmsSender>();
-    }
+        services.AddScoped<ISmsSender, KavenegarSmsSender>();     }
 }
