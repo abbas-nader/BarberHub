@@ -32,7 +32,7 @@ public class OtpService(
         if (user.IsMobileVerified == true)
             throw new MobileNumberAlreadyVerifiedException();
         var now = DateTimeOffset.UtcNow;
-        await EnsureNotRateLimitedAsync(userId, now, cancellationToken);
+        await EnsureNotRateLimitedAsync(userId, user.MobileNumber, now, cancellationToken);
         var activeCodes = await otpHistoryRepository.GetAllIssuedAsync(Purpose, userId, cancellationToken);
         foreach (var old in activeCodes)
         {
@@ -56,12 +56,14 @@ public class OtpService(
             await otpHistoryRepository.SaveChangesAsync(CancellationToken.None);
             throw;
         }
+
         var previous = await otpHistoryRepository.GetAllIssuedAsync(Purpose, userId, CancellationToken.None);
         foreach (var old in previous.Where(x => x.Id != otp.Id))
         {
             old.Supersede();
             otpHistoryRepository.Update(old);
         }
+
         await otpHistoryRepository.SaveChangesAsync(CancellationToken.None);
     }
 
@@ -98,15 +100,22 @@ public class OtpService(
         await otpHistoryRepository.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task EnsureNotRateLimitedAsync(long userId, DateTimeOffset now, CancellationToken cancellationToken)
+    private async Task EnsureNotRateLimitedAsync(long userId, string mobileNumber, DateTimeOffset now,
+        CancellationToken cancellationToken)
     {
         var last = await otpHistoryRepository.GetLatestAsync(Purpose, userId, cancellationToken);
         if (last is not null && last.CreatedAt.AddSeconds(OtpConstants.ResendCooldownSeconds) > now)
             throw new OtpRateLimitExceededException();
 
-        var sentInLastDay = await otpHistoryRepository.CountSinceAsync(
-            Purpose, userId, now.AddHours(-24), cancellationToken);
-        if (sentInLastDay >= OtpConstants.MaxSendsPer24Hours)
+        var since = now.AddHours(-24);
+
+        var sentByUser = await otpHistoryRepository.CountSinceAsync(Purpose, userId, since, cancellationToken);
+        if (sentByUser >= OtpConstants.MaxSendsPer24Hours)
+            throw new OtpRateLimitExceededException();
+
+        var sentToMobile =
+            await otpHistoryRepository.CountSinceByMobileAsync(Purpose, mobileNumber, since, cancellationToken);
+        if (sentToMobile >= OtpConstants.MaxSendsPer24Hours)
             throw new OtpRateLimitExceededException();
     }
 }

@@ -33,7 +33,14 @@ public class OtpHistoryRepository(BarberHubDbContext context) : IOtpHistoryRepos
             x => x.Purpose == purpose && x.UserId == userId &&
                  x.Status != OtpStatus.SendFailed && x.CreatedAt >= since,
             cancellationToken);
-
+    public async Task<int> CountSinceByMobileAsync(OtpPurpose purpose, string mobileNumber,
+        DateTimeOffset since, CancellationToken cancellationToken = default)
+        => await context.OtpHistories
+            .Where(x => x.Purpose == purpose
+                        && x.User.MobileNumber == mobileNumber
+                        && x.Status != OtpStatus.SendFailed
+                        && x.CreatedAt >= since)
+            .CountAsync(cancellationToken);
     public async Task AddAsync(OtpHistory otpHistory, CancellationToken cancellationToken = default)
         => await context.AddAsync(otpHistory, cancellationToken);
 

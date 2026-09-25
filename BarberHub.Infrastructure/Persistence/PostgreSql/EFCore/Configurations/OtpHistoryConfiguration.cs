@@ -28,7 +28,8 @@ public class OtpHistoryConfiguration : IEntityTypeConfiguration<OtpHistory>
             .IsRequired();
         builder.Property(x => x.FailedAttempts)
             .IsRequired();
-        builder.HasOne<User>()
+        
+        builder.HasOne(x => x.User)
             .WithMany()
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
