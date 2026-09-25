@@ -4,6 +4,7 @@ using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Security.Hash;
 using BarberHub.Application.Security.Otp;
+using BarberHub.Application.Sms;
 using BarberHub.Application.Storage;
 using BarberHub.Infrastructure.BackgroundJobs;
 using BarberHub.Infrastructure.Persistence.Mongo;
@@ -134,5 +135,6 @@ public static class DependencyInjection
             })
             .RemoveAllLoggers();
         services.AddScoped<IOtpCodeService, OtpCodeService>();
+        services.AddHttpClient<ISmsSender, KavenegarSmsSender>();
     }
 }
