@@ -22,5 +22,6 @@ public static class DependencyInjection
         services.AddScoped<IEndUserService, EndUserService>();
         services.AddScoped<IPlatformAdminService, PlatformAdminService>();
         services.AddScoped<IOtpService, OtpService>();
+        services.AddScoped<IAppointmentService, AppointmentService>();
     }
 }
