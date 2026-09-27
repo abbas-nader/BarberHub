@@ -32,7 +32,7 @@ public class Appointment : BaseEntity
     }
 
     public Appointment(DateOnly appointmentDate, TimeOnly startTime, TimeOnly endTime, ServiceSnapshot serviceSnapshot,
-        Money depositAmountSnapshot, DepositPaymentMethod depositPaymentMethod, long barberId, long customerId,
+        Money depositAmountSnapshot, DepositPaymentMethod depositPaymentMethod, long barberId, long userId,
         long salonId, long barberServiceId, long creationBy)
     {
         ValidateDate(appointmentDate, startTime);
@@ -50,7 +50,7 @@ public class Appointment : BaseEntity
         CancelledAt = null;
         NoShowDetectionType = null;
         BarberId = barberId;
-        UserId = customerId;
+        UserId = userId;
         SalonId = salonId;
         BarberServiceId = barberServiceId;
         Creation(creationBy);

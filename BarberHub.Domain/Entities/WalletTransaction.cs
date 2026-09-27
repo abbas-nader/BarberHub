@@ -19,7 +19,7 @@ public class WalletTransaction : BaseEntity
     }
 
     public WalletTransaction(Money amount, TransactionType transactionType,
-        WalletTransactionReason walletTransactionReason, Money balanceAfterTransaction, long customerId,
+        WalletTransactionReason walletTransactionReason, Money balanceAfterTransaction, long userId,
         long appointmentId, long creationBy)
     {
         ValidateAmount(amount);
@@ -27,7 +27,7 @@ public class WalletTransaction : BaseEntity
         TransactionType = transactionType;
         WalletTransactionReason = walletTransactionReason;
         BalanceAfterTransaction = balanceAfterTransaction;
-        UserId = customerId;
+        UserId = userId;
         AppointmentId = appointmentId;
         Creation(creationBy);
     }

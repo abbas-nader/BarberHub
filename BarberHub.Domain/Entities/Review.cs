@@ -20,7 +20,7 @@ public class Review : BaseEntity
     {
     }
 
-    public Review(byte rating, string comment, long customerId, long barberId, long appointmentId,
+    public Review(byte rating, string comment, long userId, long barberId, long appointmentId,
         long salonId, long creationBy)
     {
         ValidateRating(rating);
@@ -29,14 +29,14 @@ public class Review : BaseEntity
         Rating = rating;
         Comment = comment;
         IsApproved = false;
-        UserId = customerId;
+        UserId = userId;
         BarberId = barberId;
         AppointmentId = appointmentId;
         SalonId = salonId;
         Creation(creationBy);
     }
 
-    public void EditComment(byte rating, string comment, long customerId)
+    public void EditComment(byte rating, string comment, long userId)
     {
         ValidateRating(rating);
         ValidateComment(comment);
@@ -48,7 +48,7 @@ public class Review : BaseEntity
             Reply = null;
         }
 
-        Modified(customerId);
+        Modified(userId);
     }
 
     public void Approve(long adminId)
