@@ -61,5 +61,8 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
             .WithMany()
             .HasForeignKey(b => b.BarberServiceId)
             .OnDelete(DeleteBehavior.Restrict);
+        builder.HasIndex(x => new { x.BarberId, x.AppointmentDate, x.StartTime })
+            .IsUnique()
+            .HasFilter("\"IsDeleted\" = false AND \"AppointmentStatus\" = 1");
     }
 }
