@@ -4,4 +4,6 @@ namespace BarberHub.Application.Repositories;
 
 public interface IAppointmentRepository : IRepository<Appointment>
 {
+    Task<IReadOnlyList<Appointment>> GetAllByBarberIdAsync(long barberId,
+        CancellationToken cancellationToken = default);
 }
