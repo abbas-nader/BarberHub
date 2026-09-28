@@ -5,5 +5,6 @@ public enum WalletTransactionReason : byte
     DepositRefundOnSalonCancellation = 1,
     RaceConditionRefund = 2,
     DepositPaymentUsage = 3,
-    DepositRefundOnUserCancellation = 4
+    DepositRefundOnUserCancellation = 4,
+    WalletTopUp = 5
 }

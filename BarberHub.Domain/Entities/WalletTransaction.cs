@@ -12,7 +12,7 @@ public class WalletTransaction : BaseEntity
     public Money BalanceAfterTransaction { get; private set; } = null!;
 
     public long UserId { get; private set; }
-    public long AppointmentId { get; private set; }
+    public long? AppointmentId { get; private set; }
 
     private WalletTransaction()
     {
@@ -20,7 +20,7 @@ public class WalletTransaction : BaseEntity
 
     public WalletTransaction(Money amount, TransactionType transactionType,
         WalletTransactionReason walletTransactionReason, Money balanceAfterTransaction, long userId,
-        long appointmentId, long creationBy)
+        long? appointmentId, long creationBy)
     {
         ValidateAmount(amount);
         Amount = amount;
