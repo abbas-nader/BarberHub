@@ -2,6 +2,7 @@ using BarberHub.Application.DTOs.Appointment;
 using BarberHub.Application.Repositories;
 using BarberHub.Application.Security.Authentication;
 using BarberHub.Application.Services.InterFaces;
+using BarberHub.Domain.Constants;
 using BarberHub.Domain.Entities;
 using BarberHub.Domain.Enums;
 using BarberHub.Domain.Exceptions;
@@ -16,7 +17,10 @@ public class AppointmentService(
     IServiceRepository serviceRepository,
     ISalonRepository salonRepository,
     IEndUserRepository endUserRepository,
-    ICurrentUserService currentUserService) : IAppointmentService
+    ICurrentUserService currentUserService,
+    IWalletTransactionRepository walletTransactionRepository,
+    IWalletTransactionService walletTransactionService, 
+    IWorkScheduleRepository workScheduleRepository) : IAppointmentService
 {
     public async Task<IReadOnlyList<AppointmentDto>> GetAllByBarberIdAsync(long barberId,
         CancellationToken cancellationToken = default)
@@ -35,6 +39,50 @@ public class AppointmentService(
         var appointment = await appointmentRepository.GetByIdAsync(appointmentId, cancellationToken) ??
                           throw new EntityNotFoundException(nameof(Appointment), appointmentId);
         return ToDto(appointment);
+    }
+
+    public async Task<IReadOnlyList<AvailableSlotDto>> GetAvailableSlotsAsync(long barberServiceId, DateOnly date,
+        CancellationToken cancellationToken = default)
+    {
+        var barberService = await barberServiceRepository.GetByIdAsync(barberServiceId, cancellationToken) ??
+                            throw new EntityNotFoundException(nameof(BarberService), barberServiceId);
+
+        var barber = await barberRepository.GetByIdAsync(barberService.BarberId, cancellationToken);
+        if (barber is null || !barber.IsActive)
+            throw new EntityNotFoundException(nameof(Barber), barberService.BarberId);
+
+        var workSchedules = await workScheduleRepository.GetAllByBarberIdAsync(barber.Id, cancellationToken);
+        var todaySchedules = workSchedules.Where(x => x.DayOfWeek == date.DayOfWeek).ToList();
+        if (todaySchedules.Count == 0)
+            return [];
+
+        var confirmedAppointments =
+            await appointmentRepository.GetConfirmedByBarberIdAndDateAsync(barber.Id, date, cancellationToken);
+
+        var duration = barberService.Duration;
+        var nowInIran = DateTimeOffset.UtcNow.ToOffset(TimeZoneConstants.IranOffset);
+        var isToday = date == DateOnly.FromDateTime(nowInIran.DateTime);
+        var nowTime = TimeOnly.FromDateTime(nowInIran.DateTime);
+
+        var slots = new List<AvailableSlotDto>();
+
+        foreach (var schedule in todaySchedules)
+        {
+            var slotStart = schedule.StartTime;
+            while (slotStart.Add(duration) <= schedule.EndTime)
+            {
+                var slotEnd = slotStart.Add(duration);
+                var isPast = isToday && slotStart <= nowTime;
+                var hasConflict = confirmedAppointments.Any(a => slotStart < a.EndTime && a.StartTime < slotEnd);
+
+                if (!isPast && !hasConflict)
+                    slots.Add(new AvailableSlotDto(slotStart, slotEnd));
+
+                slotStart = slotEnd;
+            }
+        }
+
+        return slots;
     }
 
     public async Task<AppointmentDto> CreateAsync(CreatAppointmentDto createAppointmentDto,

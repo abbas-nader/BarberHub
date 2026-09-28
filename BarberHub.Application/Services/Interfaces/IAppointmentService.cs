@@ -9,6 +9,9 @@ public interface IAppointmentService
 
     Task<AppointmentDto> GetByIdAsync(long appointmentId, CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<AvailableSlotDto>> GetAvailableSlotsAsync(long barberServiceId, DateOnly date,
+        CancellationToken cancellationToken = default);
+
     Task<AppointmentDto> CreateAsync(CreatAppointmentDto createAppointmentDto,
         CancellationToken cancellationToken = default);
 
