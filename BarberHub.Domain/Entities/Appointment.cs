@@ -85,6 +85,7 @@ public class Appointment : BaseEntity
     {
         EnsureIsConfirmed();
         AppointmentStatus = AppointmentStatus.CancelledBySalon;
+        DepositStatus = DepositStatus.Refunded;
         CancelledAt = DateTimeOffset.UtcNow;
         Modified(modifiedBy);
     }
@@ -110,21 +111,19 @@ public class Appointment : BaseEntity
             throw new InvalidAppointmentStatusTransitionException();
     }
 
-    private static readonly TimeSpan IranOffset = TimeSpan.FromHours(3.5);
-
     private double GetHoursUntilAppointment()
     {
         var appointmentStartUtc = new DateTimeOffset(
             AppointmentDate.Year, AppointmentDate.Month, AppointmentDate.Day,
             StartTime.Hour, StartTime.Minute, StartTime.Second,
-            IranOffset);
+            TimeZoneConstants.IranOffset);
 
         return (appointmentStartUtc - DateTimeOffset.UtcNow).TotalHours;
     }
 
     private static void ValidateDate(DateOnly appointmentDate, TimeOnly startTime)
     {
-        var nowInIran = DateTimeOffset.UtcNow.ToOffset(IranOffset).DateTime;
+        var nowInIran = DateTimeOffset.UtcNow.ToOffset(TimeZoneConstants.IranOffset).DateTime;
         var today = DateOnly.FromDateTime(nowInIran);
         if (appointmentDate < today ||
             (appointmentDate == today && startTime <= TimeOnly.FromDateTime(nowInIran)))
